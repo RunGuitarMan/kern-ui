@@ -2,18 +2,18 @@
 
 - ID: `sidebar`
 - Selector: `krn-sidebar`
-- Import: `import { KrnSidebar } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSidebar } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnSidebar`
 - Lifecycle: **stable**
 - Category: Layout
 
-Sidebar. A composable spatial primitive that keeps product layouts predictable across containers.
+Sidebar. Provides a collapsible complementary panel that can shrink to icons or hide completely.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Sidebar for this specific contract: Provides a collapsible complementary panel that can shrink to icons or hide completely.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Sidebar for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSidebar } from '@kern-ui/angular/kit';
+import { KrnSidebar } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-sidebar-agent-example',
@@ -60,7 +60,7 @@ void bootstrapApplication(KernSidebarAgentExample);
 | `ariaLabel`       | input | `string \| undefined`        | no       | `undefined`                               | Accessible name used when visible content is not sufficient.                 |
 | `ariaLabelledBy`  | input | `string`                     | no       | `''`                                      | Space-separated element ids that name the native complementary landmark.     |
 | `ariaDescribedBy` | input | `string`                     | no       | `''`                                      | Space-separated element ids that describe the native complementary landmark. |
-| `side`            | input | `"auto" \| "end" \| "start"` | no       | `'auto'`                                  | Logical side on which the anchored or modal surface is placed.               |
+| `side`            | input | `"auto" \| "end" \| "start"` | no       | `'auto'`                                  | Defines the component's side behavior or presentation.                       |
 
 ## Deprecated selectors
 
@@ -78,10 +78,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Renders a complementary landmark with a stable accessible name and description relationship.
+- Hidden collapse mode removes unavailable content from interaction as well as presentation.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -116,13 +115,13 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument         | Control | Default   | Test value | Binding                           | Description                                           |
-| ---------------- | ------- | --------- | ---------- | --------------------------------- | ----------------------------------------------------- |
-| `collapsed`      | boolean | `false`   | `true`     | model `collapsed`                 | Collapses the sidebar to its configured compact mode. |
-| `width`          | text    | `"15rem"` | `"20rem"`  | input `width` (property)          | Sets the expanded sidebar width.                      |
-| `collapsedMode`  | select  | `"icons"` | `"hidden"` | input `collapsedMode` (property)  | Configures the component collapsedMode contract.      |
-| `collapsedWidth` | text    | `"4rem"`  | `"20rem"`  | input `collapsedWidth` (property) | Configures the component collapsedWidth contract.     |
-| `side`           | select  | `"auto"`  | `"end"`    | input `side` (property)           | Configures the component side contract.               |
+| Argument         | Control | Default   | Test value | Binding                           | Description                                                          |
+| ---------------- | ------- | --------- | ---------- | --------------------------------- | -------------------------------------------------------------------- |
+| `collapsed`      | boolean | `false`   | `true`     | model `collapsed`                 | Collapses the sidebar to its configured compact mode.                |
+| `width`          | text    | `"15rem"` | `"20rem"`  | input `width` (property)          | Sets the expanded sidebar width.                                     |
+| `collapsedMode`  | select  | `"icons"` | `"hidden"` | input `collapsedMode` (property)  | Controls whether the component applies the collapsed mode behavior.  |
+| `collapsedWidth` | text    | `"4rem"`  | `"20rem"`  | input `collapsedWidth` (property) | Controls whether the component applies the collapsed width behavior. |
+| `side`           | select  | `"auto"`  | `"end"`    | input `side` (property)           | Defines the component's side behavior or presentation.               |
 
 Exact API exclusions:
 

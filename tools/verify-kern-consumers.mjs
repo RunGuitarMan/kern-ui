@@ -15,6 +15,8 @@ const runtimeEntrypointsConfigPath = join(
 );
 const testingEntrypointsConfigPath = join(workspaceRoot, 'projects/kern/testing/entrypoints.json');
 const releasePolicyPath = join(workspaceRoot, 'projects/kern/api/release-policy.json');
+const packageManifestPath = join(workspaceRoot, 'projects/kern/package.json');
+const measurementsPath = join(fixtureTemplateRoot, 'measurements.json');
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const failures = [];
 
@@ -326,6 +328,7 @@ async function main() {
     runtimeEntrypointsConfigPath,
     testingEntrypointsConfigPath,
     releasePolicyPath,
+    packageManifestPath,
   ]) {
     if (!existsSync(requiredPath)) {
       throw new Error(
@@ -341,9 +344,11 @@ async function main() {
   const runtimeEntrypointsConfig = JSON.parse(await readFile(runtimeEntrypointsConfigPath, 'utf8'));
   const testingEntrypointsConfig = JSON.parse(await readFile(testingEntrypointsConfigPath, 'utf8'));
   const releasePolicy = JSON.parse(await readFile(releasePolicyPath, 'utf8'));
+  const packageManifest = JSON.parse(await readFile(packageManifestPath, 'utf8'));
   if (
     !runtimeEntrypointsConfig ||
     !Array.isArray(runtimeEntrypointsConfig.entrypoints) ||
+    !Array.isArray(runtimeEntrypointsConfig.compatibilityEntrypoints) ||
     !runtimeEntrypointsConfig.entrypoints.every(
       (entrypoint) => entrypoint && typeof entrypoint.subpath === 'string',
     )
@@ -353,6 +358,7 @@ async function main() {
   const requiredSubpaths = [
     '.',
     ...runtimeEntrypointsConfig.entrypoints.map((entrypoint) => entrypoint.subpath),
+    ...runtimeEntrypointsConfig.compatibilityEntrypoints.map((entrypoint) => entrypoint.subpath),
     testingEntrypointsConfig.aggregator?.subpath,
     ...(testingEntrypointsConfig.entrypoints ?? []).map((entrypoint) => entrypoint.subpath),
   ];
@@ -566,6 +572,33 @@ void bootstrapApplication(GeneratedSchematicsConsumer);
         fail(
           `${consumerCase.name} differs from ${consumerCase.compareWith} by ${gzipDifference} gzip JS bytes; ` +
             `allowed difference is ${consumerCase.maximumDifferenceGzipBytes}.`,
+        );
+      }
+    }
+
+    const measurementReport = {
+      schemaVersion: 1,
+      libraryVersion: packageManifest.version,
+      generatedBy: 'tools/verify-kern-consumers.mjs --write-measurements',
+      styleBudget,
+      cases: summaries.map((summary) => {
+        const consumerCase = cases.find((entry) => entry.name === summary.name);
+        return {
+          ...summary,
+          maximumJsBytes: consumerCase.maximumJsBytes,
+          maximumGzipBytes: consumerCase.maximumGzipBytes,
+        };
+      }),
+    };
+    if (failures.length === 0 && process.argv.includes('--write-measurements')) {
+      await writeFile(measurementsPath, `${JSON.stringify(measurementReport, null, 2)}\n`, 'utf8');
+      console.log('Kern packed-consumer measurements written.');
+    } else if (failures.length === 0) {
+      const committedMeasurements = JSON.parse(await readFile(measurementsPath, 'utf8'));
+      if (!isDeepStrictEqual(committedMeasurements, measurementReport)) {
+        fail(
+          'Packed-consumer measurements are stale. Review the bundle change and run ' +
+            '`node tools/verify-kern-consumers.mjs --write-measurements`.',
         );
       }
     }

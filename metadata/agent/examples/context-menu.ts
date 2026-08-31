@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnContextMenu, type KrnContextMenuItem } from '@kern-ui/angular/kit';
+import { KrnContextMenu, type KrnContextMenuItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-context-menu-agent-example',

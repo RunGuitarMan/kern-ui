@@ -9,8 +9,9 @@ workspace path aliases are deliberately excluded from these checks.
 both `types` and `default` conditions. Every discovered TypeScript entrypoint must be registered
 in `projects/kern/api/entrypoints.json` and have a committed, normalized declaration baseline.
 
-The current baselines cover the root compatibility API, all seven runtime subpaths (`cdk`, `i18n`,
-`core`, `kit`, `addon-grid`, `addon-charts`, and `patterns`), the compatibility
+The current baselines cover the root compatibility API, all 12 canonical runtime subpaths (`cdk`,
+`i18n`, `core`, `actions`, `forms`, `navigation`, `feedback`, `layout`, `data-display`,
+`addon-grid`, `addon-charts`, and `patterns`), the compatibility `kit` subpath, the compatibility
 `@kern-ui/angular/testing` aggregator, and the family-scoped `testing/actions`,
 `testing/data-display`, `testing/feedback`, `testing/forms`, `testing/layout`,
 `testing/navigation`, and `testing/shared` entrypoints.
@@ -31,7 +32,7 @@ so the gate scales to physical runtime subpaths without changing its implementat
 ## Runtime entrypoint ownership and identity
 
 `projects/kern/api/runtime-entrypoints.json` is the reviewed ownership and dependency matrix for
-`cdk`, `i18n`, `core`, `kit`, `addon-grid`, `addon-charts`, and `patterns`.
+the 12 canonical owners and the source-free `kit` compatibility facade.
 
 `npm run verify:entrypoint-boundaries` runs before compilation and requires:
 
@@ -70,7 +71,7 @@ consumer case.
    and testing entrypoints;
 6. type-checks strict consumers of root, direct runtime subpaths, and testing APIs;
 7. production-builds isolated Button, Form, Select, Grid, and Charts applications from both the
-   root compatibility API and their direct `kit` or `addon-*` subpaths, plus a Button with a
+   root compatibility API and their direct family or `addon-*` subpaths, plus a Button with a
    direct lightweight `i18n` override;
 8. enforces per-case raw/gzip JavaScript budgets and one shared raw/gzip CSS budget;
 9. limits each root/direct bundle pair to a 1 KiB raw and 512 byte gzip difference;
@@ -92,11 +93,11 @@ The current complex-entrypoint limits were calibrated after the enterprise API p
 
 | Fixture              | Measured raw / gzip |   Limit raw / gzip | Included contract                                                              |
 | -------------------- | ------------------: | -----------------: | ------------------------------------------------------------------------------ |
-| Button               |  146,871 / 47,382 B | 161,000 / 52,000 B | native host, loading state, scoped defaults, English leaf-copy fallback        |
-| Button + direct i18n |  146,948 / 47,397 B | 161,000 / 52,000 B | direct leaf-token override without the complete translation registry           |
-| Select               |  266,996 / 77,193 B | 268,000 / 78,000 B | typed local/remote filtering, controlled loading states, late label resolution |
-| Grid                 |  294,403 / 83,450 B | 296,000 / 84,000 B | server data source, virtualization, pinned regions, explicit async states      |
-| Charts               |  205,123 / 60,106 B | 206,000 / 61,000 B | keyboard marks, source tables, stable empty/loading/error semantics            |
+| Button               |  106,644 / 35,630 B | 161,000 / 52,000 B | native host, loading state, scoped defaults, English leaf-copy fallback        |
+| Button + direct i18n |  108,661 / 36,342 B | 161,000 / 52,000 B | direct leaf-token override without the complete translation registry           |
+| Select               |  267,292 / 77,306 B | 268,000 / 78,000 B | typed local/remote filtering, controlled loading states, late label resolution |
+| Grid                 |  304,981 / 85,207 B | 310,000 / 87,000 B | server data source, virtualization, pinned regions, explicit async states      |
+| Charts               |  205,123 / 60,108 B | 206,000 / 61,000 B | keyboard marks, source tables, stable empty/loading/error semantics            |
 
 Root and direct-subpath fixtures must still stay within 1 KiB raw and 512 B gzip of one another.
 Any future increase must update this evidence table with fresh production measurements.
@@ -106,7 +107,7 @@ repository tooling rather than representing a consumer bundle:
 
 | Application | Measured initial | Warning / error | Included shell contract                                                          |
 | ----------- | ---------------: | --------------: | -------------------------------------------------------------------------------- |
-| Docs        |        629.35 kB |    650 / 700 kB | catalog navigation, SSR, agent discovery, playground, and deterministic previews |
+| Docs        |        672.71 kB |    680 / 700 kB | catalog navigation, SSR, agent discovery, playground, and deterministic previews |
 
 These thresholds leave only a small reviewed regression allowance. Consumer-facing tree-shaking
 continues to be governed by the substantially tighter isolated fixture budgets above.
@@ -142,7 +143,7 @@ node tools/verify-kern-agent-dx.mjs
 
 CI and the release workflow also run the governance checks early, before package publication.
 They require complete catalog and public-symbol registration, exact deprecation inventory, honest
-manual-a11y records, 131 explicit Docs preview renderers, and 131 examples AOT-compiled against
+manual-a11y records, 132 explicit Docs preview renderers, and 132 examples AOT-compiled against
 the packed npm artifact. A pending manual record remains non-certifying evidence rather than
 being inferred from automated browser tests.
 

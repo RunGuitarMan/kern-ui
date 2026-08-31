@@ -2,18 +2,18 @@
 
 - ID: `grid`
 - Selector: `krn-grid`
-- Import: `import { KrnGrid } from '@kern-ui/angular/kit';`
+- Import: `import { KrnGrid } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnGrid`
 - Lifecycle: **stable**
 - Category: Layout
 
-Grid. A composable spatial primitive that keeps product layouts predictable across containers.
+Grid. Creates fixed or auto-fitting columns and collapses them responsively in narrow containers.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Grid for this specific contract: Creates fixed or auto-fitting columns and collapses them responsively in narrow containers.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Grid for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnGrid } from '@kern-ui/angular/kit';
+import { KrnGrid } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-grid-agent-example',
@@ -71,10 +71,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Projected content retains its document order and native semantics as layout changes.
+- Logical sizing and placement work in both LTR and RTL without duplicating content.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -109,13 +108,13 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument         | Control | Default     | Test value | Binding                           | Description                                       |
-| ---------------- | ------- | ----------- | ---------- | --------------------------------- | ------------------------------------------------- |
-| `responsive`     | boolean | `true`      | `false`    | input `responsive` (property)     | Enables responsive column collapsing.             |
-| `columns`        | select  | `3`         | `"auto"`   | input `columns` (property)        | Sets a fixed or automatic column count.           |
-| `gap`            | text    | `"3"`       | `"20rem"`  | input `gap` (property)            | Sets the grid gutter.                             |
-| `align`          | select  | `"stretch"` | `"start"`  | input `align` (property)          | Configures the component align contract.          |
-| `minColumnWidth` | text    | `"16rem"`   | `"20rem"`  | input `minColumnWidth` (property) | Configures the component minColumnWidth contract. |
+| Argument         | Control | Default     | Test value | Binding                           | Description                                             |
+| ---------------- | ------- | ----------- | ---------- | --------------------------------- | ------------------------------------------------------- |
+| `responsive`     | boolean | `true`      | `false`    | input `responsive` (property)     | Enables responsive column collapsing.                   |
+| `columns`        | select  | `3`         | `"auto"`   | input `columns` (property)        | Sets a fixed or automatic column count.                 |
+| `gap`            | text    | `"3"`       | `"20rem"`  | input `gap` (property)            | Sets the grid gutter.                                   |
+| `align`          | select  | `"stretch"` | `"start"`  | input `align` (property)          | Block-axis alignment of items within their grid areas.  |
+| `minColumnWidth` | text    | `"16rem"`   | `"20rem"`  | input `minColumnWidth` (property) | Minimum fluid column width used when columns is `auto`. |
 
 Exact API exclusions:
 

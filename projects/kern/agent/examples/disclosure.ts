@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDisclosure } from '@kern-ui/angular/kit';
+import { KrnDisclosure } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-disclosure-agent-example',

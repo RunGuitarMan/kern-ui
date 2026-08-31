@@ -21,11 +21,6 @@
         <p class="summary">{{ current.summary }}</p>
       </div>
       <div class="component-actions">
-        @if (current.variantOf) {
-          <a class="variant-link" [routerLink]="['/components', current.variantOf]">
-            {{ i18n.t('component.variantOf', 'Variant of') }} {{ variantName(current) }}
-          </a>
-        }
         <div class="selector">
           <code>{{ current.selector }}</code>
           <krn-copy-button [value]="current.selector">{{
@@ -34,6 +29,74 @@
         </div>
       </div>
     </header>
+
+    @if (hasTaxonomy()) {
+      <section
+        class="taxonomy"
+        [attr.aria-label]="i18n.t('component.relationships', 'Component relationships')"
+      >
+        @if (family(); as componentFamily) {
+          <article class="taxonomy-card family-card">
+            <header>
+              <span>{{ i18n.t('component.family', 'Component family') }}</span>
+              <h2>{{ componentFamily.name }}</h2>
+              <p>{{ componentFamily.description }}</p>
+            </header>
+            <ul>
+              @for (member of componentFamily.members; track member.id) {
+                <li [class.current]="member.id === current.id">
+                  <div>
+                    @if (member.id === current.id) {
+                      <strong>{{ member.item.name }}</strong>
+                      <small>{{ i18n.t('component.current', 'Current') }}</small>
+                    } @else {
+                      <a [routerLink]="['/components', member.id]">{{ member.item.name }}</a>
+                    }
+                  </div>
+                  <div class="member-guidance">
+                    <p>{{ member.role }}</p>
+                    @if (member.migration) {
+                      <small class="migration">
+                        <span>{{ i18n.t('component.migration', 'Migration') }}</span>
+                        {{ member.migration }}
+                      </small>
+                    }
+                  </div>
+                </li>
+              }
+            </ul>
+          </article>
+        }
+
+        @if (aliases().length) {
+          <article class="taxonomy-card alias-card">
+            <header>
+              <span>{{ i18n.t('component.aliases', 'Supported aliases and variants') }}</span>
+              <h2>{{ i18n.t('component.sameImplementation', 'One implementation') }}</h2>
+              <p>
+                {{
+                  i18n.t(
+                    'component.aliasDescription',
+                    'These public names remain supported, but their documentation resolves to this canonical page.'
+                  )
+                }}
+              </p>
+            </header>
+            <ul>
+              @for (alias of aliases(); track alias.id) {
+                <li>
+                  <div>
+                    <strong>{{ alias.name }}</strong>
+                    <small>/components/{{ alias.id }}</small>
+                  </div>
+                  <code>{{ alias.selector }}</code>
+                </li>
+              }
+            </ul>
+          </article>
+        }
+      </section>
+    }
 
     <kdocs-component-playground id="specimen-overview" [item]="current" [code]="codeExample()" />
 

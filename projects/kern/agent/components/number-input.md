@@ -2,18 +2,18 @@
 
 - ID: `number-input`
 - Selector: `krn-number-input`
-- Import: `import { KrnNumberInput } from '@kern-ui/angular/kit';`
+- Import: `import { KrnNumberInput } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnNumberInput`
 - Lifecycle: **stable**
 - Category: Forms
 
-Number Input. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Number Input. Captures a bounded numeric value with optional increment and decrement controls.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Number Input for this specific contract: Captures a bounded numeric value with optional increment and decrement controls.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Number Input for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnNumberInput } from '@kern-ui/angular/kit';
+import { KrnNumberInput } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-number-input-agent-example',
@@ -56,14 +56,14 @@ void bootstrapApplication(KernNumberInputAgentExample);
 
 | Name              | Kind   | Type                          | Required | Default     | Description                                                                                      |
 | ----------------- | ------ | ----------------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`                      | no       | `''`        | Stable identifier value used by the id contract.                                                 |
-| `name`            | input  | `string`                      | no       | `''`        | Required human-readable name for the represented person, item, or action.                        |
+| `id`              | input  | `string`                      | no       | `''`        | Stable identifier used by the id contract.                                                       |
+| `name`            | input  | `string`                      | no       | `''`        | Native form-control name forwarded to the owned interactive element.                             |
 | `placeholder`     | input  | `string`                      | no       | `''`        | Short input hint shown only while no value is present.                                           |
 | `ariaLabel`       | input  | `string`                      | no       | `''`        | Accessible name used when visible content is not sufficient.                                     |
 | `ariaLabelledBy`  | input  | `string`                      | no       | `''`        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input  | `string`                      | no       | `''`        | Space-separated element ids composed with Form Field hints and validation descriptions.          |
 | `autocomplete`    | input  | `string`                      | no       | `'off'`     | Native autocomplete purpose forwarded to the editable control.                                   |
-| `inputMode`       | input  | `KrnInputMode`                | no       | `'decimal'` | Virtual-keyboard hint forwarded to the editable control.                                         |
+| `inputMode`       | input  | `KrnInputMode`                | no       | `'decimal'` | Defines the component's input mode behavior or presentation.                                     |
 | `value`           | input  | `number \| null \| undefined` | no       | `undefined` | Controlled component value.                                                                      |
 | `increaseLabel`   | input  | `string \| undefined`         | no       | `undefined` | Human-readable copy for the increase state or control.                                           |
 | `decreaseLabel`   | input  | `string \| undefined`         | no       | `undefined` | Human-readable copy for the decrease state or control.                                           |
@@ -91,12 +91,10 @@ Angular Forms control with value type `number | null`.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab focuses the numeric input and optional stepper actions
+- Arrow Up and Arrow Down adjust the value by the configured step
+- The real form control retains its visible name, described-by relationships, and Angular state.
+- Required, readonly, disabled, and invalid states remain programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -135,27 +133,28 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/number-input`
 
 Scenarios: `default`.
-Public API coverage: 12/19
-directly controlled; 7 exact exclusions; 0 unclassified.
+Public API coverage: 13/19
+directly controlled; 6 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument       | Control | Default     | Test value          | Binding                         | Description                                       |
-| -------------- | ------- | ----------- | ------------------- | ------------------------------- | ------------------------------------------------- |
-| `min`          | number  | `1`         | `2`                 | input `min` (property)          | Sets the lowest accepted value.                   |
-| `max`          | number  | `500`       | `501`               | input `max` (property)          | Sets the highest accepted value.                  |
-| `step`         | number  | `5`         | `6`                 | input `step` (property)         | Sets the keyboard and stepper increment.          |
-| `showSteppers` | boolean | `true`      | `false`             | input `showSteppers` (property) | Shows increment and decrement actions.            |
-| `disabled`     | boolean | `false`     | `true`              | input `disabled` (property)     | Prevents user interaction.                        |
-| `readOnly`     | boolean | `false`     | `true`              | input `readonly` (property)     | Keeps the value focusable while preventing edits. |
-| `required`     | boolean | `false`     | `true`              | input `required` (property)     | Marks the control as required.                    |
-| `invalid`      | boolean | `false`     | `true`              | input `invalid` (property)      | Exposes the invalid visual and ARIA state.        |
-| `autocomplete` | text    | `"off"`     | `"off · alternate"` | input `autocomplete` (property) | Configures the component autocomplete contract.   |
-| `id`           | text    | `""`        | `"Alternate value"` | input `id` (property)           | Configures the component id contract.             |
-| `inputMode`    | select  | `"decimal"` | `"none"`            | input `inputMode` (property)    | Configures the component inputMode contract.      |
-| `placeholder`  | text    | `""`        | `"Alternate value"` | input `placeholder` (property)  | Configures the component placeholder contract.    |
+| Argument       | Control | Default     | Test value          | Binding                         | Description                                                    |
+| -------------- | ------- | ----------- | ------------------- | ------------------------------- | -------------------------------------------------------------- |
+| `value`        | number  | `250`       | `251`               | input `value` (property)        | Sets the controlled numeric value.                             |
+| `min`          | number  | `1`         | `2`                 | input `min` (property)          | Sets the lowest accepted value.                                |
+| `max`          | number  | `500`       | `501`               | input `max` (property)          | Sets the highest accepted value.                               |
+| `step`         | number  | `5`         | `6`                 | input `step` (property)         | Sets the keyboard and stepper increment.                       |
+| `showSteppers` | boolean | `true`      | `false`             | input `showSteppers` (property) | Shows increment and decrement actions.                         |
+| `disabled`     | boolean | `false`     | `true`              | input `disabled` (property)     | Prevents user interaction.                                     |
+| `readOnly`     | boolean | `false`     | `true`              | input `readonly` (property)     | Keeps the value focusable while preventing edits.              |
+| `required`     | boolean | `false`     | `true`              | input `required` (property)     | Marks the control as required.                                 |
+| `invalid`      | boolean | `false`     | `true`              | input `invalid` (property)      | Exposes the invalid visual and ARIA state.                     |
+| `autocomplete` | text    | `"off"`     | `"off · alternate"` | input `autocomplete` (property) | Native autocomplete purpose forwarded to the editable control. |
+| `id`           | text    | `""`        | `"Alternate value"` | input `id` (property)           | Stable identifier used by the id contract.                     |
+| `inputMode`    | select  | `"decimal"` | `"none"`            | input `inputMode` (property)    | Defines the component's input mode behavior or presentation.   |
+| `placeholder`  | text    | `""`        | `"Alternate value"` | input `placeholder` (property)  | Short input hint shown only while no value is present.         |
 
 Exact API exclusions:
 
@@ -167,7 +166,6 @@ Exact API exclusions:
 | `decreaseLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#number-input`                | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `increaseLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#number-input`                | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `name`            | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#number-input` | Form submission field names do not alter the rendered component and are covered by forms integration tests.                                                          |
-| `value`           | complex-data       | `specimen-fixture:preview/number-input?state=default`                    | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                     |
 
 Presets:
 
@@ -183,13 +181,13 @@ Presets:
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
-- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `filled` — filled; scenario `default`; `value=250`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — Readonly; scenario `default`; `readOnly=true`.
 - `required` — Required; scenario `default`; `required=true`.
 - `invalid` — Invalid; scenario `default`; `invalid=true`.
-- `minimum` — minimum; scenario `default`; fixture effect `status/neutral` — minimum: The fixture exposes the minimum status without claiming a public component input..
-- `maximum` — maximum; scenario `default`; fixture effect `status/neutral` — maximum: The fixture exposes the maximum status without claiming a public component input..
+- `minimum` — minimum; scenario `default`; `value=1`; fixture effect `status/neutral` — minimum: The fixture exposes the minimum status without claiming a public component input..
+- `maximum` — maximum; scenario `default`; `value=500`; fixture effect `status/neutral` — maximum: The fixture exposes the maximum status without claiming a public component input..
 
 ## Related
 

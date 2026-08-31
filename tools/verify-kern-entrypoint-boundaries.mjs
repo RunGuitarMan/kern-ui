@@ -44,7 +44,8 @@ function validateConfig(value) {
     typeof value.packageName !== 'string' ||
     typeof value.primarySourceRoot !== 'string' ||
     typeof value.rootPublicApi !== 'string' ||
-    !Array.isArray(value.entrypoints)
+    !Array.isArray(value.entrypoints) ||
+    !Array.isArray(value.compatibilityEntrypoints)
   ) {
     throw new Error('Invalid projects/kern/api/runtime-entrypoints.json structure.');
   }
@@ -103,10 +104,60 @@ function validateConfig(value) {
     publicApis.add(entrypoint.publicApi);
   }
 
-  const resolvedSourceRoots = value.entrypoints.map((entrypoint) => ({
-    name: entrypoint.name,
-    path: resolve(workspaceRoot, entrypoint.sourceRoot),
-  }));
+  for (const entrypoint of value.compatibilityEntrypoints) {
+    if (
+      !entrypoint ||
+      typeof entrypoint !== 'object' ||
+      typeof entrypoint.name !== 'string' ||
+      typeof entrypoint.subpath !== 'string' ||
+      typeof entrypoint.sourceRoot !== 'string' ||
+      typeof entrypoint.publicApi !== 'string' ||
+      !Array.isArray(entrypoint.dependencies) ||
+      !Array.isArray(entrypoint.identityExports) ||
+      !entrypoint.dependencies.every((item) => typeof item === 'string') ||
+      !entrypoint.identityExports.every((item) => typeof item === 'string')
+    ) {
+      throw new Error(
+        `Invalid compatibility entrypoint configuration: ${JSON.stringify(entrypoint)}`,
+      );
+    }
+    if (!entrypoint.subpath.startsWith('./') || entrypoint.subpath.slice(2).includes('/')) {
+      throw new Error(
+        `Compatibility subpath must be a single package segment: ${entrypoint.subpath}`,
+      );
+    }
+    if (!entrypoint.dependencies.length || !entrypoint.identityExports.length) {
+      throw new Error(
+        `Compatibility entrypoint "${entrypoint.name}" requires dependencies and identity exports.`,
+      );
+    }
+    if (
+      names.has(entrypoint.name) ||
+      subpaths.has(entrypoint.subpath) ||
+      sourceRoots.has(entrypoint.sourceRoot) ||
+      publicApis.has(entrypoint.publicApi)
+    ) {
+      throw new Error(`Compatibility entrypoint "${entrypoint.name}" duplicates a runtime key.`);
+    }
+    const sourceRoot = resolve(workspaceRoot, entrypoint.sourceRoot);
+    const publicApi = resolve(workspaceRoot, entrypoint.publicApi);
+    if (!isPathWithin(sourceRoot, publicApi)) {
+      throw new Error(
+        `Compatibility entrypoint "${entrypoint.name}" public API must live inside its source root.`,
+      );
+    }
+    names.add(entrypoint.name);
+    subpaths.add(entrypoint.subpath);
+    sourceRoots.add(entrypoint.sourceRoot);
+    publicApis.add(entrypoint.publicApi);
+  }
+
+  const resolvedSourceRoots = [...value.entrypoints, ...value.compatibilityEntrypoints].map(
+    (entrypoint) => ({
+      name: entrypoint.name,
+      path: resolve(workspaceRoot, entrypoint.sourceRoot),
+    }),
+  );
   for (const sourceRoot of resolvedSourceRoots) {
     for (const candidate of resolvedSourceRoots) {
       if (
@@ -136,6 +187,19 @@ function validateConfig(value) {
       dependencies.add(dependency);
     }
   }
+  const ownerNames = new Set(value.entrypoints.map((entrypoint) => entrypoint.name));
+  for (const entrypoint of value.compatibilityEntrypoints) {
+    if (new Set(entrypoint.dependencies).size !== entrypoint.dependencies.length) {
+      throw new Error(`Compatibility entrypoint "${entrypoint.name}" repeats a dependency.`);
+    }
+    for (const dependency of entrypoint.dependencies) {
+      if (!ownerNames.has(dependency)) {
+        throw new Error(
+          `Compatibility entrypoint "${entrypoint.name}" has unknown owner dependency "${dependency}".`,
+        );
+      }
+    }
+  }
 
   const byName = new Map(value.entrypoints.map((entrypoint) => [entrypoint.name, entrypoint]));
   const visiting = new Set();
@@ -153,7 +217,7 @@ function validateConfig(value) {
     visiting.delete(name);
     visited.add(name);
   }
-  for (const name of names) visit(name, []);
+  for (const name of ownerNames) visit(name, []);
 
   return value;
 }
@@ -241,6 +305,12 @@ async function main() {
       entrypoint,
     ]),
   );
+  const compatibilityBySpecifier = new Map(
+    config.compatibilityEntrypoints.map((entrypoint) => [
+      `${config.packageName}${entrypoint.subpath.slice(1)}`,
+      entrypoint,
+    ]),
+  );
 
   const sourceFiles = [];
   const ownership = new Map();
@@ -270,6 +340,42 @@ async function main() {
         continue;
       }
       ownership.set(sourceFile, entrypoint.name);
+    }
+  }
+
+  for (const entrypoint of config.compatibilityEntrypoints) {
+    const sourceRoot = resolve(workspaceRoot, entrypoint.sourceRoot);
+    const publicApi = resolve(workspaceRoot, entrypoint.publicApi);
+    const ownedRuntimeFiles = (await filesRecursively(sourceRoot)).filter(
+      (path) => path.endsWith('.ts') && !path.endsWith('.spec.ts') && path !== publicApi,
+    );
+    if (ownedRuntimeFiles.length) {
+      fail(
+        `Compatibility entrypoint "${entrypoint.name}" may not own runtime source:\n- ${ownedRuntimeFiles
+          .map(workspacePath)
+          .join('\n- ')}`,
+      );
+    }
+    const ngPackagePath = join(workspaceRoot, 'projects/kern', entrypoint.name, 'ng-package.json');
+    if (!existsSync(ngPackagePath)) {
+      fail(`Compatibility entrypoint "${entrypoint.name}" ng-package.json is missing.`);
+      continue;
+    }
+    const ngPackage = JSON.parse(await readFile(ngPackagePath, 'utf8'));
+    if (resolve(dirname(ngPackagePath), ngPackage.lib?.entryFile ?? '') !== publicApi) {
+      fail(
+        `Compatibility entrypoint "${entrypoint.name}" ng-package.json must target ${entrypoint.publicApi}.`,
+      );
+    }
+    const references = moduleReferences(publicApi, await readFile(publicApi, 'utf8'));
+    const expectedSpecifiers = entrypoint.dependencies.map(
+      (name) => `${config.packageName}${entrypointsByName.get(name).subpath.slice(1)}`,
+    );
+    const actualSpecifiers = references.map((reference) => reference.specifier);
+    if (JSON.stringify(actualSpecifiers) !== JSON.stringify(expectedSpecifiers)) {
+      fail(
+        `Compatibility entrypoint "${entrypoint.name}" must aggregate its declared owners in dependency order.`,
+      );
     }
   }
 
@@ -418,7 +524,9 @@ async function main() {
     const counts = new Map();
     for (const reference of rootReferences) {
       const location = `${workspacePath(rootPublicApi)}:${reference.line}`;
-      const entrypoint = entrypointsBySpecifier.get(reference.specifier);
+      const entrypoint =
+        entrypointsBySpecifier.get(reference.specifier) ??
+        compatibilityBySpecifier.get(reference.specifier);
       if (!entrypoint) {
         fail(
           `${location} root compatibility API may aggregate only declared runtime subpaths; ` +
@@ -435,6 +543,13 @@ async function main() {
         );
       }
     }
+    for (const entrypoint of config.compatibilityEntrypoints) {
+      if (counts.get(entrypoint.name) !== 1) {
+        fail(
+          `Root compatibility API must export "${config.packageName}${entrypoint.subpath.slice(1)}" exactly once.`,
+        );
+      }
+    }
   }
 
   if (failures.length) {
@@ -444,7 +559,8 @@ async function main() {
     process.exitCode = 1;
   } else {
     console.log(
-      `Kern runtime entrypoint boundaries verified: ${config.entrypoints.length} entrypoints, ` +
+      `Kern runtime entrypoint boundaries verified: ${config.entrypoints.length} owners and ` +
+        `${config.compatibilityEntrypoints.length} compatibility entrypoint, ` +
         `${sourceFiles.length} owned source files, ${dependencyImportCount} package-boundary imports.`,
     );
   }

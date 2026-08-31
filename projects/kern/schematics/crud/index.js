@@ -7,7 +7,8 @@ function typescript(context) {
   return `import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KrnDataGrid, type KrnDataColumn, type KrnDataRowKey } from '@kern-ui/angular/addon-grid';
-import { KrnButton, KrnFormField, KrnTextInput } from '@kern-ui/angular/kit';
+import { KrnButton } from '@kern-ui/angular/actions';
+import { KrnFormField, KrnTextInput } from '@kern-ui/angular/forms';
 import { KrnMasterDetailLayout } from '@kern-ui/angular/patterns';
 
 export interface ${record} {

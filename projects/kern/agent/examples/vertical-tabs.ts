@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnVerticalTabs, type KrnTabItem } from '@kern-ui/angular/kit';
+import { KrnVerticalTabs, type KrnTabItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-vertical-tabs-agent-example',

@@ -9,14 +9,14 @@
   "symbol": "KrnMenu",
   "canonicalSymbol": "KrnMenu",
   "canonicalId": "menu",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Menu. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Menu. Opens a transient list of commands and closes after selection or dismissal.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -112,7 +112,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Accessible copy that explains the empty state.",
+      "description": "Human-readable copy for the empty state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -155,11 +155,13 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "keyboard": [
+      "Arrow keys move through menu items; Home and End move to the boundaries",
+      "Enter or Space activates an item; Escape closes and restores trigger focus"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Destinations retain native link semantics and expose current location where applicable.",
+      "Composite navigation uses one documented focus model without changing reading order."
     ],
     "manualValidationRequired": true
   },
@@ -178,7 +180,7 @@
       "title": "Controlled record action menu",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled record action menu\n *\n * Render typed actions and own disclosure state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMenu, type KrnNavigationItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-menu-agent-example',\n  standalone: true,\n  imports: [KrnMenu],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-menu triggerLabel=\"Record actions\" [items]=\"items\" [(open)]=\"open\" /> `,\n})\nexport class KernMenuAgentExample {\n  readonly items: readonly (KrnNavigationItem & { readonly shortcut?: string })[] = [\n    { id: 'duplicate', label: 'Duplicate', shortcut: '⌘D' },\n    { id: 'archive', label: 'Archive' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernMenuAgentExample);\n",
+      "code": "/**\n * Controlled record action menu\n *\n * Render typed actions and own disclosure state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMenu, type KrnNavigationItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-menu-agent-example',\n  standalone: true,\n  imports: [KrnMenu],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-menu triggerLabel=\"Record actions\" [items]=\"items\" [(open)]=\"open\" /> `,\n})\nexport class KernMenuAgentExample {\n  readonly items: readonly (KrnNavigationItem & { readonly shortcut?: string })[] = [\n    { id: 'duplicate', label: 'Duplicate', shortcut: '⌘D' },\n    { id: 'archive', label: 'Archive' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernMenuAgentExample);\n",
       "verification": "compiled",
       "source": "examples/menu.ts"
     }
@@ -203,8 +205,8 @@
     "closed"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Menu for this specific contract: Opens a transient list of commands and closes after selection or dismissal.",
+    "avoidWhen": "Do not choose Menu for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

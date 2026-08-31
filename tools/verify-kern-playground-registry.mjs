@@ -1,5 +1,6 @@
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { Script } from 'node:vm';
 import { fileURLToPath } from 'node:url';
 
@@ -51,40 +52,55 @@ function describeJsonDifference(expectedValue, actualValue) {
 }
 
 async function evaluateTypeScript(filePath, dependencies = new Map()) {
-  const source = await readFile(filePath, 'utf8');
-  const result = ts.transpileModule(source, {
-    compilerOptions: {
-      module: ts.ModuleKind.CommonJS,
-      target: ts.ScriptTarget.ES2022,
-    },
-    fileName: filePath,
-    reportDiagnostics: true,
-  });
-  const diagnostics = (result.diagnostics ?? []).filter(
-    ({ category }) => category === ts.DiagnosticCategory.Error,
-  );
-  invariant(
-    diagnostics.length === 0,
-    `Unable to evaluate ${filePath}:\n${ts.formatDiagnostics(diagnostics, {
-      getCanonicalFileName: (name) => name,
-      getCurrentDirectory: () => workspaceRoot,
-      getNewLine: () => '\n',
-    })}`,
-  );
+  const modules = new Map();
+  const load = (currentPath) => {
+    if (modules.has(currentPath)) return modules.get(currentPath).exports;
 
-  const module = { exports: {} };
-  const localRequire = (specifier) => {
-    invariant(
-      dependencies.has(specifier),
-      `${filePath} has an unexpected runtime dependency on ${JSON.stringify(specifier)}.`,
+    const source = readFileSync(currentPath, 'utf8');
+    const result = ts.transpileModule(source, {
+      compilerOptions: {
+        module: ts.ModuleKind.CommonJS,
+        target: ts.ScriptTarget.ES2022,
+      },
+      fileName: currentPath,
+      reportDiagnostics: true,
+    });
+    const diagnostics = (result.diagnostics ?? []).filter(
+      ({ category }) => category === ts.DiagnosticCategory.Error,
     );
-    return dependencies.get(specifier);
+    invariant(
+      diagnostics.length === 0,
+      `Unable to evaluate ${currentPath}:\n${ts.formatDiagnostics(diagnostics, {
+        getCanonicalFileName: (name) => name,
+        getCurrentDirectory: () => workspaceRoot,
+        getNewLine: () => '\n',
+      })}`,
+    );
+
+    const module = { exports: {} };
+    modules.set(currentPath, module);
+    const localRequire = (specifier) => {
+      if (dependencies.has(specifier)) return dependencies.get(specifier);
+      if (specifier.startsWith('.')) {
+        const unresolved = resolve(dirname(currentPath), specifier);
+        const candidates = [`${unresolved}.ts`, join(unresolved, 'index.ts'), unresolved];
+        const resolvedPath = candidates.find(
+          (candidate) => existsSync(candidate) && statSync(candidate).isFile(),
+        );
+        if (resolvedPath) return load(resolvedPath);
+      }
+      throw new Error(
+        `${currentPath} has an unexpected runtime dependency on ${JSON.stringify(specifier)}.`,
+      );
+    };
+    const wrapper = new Script(`(function (require, module, exports) {\n${result.outputText}\n})`, {
+      filename: currentPath,
+    }).runInThisContext();
+    wrapper(localRequire, module, module.exports);
+    return module.exports;
   };
-  const wrapper = new Script(`(function (require, module, exports) {\n${result.outputText}\n})`, {
-    filename: filePath,
-  }).runInThisContext();
-  wrapper(localRequire, module, module.exports);
-  return module.exports;
+
+  return load(filePath);
 }
 
 const generatedContract = await evaluateTypeScript(generatedContractPath);
@@ -581,16 +597,16 @@ invariant(
   `Playground control binding provenance is invalid:\n- ${bindingIssues.join('\n- ')}`,
 );
 invariant(
-  apiCoverage.publicInputsAndModels === 1057,
-  `Expected 1057 public inputs/models, received ${apiCoverage.publicInputsAndModels}.`,
+  apiCoverage.publicInputsAndModels === 1066,
+  `Expected 1066 public inputs/models, received ${apiCoverage.publicInputsAndModels}.`,
 );
 invariant(
-  apiCoverage.controlled === 663,
-  `Expected 663 directly controlled public inputs/models, received ${apiCoverage.controlled}.`,
+  apiCoverage.controlled === 665,
+  `Expected 665 directly controlled public inputs/models, received ${apiCoverage.controlled}.`,
 );
 invariant(
-  apiCoverage.excluded === 394,
-  `Expected 394 exact API exclusions, received ${apiCoverage.excluded}.`,
+  apiCoverage.excluded === 401,
+  `Expected 401 exact API exclusions, received ${apiCoverage.excluded}.`,
 );
 invariant(apiCoverage.unclassified === 0, 'Public playground API contains unclassified members.');
 invariant(

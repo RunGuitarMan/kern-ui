@@ -9,14 +9,14 @@
   "symbol": "KrnValidationMessage",
   "canonicalSymbol": "KrnValidationMessage",
   "canonicalId": "validation-message",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Validation Message. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Validation Message. Displays validation feedback and exposes its message to the associated form control.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -53,7 +53,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the custom contract.",
+      "description": "Stable identifier used by the custom contract.",
       "descriptionSource": "inferred"
     }
   ],
@@ -76,15 +76,9 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
-    ],
+    "keyboard": ["Validation Message is not focusable and adds no keyboard interaction"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The message is visibly associated with the invalid control and announced with appropriate urgency."
     ],
     "manualValidationRequired": true
   },
@@ -103,7 +97,7 @@
       "title": "Actionable validation message",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Actionable validation message\n *\n * Explain how to correct an invalid form value.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnValidationMessage } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-validation-message-agent-example',\n  standalone: true,\n  imports: [KrnValidationMessage],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-validation-message id=\"email-error\">\n      Enter a complete business email address.\n    </krn-validation-message>\n  `,\n})\nexport class KernValidationMessageAgentExample {}\n\nvoid bootstrapApplication(KernValidationMessageAgentExample);\n",
+      "code": "/**\n * Actionable validation message\n *\n * Explain how to correct an invalid form value.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnValidationMessage } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-validation-message-agent-example',\n  standalone: true,\n  imports: [KrnValidationMessage],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-validation-message id=\"email-error\">\n      Enter a complete business email address.\n    </krn-validation-message>\n  `,\n})\nexport class KernValidationMessageAgentExample {}\n\nvoid bootstrapApplication(KernValidationMessageAgentExample);\n",
       "verification": "compiled",
       "source": "examples/validation-message.ts"
     }
@@ -118,8 +112,8 @@
     "id"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Validation Message for this specific contract: Displays validation feedback and exposes its message to the associated form control.",
+    "avoidWhen": "Do not choose Validation Message for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -162,7 +156,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the custom contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",

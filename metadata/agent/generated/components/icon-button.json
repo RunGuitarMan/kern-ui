@@ -9,8 +9,8 @@
   "symbol": "KrnIconButton",
   "canonicalSymbol": "KrnIconButton",
   "canonicalId": "icon-button",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "actions",
+  "importPath": "@kern-ui/angular/actions",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -58,7 +58,7 @@
       "type": "KrnSize",
       "required": false,
       "defaultValue": "this.options.size",
-      "description": "Named semantic size resolved through KERN density and sizing tokens.",
+      "description": "Named semantic size resolved through Kern density and sizing tokens.",
       "descriptionSource": "inferred"
     },
     {
@@ -149,7 +149,7 @@
       "title": "Accessible icon-only action",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Accessible icon-only action\n *\n * Keep the accessible name and native action semantics on the icon-only button host.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnIconButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-icon-button-agent-example',\n  standalone: true,\n  imports: [KrnIconButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <button krnIconButton type=\"button\" aria-label=\"Add team member\">+</button> `,\n})\nexport class KernIconButtonAgentExample {}\n\nvoid bootstrapApplication(KernIconButtonAgentExample);\n",
+      "code": "/**\n * Accessible icon-only action\n *\n * Keep the accessible name and native action semantics on the icon-only button host.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnIconButton } from '@kern-ui/angular/actions';\n\n@Component({\n  selector: 'app-kern-icon-button-agent-example',\n  standalone: true,\n  imports: [KrnIconButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <button krnIconButton type=\"button\" aria-label=\"Add team member\">+</button> `,\n})\nexport class KernIconButtonAgentExample {}\n\nvoid bootstrapApplication(KernIconButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/icon-button.ts"
     }

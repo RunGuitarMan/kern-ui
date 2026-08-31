@@ -2,7 +2,7 @@ import type { HarnessLoader } from '@angular/cdk/testing';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSelect, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnSelect, type KrnSelectOption } from '@kern-ui/angular/forms';
 import { KrnSelectHarness } from '@kern-ui/angular/testing';
 
 @Component({

@@ -9,7 +9,7 @@ extend OIDC authentication to `npm dist-tag`, so public-tag promotion uses a sep
 rotated granular token only in the promotion step.
 
 The npm registry does not allow trusted-publisher configuration until a package already exists.
-Only the declared first version (`0.1.0`) may therefore use the workflow's `bootstrap-token` mode.
+Only the declared first version (`0.1.2`) may therefore use the workflow's `bootstrap-token` mode.
 That mode is registry-aware and resumable, refuses any package with a different published version,
 and still requires GitHub provenance. After the first release, revoke the bootstrap token and use
 `trusted-publishing` exclusively.
@@ -36,7 +36,7 @@ Maintainers must configure these controls before enabling publication:
 
 For the one-time first publication only, create `NPM_BOOTSTRAP_TOKEN` in `npm-production`. Because
 the two package records do not exist yet, this token must be able to create public packages under
-the `@kern-ui` scope, write dist-tags, and bypass publish 2FA. Select `bootstrap-token` for `0.1.0`,
+the `@kern-ui` scope, write dist-tags, and bypass publish 2FA. Select `bootstrap-token` for `0.1.2`,
 then immediately revoke the secret/token, configure both trusted publishers, and retain only the
 narrow `NPM_DIST_TAG_TOKEN` described above. The bootstrap guard rejects later versions.
 
@@ -62,7 +62,7 @@ receives it, so the two preceding `npm publish` operations continue to authentic
    immutable release inputs; do not move an existing tag.
 4. Run **Prepare and publish release** from that tag and enter the same version. Use `next` for a
    prerelease; a prerelease is rejected under `latest`. Select `bootstrap-token` only for the first
-   `0.1.0` publication and `trusted-publishing` for every subsequent release.
+   `0.1.2` publication and `trusted-publishing` for every subsequent release.
 5. Inspect the candidate job, immutable artifact digest, npm and versioned-documentation tarballs,
    manifests, SBOM, checksums, and pending GitHub environment deployment.
 6. Approve `npm-production` only when the evidence matches the intended release.

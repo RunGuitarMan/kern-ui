@@ -9,14 +9,14 @@
   "symbol": "KrnTabs",
   "canonicalSymbol": "KrnTabs",
   "canonicalId": "tabs",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": ["KrnVerticalTabs"],
     "selectors": ["krn-vertical-tabs"],
     "componentIds": ["vertical-tabs"]
   },
-  "summary": "Tabs. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Tabs. Switches between related panels with one selected tab and orientation-aware keyboard navigation.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -111,11 +111,13 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "keyboard": [
+      "Arrow keys move focus between tabs according to orientation and text direction",
+      "Home and End move to the first and last tab; Enter or Space selects when activation is manual"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Destinations retain native link semantics and expose current location where applicable.",
+      "Composite navigation uses one documented focus model without changing reading order."
     ],
     "manualValidationRequired": true
   },
@@ -135,7 +137,7 @@
       "title": "Controlled account tabs",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled account tabs\n *\n * Use stable ids and application-owned selected tab state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTabs, type KrnTabItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-tabs-agent-example',\n  standalone: true,\n  imports: [KrnTabs],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tabs ariaLabel=\"Account sections\" [items]=\"items\" [(value)]=\"selectedTab\">\n      Selected section: {{ selectedTab }}\n    </krn-tabs>\n  `,\n})\nexport class KernTabsAgentExample {\n  readonly items: readonly KrnTabItem[] = [\n    { id: 'overview', label: 'Overview' },\n    { id: 'activity', label: 'Activity', badge: 4 },\n    { id: 'settings', label: 'Settings' },\n  ];\n\n  selectedTab: string | null = 'overview';\n}\n\nvoid bootstrapApplication(KernTabsAgentExample);\n",
+      "code": "/**\n * Controlled account tabs\n *\n * Use stable ids and application-owned selected tab state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTabs, type KrnTabItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-tabs-agent-example',\n  standalone: true,\n  imports: [KrnTabs],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tabs ariaLabel=\"Account sections\" [items]=\"items\" [(value)]=\"selectedTab\">\n      Selected section: {{ selectedTab }}\n    </krn-tabs>\n  `,\n})\nexport class KernTabsAgentExample {\n  readonly items: readonly KrnTabItem[] = [\n    { id: 'overview', label: 'Overview' },\n    { id: 'activity', label: 'Activity', badge: 4 },\n    { id: 'settings', label: 'Settings' },\n  ];\n\n  selectedTab: string | null = 'overview';\n}\n\nvoid bootstrapApplication(KernTabsAgentExample);\n",
       "verification": "compiled",
       "source": "examples/tabs.ts"
     }
@@ -154,8 +156,8 @@
     "ariaLabel"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Tabs for this specific contract: Switches between related panels with one selected tab and orientation-aware keyboard navigation.",
+    "avoidWhen": "Do not choose Tabs for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

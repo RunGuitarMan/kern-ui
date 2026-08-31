@@ -9,14 +9,14 @@
   "symbol": "KrnTimeline",
   "canonicalSymbol": "KrnTimeline",
   "canonicalId": "timeline",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Timeline. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Timeline. Orders dated or sequential events along a shared visual and semantic axis.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -76,11 +76,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -99,7 +98,7 @@
       "title": "Customer activity timeline",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Customer activity timeline\n *\n * Compose chronologically ordered typed timeline items.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTimeline, KrnTimelineItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-timeline-agent-example',\n  standalone: true,\n  imports: [KrnTimeline, KrnTimelineItem],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-timeline ariaLabel=\"Recent customer activity\">\n      <krn-timeline-item heading=\"Contract approved\" time=\"09:42\">\n        Legal review completed by Grace Hopper.\n      </krn-timeline-item>\n      <krn-timeline-item heading=\"Owner assigned\" time=\"08:15\">\n        Ada Lovelace became the account owner.\n      </krn-timeline-item>\n    </krn-timeline>\n  `,\n})\nexport class KernTimelineAgentExample {}\n\nvoid bootstrapApplication(KernTimelineAgentExample);\n",
+      "code": "/**\n * Customer activity timeline\n *\n * Compose chronologically ordered typed timeline items.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTimeline, KrnTimelineItem } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-timeline-agent-example',\n  standalone: true,\n  imports: [KrnTimeline, KrnTimelineItem],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-timeline ariaLabel=\"Recent customer activity\">\n      <krn-timeline-item heading=\"Contract approved\" time=\"09:42\">\n        Legal review completed by Grace Hopper.\n      </krn-timeline-item>\n      <krn-timeline-item heading=\"Owner assigned\" time=\"08:15\">\n        Ada Lovelace became the account owner.\n      </krn-timeline-item>\n    </krn-timeline>\n  `,\n})\nexport class KernTimelineAgentExample {}\n\nvoid bootstrapApplication(KernTimelineAgentExample);\n",
       "verification": "compiled",
       "source": "examples/timeline.ts"
     }
@@ -107,8 +106,8 @@
   "related": ["badge", "status-badge", "chip", "tag"],
   "keywords": ["timeline", "Timeline", "Data display", "krn-timeline", "KrnTimeline", "ariaLabel"],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Timeline for this specific contract: Orders dated or sequential events along a shared visual and semantic axis.",
+    "avoidWhen": "Do not choose Timeline for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

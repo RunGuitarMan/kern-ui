@@ -2,18 +2,18 @@
 
 - ID: `stack`
 - Selector: `krn-stack`
-- Import: `import { KrnStack } from '@kern-ui/angular/kit';`
+- Import: `import { KrnStack } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnStack`
 - Lifecycle: **stable**
 - Category: Layout
 
-Stack. A composable spatial primitive that keeps product layouts predictable across containers.
+Stack. Arranges children vertically with a consistent gap, alignment, and block-axis distribution.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Stack for this specific contract: Arranges children vertically with a consistent gap, alignment, and block-axis distribution.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Stack for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnStack } from '@kern-ui/angular/kit';
+import { KrnStack } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-stack-agent-example',
@@ -69,10 +69,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Projected content retains its document order and native semantics as layout changes.
+- Logical sizing and placement work in both LTR and RTL without duplicating content.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -107,11 +106,11 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument  | Control | Default     | Test value | Binding                    | Description                                             |
-| --------- | ------- | ----------- | ---------- | -------------------------- | ------------------------------------------------------- |
-| `gap`     | select  | `"3"`       | `"2"`      | input `gap` (property)     | Changes the block-axis spacing between projected items. |
-| `align`   | select  | `"stretch"` | `"start"`  | input `align` (property)   | Configures the component align contract.                |
-| `justify` | select  | `"start"`   | `"center"` | input `justify` (property) | Configures the component justify contract.              |
+| Argument  | Control | Default     | Test value | Binding                    | Description                                              |
+| --------- | ------- | ----------- | ---------- | -------------------------- | -------------------------------------------------------- |
+| `gap`     | select  | `"3"`       | `"2"`      | input `gap` (property)     | Changes the block-axis spacing between projected items.  |
+| `align`   | select  | `"stretch"` | `"start"`  | input `align` (property)   | Cross-axis alignment of projected children.              |
+| `justify` | select  | `"start"`   | `"center"` | input `justify` (property) | Distribution of projected children along the block axis. |
 
 Exact API exclusions:
 

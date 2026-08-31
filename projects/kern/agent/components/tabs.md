@@ -2,18 +2,18 @@
 
 - ID: `tabs`
 - Selector: `krn-tabs`
-- Import: `import { KrnTabs } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTabs } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnTabs`
 - Lifecycle: **stable**
 - Category: Navigation
 
-Tabs. A keyboard-first wayfinding primitive that preserves orientation and current location.
+Tabs. Switches between related panels with one selected tab and orientation-aware keyboard navigation.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Tabs for this specific contract: Switches between related panels with one selected tab and orientation-aware keyboard navigation.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Tabs for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTabs, type KrnTabItem } from '@kern-ui/angular/kit';
+import { KrnTabs, type KrnTabItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-tabs-agent-example',
@@ -76,12 +76,10 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys move within composites
-- Home / End jump
-- Enter activates
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Arrow keys move focus between tabs according to orientation and text direction
+- Home and End move to the first and last tab; Enter or Space selects when activation is manual
+- Destinations retain native link semantics and expose current location where applicable.
+- Composite navigation uses one documented focus model without changing reading order.
 
 Manual assistive-technology validation remains required in the consuming application.
 

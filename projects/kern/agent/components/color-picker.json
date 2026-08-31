@@ -9,14 +9,14 @@
   "symbol": "KrnColorPicker",
   "canonicalSymbol": "KrnColorPicker",
   "canonicalId": "color-picker",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Color Picker. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Color Picker. Selects one color through an accessible palette and controlled value.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -77,7 +77,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -243,7 +243,7 @@
       "title": "Typed chart accent color",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed chart accent color\n *\n * Bind a normalized color value for user-configurable reporting.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnColorPicker } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-color-picker-agent-example',\n  standalone: true,\n  imports: [KrnColorPicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-color-picker pickerLabel=\"Chart accent\" textLabel=\"Hex color\" [formControl]=\"control\" />\n  `,\n})\nexport class KernColorPickerAgentExample {\n  readonly control = new FormControl<string>('#4666da', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernColorPickerAgentExample);\n",
+      "code": "/**\n * Typed chart accent color\n *\n * Bind a normalized color value for user-configurable reporting.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnColorPicker } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-color-picker-agent-example',\n  standalone: true,\n  imports: [KrnColorPicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-color-picker pickerLabel=\"Chart accent\" textLabel=\"Hex color\" [formControl]=\"control\" />\n  `,\n})\nexport class KernColorPickerAgentExample {\n  readonly control = new FormControl<string>('#4666da', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernColorPickerAgentExample);\n",
       "verification": "compiled",
       "source": "examples/color-picker.ts"
     }
@@ -316,7 +316,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Prevents interaction and participates in the component disabled contract.",
+        "description": "Prevents user interaction and participates in the disabled-state contract.",
         "binding": {
           "kind": "input",
           "publicName": "disabled",
@@ -329,7 +329,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -342,7 +342,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Controlled disclosure or overlay state.",
+        "description": "Controls whether the disclosure or overlay surface is visible.",
         "binding": {
           "kind": "model",
           "publicName": "open"
@@ -354,7 +354,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component readonly contract.",
+        "description": "Keeps the value perceivable while preventing user edits.",
         "binding": {
           "kind": "input",
           "publicName": "readonly",
@@ -367,7 +367,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",
@@ -500,7 +500,9 @@
         "id": "filled",
         "label": "filled",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "value": "#4666da"
+        },
         "fixtureEffect": {
           "kind": "content",
           "mode": "filled",

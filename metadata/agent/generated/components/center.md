@@ -2,18 +2,18 @@
 
 - ID: `center`
 - Selector: `krn-center`
-- Import: `import { KrnCenter } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCenter } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnCenter`
 - Lifecycle: **stable**
 - Category: Layout
 
-Center. A composable spatial primitive that keeps product layouts predictable across containers.
+Center. Centers child content inside a width-constrained surface. For new work, use Container with intrinsic centering.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Center for this specific contract: Centers child content inside a width-constrained surface. For new work, use Container with intrinsic centering.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Center for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCenter } from '@kern-ui/angular/kit';
+import { KrnCenter } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-center-agent-example',
@@ -68,10 +68,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Projected content retains its document order and native semantics as layout changes.
+- Logical sizing and placement work in both LTR and RTL without duplicating content.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -106,11 +105,11 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument    | Control | Default   | Test value | Binding                      | Description                                        |
-| ----------- | ------- | --------- | ---------- | ---------------------------- | -------------------------------------------------- |
-| `intrinsic` | boolean | `true`    | `false`    | input `intrinsic` (property) | Centers the child using its intrinsic inline size. |
-| `maxWidth`  | text    | `"28rem"` | `"20rem"`  | input `maxWidth` (property)  | Constrains the centered content measure.           |
-| `gutters`   | text    | `"4"`     | `"20rem"`  | input `gutters` (property)   | Configures the component gutters contract.         |
+| Argument    | Control | Default   | Test value | Binding                      | Description                                           |
+| ----------- | ------- | --------- | ---------- | ---------------------------- | ----------------------------------------------------- |
+| `intrinsic` | boolean | `true`    | `false`    | input `intrinsic` (property) | Centers the child using its intrinsic inline size.    |
+| `maxWidth`  | text    | `"28rem"` | `"20rem"`  | input `maxWidth` (property)  | Constrains the centered content measure.              |
+| `gutters`   | text    | `"4"`     | `"20rem"`  | input `gutters` (property)   | Logical inline padding kept inside the maximum width. |
 
 Exact API exclusions:
 

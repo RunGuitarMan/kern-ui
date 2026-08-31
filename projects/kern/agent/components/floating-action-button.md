@@ -2,7 +2,7 @@
 
 - ID: `floating-action-button`
 - Selector: `button[krnFab]`
-- Import: `import { KrnFloatingActionButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnFloatingActionButton } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnFloatingActionButton`
 - Lifecycle: **stable**
 - Category: Actions
@@ -27,7 +27,7 @@ Avoid: Do not use Floating Action Button for navigation, multiple equal-priority
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnFloatingActionButton } from '@kern-ui/angular/kit';
+import { KrnFloatingActionButton } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-floating-action-button-agent-example',
@@ -50,10 +50,10 @@ void bootstrapApplication(KernFloatingActionButtonAgentExample);
 
 | Name           | Kind  | Type                  | Required | Default                 | Description                                                                                                                        |
 | -------------- | ----- | --------------------- | -------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `size`         | input | `KrnSize`             | no       | `this.options.size`     | Named semantic size resolved through KERN density and sizing tokens.                                                               |
+| `size`         | input | `KrnSize`             | no       | `this.options.size`     | Named semantic size resolved through Kern density and sizing tokens.                                                               |
 | `variant`      | input | `KrnActionVariant`    | no       | `this.options.variant`  | Named visual hierarchy treatment that preserves the component semantics.                                                           |
 | `tone`         | input | `KrnTone`             | no       | `this.options.tone`     | Semantic intent that selects coordinated text, icon, border, and surface tokens.                                                   |
-| `extended`     | input | `boolean`             | no       | `this.options.extended` | Displays the floating action label in addition to its icon.                                                                        |
+| `extended`     | input | `boolean`             | no       | `this.options.extended` | Defines the component's extended behavior or presentation.                                                                         |
 | `loading`      | input | `boolean`             | no       | `false`                 | Suppresses duplicate activation and owns `aria-disabled` while retaining focus. Use native `disabled` for ordinary unavailability. |
 | `loadingLabel` | input | `string \| undefined` | no       | `undefined`             | Accessible loading copy; defaults to the application or closest scoped option.                                                     |
 

@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTableOfContents, type KrnTocItem } from '@kern-ui/angular/kit';
+import { KrnTableOfContents, type KrnTocItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-table-of-contents-agent-example',

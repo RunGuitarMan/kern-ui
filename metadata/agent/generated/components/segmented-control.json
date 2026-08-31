@@ -9,14 +9,14 @@
   "symbol": "KrnSegmentedControl",
   "canonicalSymbol": "KrnSegmentedControl",
   "canonicalId": "segmented-control",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Segmented Control. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Segmented Control. Presents a small set of mutually exclusive views or modes as adjacent labelled segments.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -62,7 +62,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -102,7 +102,7 @@
       "type": "KrnSegmentDisabledHandler<T>",
       "required": false,
       "defaultValue": "(option) => option.disabled ?? false",
-      "description": "Determines whether an individual option or item is unavailable.",
+      "description": "Controls whether the component applies the disabled handler behavior.",
       "descriptionSource": "inferred"
     },
     {
@@ -112,7 +112,7 @@
       "type": "TemplateRef<KrnSegmentOptionContext<T>> | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Template used to render one option with its typed context.",
+      "description": "Template or projected content used to render option.",
       "descriptionSource": "inferred"
     },
     {
@@ -242,14 +242,12 @@
   "a11y": {
     "target": "WCAG 2.2 AA",
     "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
+      "Tab enters the selected segment",
+      "Arrow keys move and select a segment according to orientation and text direction"
     ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The real form control retains its visible name, described-by relationships, and Angular state.",
+      "Required, readonly, disabled, and invalid states remain programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -268,7 +266,7 @@
       "title": "Typed report period",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed report period\n *\n * Select one typed period from stable segment options.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSegmentedControl, type KrnSegmentOption } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-segmented-control-agent-example',\n  standalone: true,\n  imports: [KrnSegmentedControl, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-segmented-control\n      ariaLabel=\"Report period\"\n      [options]=\"periodOptions\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernSegmentedControlAgentExample {\n  readonly control = new FormControl<string | null>('quarter', { nonNullable: true });\n\n  readonly periodOptions: readonly KrnSegmentOption<string>[] = [\n    { value: 'month', label: 'Month' },\n    { value: 'quarter', label: 'Quarter' },\n    { value: 'year', label: 'Year' },\n  ];\n}\n\nvoid bootstrapApplication(KernSegmentedControlAgentExample);\n",
+      "code": "/**\n * Typed report period\n *\n * Select one typed period from stable segment options.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSegmentedControl, type KrnSegmentOption } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-segmented-control-agent-example',\n  standalone: true,\n  imports: [KrnSegmentedControl, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-segmented-control\n      ariaLabel=\"Report period\"\n      [options]=\"periodOptions\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernSegmentedControlAgentExample {\n  readonly control = new FormControl<string | null>('quarter', { nonNullable: true });\n\n  readonly periodOptions: readonly KrnSegmentOption<string>[] = [\n    { value: 'month', label: 'Month' },\n    { value: 'quarter', label: 'Quarter' },\n    { value: 'year', label: 'Year' },\n  ];\n}\n\nvoid bootstrapApplication(KernSegmentedControlAgentExample);\n",
       "verification": "compiled",
       "source": "examples/segmented-control.ts"
     }
@@ -299,8 +297,8 @@
     "valueChange"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Segmented Control for this specific contract: Presents a small set of mutually exclusive views or modes as adjacent labelled segments.",
+    "avoidWhen": "Do not choose Segmented Control for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Do not omit required inputs: `options`.",
@@ -385,7 +383,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -398,7 +396,7 @@
         "kind": "select",
         "defaultValue": "horizontal",
         "testValue": "vertical",
-        "description": "Logical axis exposed by the component; behavior follows its documented keyboard contract.",
+        "description": "Defines the logical axis used by layout and keyboard navigation.",
         "binding": {
           "kind": "input",
           "publicName": "orientation",
@@ -421,7 +419,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",

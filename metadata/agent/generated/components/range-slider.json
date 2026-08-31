@@ -9,14 +9,14 @@
   "symbol": "KrnRangeSlider",
   "canonicalSymbol": "KrnRangeSlider",
   "canonicalId": "range-slider",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Range Slider. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Range Slider. Selects a bounded numeric interval with independently labelled start and end thumbs.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -63,7 +63,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -213,14 +213,12 @@
   "a11y": {
     "target": "WCAG 2.2 AA",
     "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
+      "Tab moves between the start and end thumbs",
+      "Arrow keys adjust the focused thumb without crossing the other value"
     ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The real form control retains its visible name, described-by relationships, and Angular state.",
+      "Required, readonly, disabled, and invalid states remain programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -239,7 +237,7 @@
       "title": "Typed contract-value range",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed contract-value range\n *\n * Bind start and end values through the public range value type.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRangeSlider, type KrnRangeValue } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-range-slider-agent-example',\n  standalone: true,\n  imports: [KrnRangeSlider, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-range-slider\n      label=\"Contract value range\"\n      startLabel=\"Minimum value\"\n      endLabel=\"Maximum value\"\n      [min]=\"0\"\n      [max]=\"100\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernRangeSliderAgentExample {\n  readonly control = new FormControl<KrnRangeValue>({ start: 20, end: 80 }, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernRangeSliderAgentExample);\n",
+      "code": "/**\n * Typed contract-value range\n *\n * Bind start and end values through the public range value type.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRangeSlider, type KrnRangeValue } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-range-slider-agent-example',\n  standalone: true,\n  imports: [KrnRangeSlider, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-range-slider\n      label=\"Contract value range\"\n      startLabel=\"Minimum value\"\n      endLabel=\"Maximum value\"\n      [min]=\"0\"\n      [max]=\"100\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernRangeSliderAgentExample {\n  readonly control = new FormControl<KrnRangeValue>({ start: 20, end: 80 }, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernRangeSliderAgentExample);\n",
       "verification": "compiled",
       "source": "examples/range-slider.ts"
     }
@@ -267,8 +265,8 @@
     "valueChange"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Range Slider for this specific contract: Selects a bounded numeric interval with independently labelled start and end thumbs.",
+    "avoidWhen": "Do not choose Range Slider for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -387,7 +385,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -400,7 +398,7 @@
         "kind": "text",
         "defaultValue": "Usage range",
         "testValue": "Usage range · alternate",
-        "description": "Configures the component label contract.",
+        "description": "Visible text that names the control or data value.",
         "binding": {
           "kind": "input",
           "publicName": "label",
@@ -413,7 +411,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",

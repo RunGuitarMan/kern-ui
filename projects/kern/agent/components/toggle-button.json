@@ -9,8 +9,8 @@
   "symbol": "KrnToggleButton",
   "canonicalSymbol": "KrnToggleButton",
   "canonicalId": "toggle-button",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "actions",
+  "importPath": "@kern-ui/angular/actions",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -69,7 +69,7 @@
       "type": "KrnSize",
       "required": false,
       "defaultValue": "this.options.size",
-      "description": "Named semantic size resolved through KERN density and sizing tokens.",
+      "description": "Named semantic size resolved through Kern density and sizing tokens.",
       "descriptionSource": "inferred"
     },
     {
@@ -79,7 +79,7 @@
       "type": "KrnActionVariant",
       "required": false,
       "defaultValue": "this.options.pressedVariant",
-      "description": "Visual emphasis rendered while Toggle Button is pressed.",
+      "description": "Defines the component's pressed variant behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -89,7 +89,7 @@
       "type": "KrnTone",
       "required": false,
       "defaultValue": "this.options.pressedTone",
-      "description": "Semantic tone rendered while Toggle Button is pressed.",
+      "description": "Defines the component's pressed tone behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -99,7 +99,7 @@
       "type": "KrnActionVariant",
       "required": false,
       "defaultValue": "this.options.unpressedVariant",
-      "description": "Visual emphasis rendered while Toggle Button is not pressed.",
+      "description": "Defines the component's unpressed variant behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -109,7 +109,7 @@
       "type": "KrnTone",
       "required": false,
       "defaultValue": "this.options.unpressedTone",
-      "description": "Semantic tone rendered while Toggle Button is not pressed.",
+      "description": "Defines the component's unpressed tone behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -192,7 +192,7 @@
       "title": "Controlled formatting toggle",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled formatting toggle\n *\n * Keep formatting state controlled while native button semantics remain intact.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnToggleButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-toggle-button-agent-example',\n  standalone: true,\n  imports: [KrnToggleButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button krnToggleButton type=\"button\" value=\"bold\" [(pressed)]=\"boldEnabled\">Bold</button>\n  `,\n})\nexport class KernToggleButtonAgentExample {\n  boldEnabled = false;\n}\n\nvoid bootstrapApplication(KernToggleButtonAgentExample);\n",
+      "code": "/**\n * Controlled formatting toggle\n *\n * Keep formatting state controlled while native button semantics remain intact.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnToggleButton } from '@kern-ui/angular/actions';\n\n@Component({\n  selector: 'app-kern-toggle-button-agent-example',\n  standalone: true,\n  imports: [KrnToggleButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button krnToggleButton type=\"button\" value=\"bold\" [(pressed)]=\"boldEnabled\">Bold</button>\n  `,\n})\nexport class KernToggleButtonAgentExample {\n  boldEnabled = false;\n}\n\nvoid bootstrapApplication(KernToggleButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/toggle-button.ts"
     }
@@ -285,7 +285,7 @@
         "kind": "select",
         "defaultValue": "brand",
         "testValue": "neutral",
-        "description": "Semantic tone used while the toggle is pressed.",
+        "description": "Defines the component's pressed tone behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "pressedTone",
@@ -324,7 +324,7 @@
         "kind": "select",
         "defaultValue": "soft",
         "testValue": "solid",
-        "description": "Visual emphasis used while the toggle is pressed.",
+        "description": "Defines the component's pressed variant behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "pressedVariant",
@@ -355,7 +355,7 @@
         "kind": "select",
         "defaultValue": "md",
         "testValue": "sm",
-        "description": "Semantic component size.",
+        "description": "Named semantic size resolved through Kern density and sizing tokens.",
         "binding": {
           "kind": "input",
           "publicName": "size",
@@ -382,7 +382,7 @@
         "kind": "select",
         "defaultValue": "neutral",
         "testValue": "brand",
-        "description": "Semantic tone used while the toggle is not pressed.",
+        "description": "Defines the component's unpressed tone behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "unpressedTone",
@@ -421,7 +421,7 @@
         "kind": "select",
         "defaultValue": "ghost",
         "testValue": "solid",
-        "description": "Visual emphasis used while the toggle is not pressed.",
+        "description": "Defines the component's unpressed variant behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "unpressedVariant",
@@ -452,7 +452,7 @@
         "kind": "text",
         "defaultValue": "watch",
         "testValue": "watch · alternate",
-        "description": "Controlled component value.",
+        "description": "Stable native value used by `KrnToggleGroup` as the selection identity.\n\nIt remains required because group selection is represented by serializable\nstring values rather than child indices or component identities.",
         "binding": {
           "kind": "input",
           "publicName": "value",

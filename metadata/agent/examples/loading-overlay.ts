@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnLoadingOverlay } from '@kern-ui/angular/kit';
+import { KrnLoadingOverlay } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-loading-overlay-agent-example',

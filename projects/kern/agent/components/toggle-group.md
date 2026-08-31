@@ -2,7 +2,7 @@
 
 - ID: `toggle-group`
 - Selector: `div[krnToggleGroup]`
-- Import: `import { KrnToggleGroup } from '@kern-ui/angular/kit';`
+- Import: `import { KrnToggleGroup } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnToggleGroup`
 - Lifecycle: **stable**
 - Category: Actions
@@ -27,7 +27,7 @@ Avoid: Do not use Toggle Group as an Angular form radio control or project arbit
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnToggleButton, KrnToggleGroup } from '@kern-ui/angular/kit';
+import { KrnToggleButton, KrnToggleGroup } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-toggle-group-agent-example',

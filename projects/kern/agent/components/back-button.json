@@ -9,14 +9,14 @@
   "symbol": "KrnBackButton",
   "canonicalSymbol": "KrnBackButton",
   "canonicalId": "back-button",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Back Button. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Back Button. Provides an explicitly labelled native link to the previous product destination.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -58,7 +58,7 @@
       "type": "string | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Required destination URL used by the semantic link element.",
+      "description": "Defines the component's href behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -94,11 +94,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "keyboard": ["Tab focuses the native link; Enter follows its destination"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Destinations retain native link semantics and expose current location where applicable.",
+      "Composite navigation uses one documented focus model without changing reading order."
     ],
     "manualValidationRequired": true
   },
@@ -117,7 +116,7 @@
       "title": "Explicit back navigation",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Explicit back navigation\n *\n * Provide a deterministic href when browser history is not sufficient.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBackButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-back-button-agent-example',\n  standalone: true,\n  imports: [KrnBackButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-back-button href=\"/customers\" label=\"Back to customers\" /> `,\n})\nexport class KernBackButtonAgentExample {}\n\nvoid bootstrapApplication(KernBackButtonAgentExample);\n",
+      "code": "/**\n * Explicit back navigation\n *\n * Provide a deterministic href when browser history is not sufficient.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBackButton } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-back-button-agent-example',\n  standalone: true,\n  imports: [KrnBackButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-back-button href=\"/customers\" label=\"Back to customers\" /> `,\n})\nexport class KernBackButtonAgentExample {}\n\nvoid bootstrapApplication(KernBackButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/back-button.ts"
     }
@@ -134,8 +133,8 @@
     "activated"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Back Button for this specific contract: Provides an explicitly labelled native link to the previous product destination.",
+    "avoidWhen": "Do not choose Back Button for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -178,7 +177,7 @@
         "kind": "text",
         "defaultValue": "/",
         "testValue": "#specimen-overview",
-        "description": "Configures the component href contract.",
+        "description": "Defines the component's href behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "href",

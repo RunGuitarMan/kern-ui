@@ -9,14 +9,14 @@
   "symbol": "KrnSkeleton",
   "canonicalSymbol": "KrnSkeleton",
   "canonicalId": "skeleton",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Skeleton. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Skeleton. Reserves content geometry with a non-interactive loading placeholder.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -74,7 +74,7 @@
       "type": "\"circle\" | \"rectangle\" | \"text\"",
       "required": false,
       "defaultValue": "'text'",
-      "description": "Named geometry applied to the avatar or media boundary.",
+      "description": "Defines the component's shape behavior or presentation.",
       "descriptionSource": "inferred"
     }
   ],
@@ -90,11 +90,9 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Is hidden from assistive technology so the eventual content remains the semantic target."
     ],
     "manualValidationRequired": true
   },
@@ -113,7 +111,7 @@
       "title": "Stable customer-card placeholder",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Stable customer-card placeholder\n *\n * Reserve the final content geometry while data loads.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSkeleton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-skeleton-agent-example',\n  standalone: true,\n  imports: [KrnSkeleton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <section aria-label=\"Loading customer summary\">\n      <krn-skeleton width=\"40%\" height=\"1.25rem\" shape=\"text\" />\n      <krn-skeleton width=\"100%\" height=\"4rem\" shape=\"rectangle\" />\n    </section>\n  `,\n})\nexport class KernSkeletonAgentExample {}\n\nvoid bootstrapApplication(KernSkeletonAgentExample);\n",
+      "code": "/**\n * Stable customer-card placeholder\n *\n * Reserve the final content geometry while data loads.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSkeleton } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-skeleton-agent-example',\n  standalone: true,\n  imports: [KrnSkeleton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <section aria-label=\"Loading customer summary\">\n      <krn-skeleton width=\"40%\" height=\"1.25rem\" shape=\"text\" />\n      <krn-skeleton width=\"100%\" height=\"4rem\" shape=\"rectangle\" />\n    </section>\n  `,\n})\nexport class KernSkeletonAgentExample {}\n\nvoid bootstrapApplication(KernSkeletonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/skeleton.ts"
     }
@@ -130,8 +128,8 @@
     "shape"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Skeleton for this specific contract: Reserves content geometry with a non-interactive loading placeholder.",
+    "avoidWhen": "Do not choose Skeleton for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

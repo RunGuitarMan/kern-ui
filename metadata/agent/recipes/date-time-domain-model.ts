@@ -8,7 +8,7 @@ import {
   KrnNativeSelect,
   KrnTimePicker,
   type KrnSelectOption,
-} from '@kern-ui/angular/kit';
+} from '@kern-ui/angular/forms';
 
 interface ScheduledLocalTime {
   readonly date: string;

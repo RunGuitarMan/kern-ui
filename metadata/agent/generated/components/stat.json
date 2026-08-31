@@ -9,14 +9,14 @@
   "symbol": "KrnStat",
   "canonicalSymbol": "KrnStat",
   "canonicalId": "stat",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Stat. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Stat. Pairs one prominent value with its label, context, and optional trend.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -73,7 +73,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Supporting detail text displayed with the primary content.",
+      "description": "Defines the component's detail behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -83,7 +83,7 @@
       "type": "\"down\" | \"flat\" | \"up\"",
       "required": false,
       "defaultValue": "'flat'",
-      "description": "Direction of change communicated by the statistic in addition to its numeric value.",
+      "description": "Defines the component's trend behavior or presentation.",
       "descriptionSource": "inferred"
     }
   ],
@@ -99,11 +99,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -122,7 +121,7 @@
       "title": "Revenue metric",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Revenue metric\n *\n * Pair a formatted value with label, trend and supporting detail.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnStat } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-stat-agent-example',\n  standalone: true,\n  imports: [KrnStat],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-stat\n      label=\"Annual recurring revenue\"\n      value=\"€1.8M\"\n      detail=\"+8.4% year over year\"\n      trend=\"up\"\n    />\n  `,\n})\nexport class KernStatAgentExample {}\n\nvoid bootstrapApplication(KernStatAgentExample);\n",
+      "code": "/**\n * Revenue metric\n *\n * Pair a formatted value with label, trend and supporting detail.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnStat } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-stat-agent-example',\n  standalone: true,\n  imports: [KrnStat],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-stat\n      label=\"Annual recurring revenue\"\n      value=\"€1.8M\"\n      detail=\"+8.4% year over year\"\n      trend=\"up\"\n    />\n  `,\n})\nexport class KernStatAgentExample {}\n\nvoid bootstrapApplication(KernStatAgentExample);\n",
       "verification": "compiled",
       "source": "examples/stat.ts"
     }
@@ -140,8 +139,8 @@
     "trend"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Stat for this specific contract: Pairs one prominent value with its label, context, and optional trend.",
+    "avoidWhen": "Do not choose Stat for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Do not omit required inputs: `label`, `value`.",

@@ -9,14 +9,14 @@
   "symbol": "KrnTag",
   "canonicalSymbol": "KrnChip",
   "canonicalId": "chip",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": ["KrnChip"],
     "selectors": ["krn-chip"],
     "componentIds": ["chip"]
   },
-  "summary": "Tag. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Tag. Displays a compact removable label for a user- or system-assigned value.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -66,7 +66,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Enables the documented user interaction for an otherwise presentational item.",
+      "description": "Defines the component's interactive behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -76,7 +76,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Displays a named action for removing the represented value.",
+      "description": "Defines the component's removable behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -96,7 +96,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Accessible name for the complete composite widget.",
+      "description": "Human-readable copy for the accessible state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -129,11 +129,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -152,7 +151,7 @@
       "title": "Controlled tag alias",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled tag alias\n *\n * Use the tag alias for removable classification metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTag } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-tag-agent-example',\n  standalone: true,\n  imports: [KrnTag],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tag\n      [interactive]=\"true\"\n      [removable]=\"true\"\n      accessibleLabel=\"Renewal Q3 tag\"\n      [(selected)]=\"selected\"\n    >\n      Renewal Q3\n    </krn-tag>\n  `,\n})\nexport class KernTagAgentExample {\n  selected = true;\n}\n\nvoid bootstrapApplication(KernTagAgentExample);\n",
+      "code": "/**\n * Controlled tag alias\n *\n * Use the tag alias for removable classification metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTag } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-tag-agent-example',\n  standalone: true,\n  imports: [KrnTag],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tag\n      [interactive]=\"true\"\n      [removable]=\"true\"\n      accessibleLabel=\"Renewal Q3 tag\"\n      [(selected)]=\"selected\"\n    >\n      Renewal Q3\n    </krn-tag>\n  `,\n})\nexport class KernTagAgentExample {\n  selected = true;\n}\n\nvoid bootstrapApplication(KernTagAgentExample);\n",
       "verification": "compiled",
       "source": "examples/tag.ts"
     }
@@ -173,8 +172,8 @@
     "remove"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Tag for this specific contract: Displays a compact removable label for a user- or system-assigned value.",
+    "avoidWhen": "Do not choose Tag for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

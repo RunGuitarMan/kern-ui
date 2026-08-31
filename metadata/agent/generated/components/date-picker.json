@@ -9,14 +9,14 @@
   "symbol": "KrnDatePicker",
   "canonicalSymbol": "KrnDatePicker",
   "canonicalId": "date-picker",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Date Picker. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Date Picker. Selects one bounded date from a localized calendar popup.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -80,7 +80,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -296,7 +296,7 @@
       "title": "Typed renewal date",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed renewal date\n *\n * Bind an ISO date string with explicit locale and reference date.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDatePicker } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-date-picker-agent-example',\n  standalone: true,\n  imports: [KrnDatePicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-date-picker\n      ariaLabel=\"Renewal date\"\n      locale=\"en-GB\"\n      today=\"2026-07-29\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernDatePickerAgentExample {\n  readonly control = new FormControl<string>('2026-10-15', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernDatePickerAgentExample);\n",
+      "code": "/**\n * Typed renewal date\n *\n * Bind an ISO date string with explicit locale and reference date.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDatePicker } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-date-picker-agent-example',\n  standalone: true,\n  imports: [KrnDatePicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-date-picker\n      ariaLabel=\"Renewal date\"\n      locale=\"en-GB\"\n      today=\"2026-07-29\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernDatePickerAgentExample {\n  readonly control = new FormControl<string>('2026-10-15', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernDatePickerAgentExample);\n",
       "verification": "compiled",
       "source": "examples/date-picker.ts"
     }
@@ -468,7 +468,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -481,7 +481,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Controlled disclosure or overlay state.",
+        "description": "Controls whether the disclosure or overlay surface is visible.",
         "binding": {
           "kind": "model",
           "publicName": "open"
@@ -493,7 +493,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",
@@ -509,7 +509,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "2026-08-15",
-        "description": "Configures the component today contract.",
+        "description": "Deterministic plain date treated as today on both server and client.",
         "binding": {
           "kind": "input",
           "publicName": "today",
@@ -639,7 +639,9 @@
         "id": "filled",
         "label": "filled",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "value": "2026-10-15"
+        },
         "fixtureEffect": {
           "kind": "content",
           "mode": "filled",

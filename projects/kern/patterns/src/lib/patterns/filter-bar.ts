@@ -9,7 +9,7 @@ import {
   viewChildren,
 } from '@angular/core';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
-import { KrnBadge } from '@kern-ui/angular/kit';
+import { KrnBadge } from '@kern-ui/angular/data-display';
 import type { KrnFilterDefinition } from './product-types';
 
 @Component({

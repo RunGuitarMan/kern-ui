@@ -9,14 +9,14 @@
   "symbol": "KrnRating",
   "canonicalSymbol": "KrnRating",
   "canonicalId": "rating",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Rating. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Rating. Captures or displays a bounded ordinal rating with keyboard and pointer interaction.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -116,11 +116,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["Arrow keys adjust the rating; Home and End select the minimum and maximum"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -139,7 +138,7 @@
       "title": "Controlled customer rating",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled customer rating\n *\n * Keep the selected numeric rating in application state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRating } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-rating-agent-example',\n  standalone: true,\n  imports: [KrnRating],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-rating ariaLabel=\"Customer satisfaction\" [max]=\"5\" [(value)]=\"rating\" /> `,\n})\nexport class KernRatingAgentExample {\n  rating = 4;\n}\n\nvoid bootstrapApplication(KernRatingAgentExample);\n",
+      "code": "/**\n * Controlled customer rating\n *\n * Keep the selected numeric rating in application state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRating } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-rating-agent-example',\n  standalone: true,\n  imports: [KrnRating],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-rating ariaLabel=\"Customer satisfaction\" [max]=\"5\" [(value)]=\"rating\" /> `,\n})\nexport class KernRatingAgentExample {\n  rating = 4;\n}\n\nvoid bootstrapApplication(KernRatingAgentExample);\n",
       "verification": "compiled",
       "source": "examples/rating.ts"
     }
@@ -158,8 +157,8 @@
     "ariaLabel"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Rating for this specific contract: Captures or displays a bounded ordinal rating with keyboard and pointer interaction.",
+    "avoidWhen": "Do not choose Rating for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -204,7 +203,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Prevents interaction and participates in the component disabled contract.",
+        "description": "Prevents user interaction and participates in the disabled-state contract.",
         "binding": {
           "kind": "input",
           "publicName": "disabled",
@@ -217,7 +216,7 @@
         "kind": "number",
         "defaultValue": 5,
         "testValue": 6,
-        "description": "Configures the component max contract.",
+        "description": "Largest accepted numeric or temporal value.",
         "binding": {
           "kind": "input",
           "publicName": "max",
@@ -233,7 +232,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component readonly contract.",
+        "description": "Keeps the value perceivable while preventing user edits.",
         "binding": {
           "kind": "input",
           "publicName": "readonly",
@@ -374,7 +373,9 @@
         "id": "maximum",
         "label": "maximum",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "value": 5
+        },
         "fixtureEffect": {
           "kind": "status",
           "mode": "neutral",

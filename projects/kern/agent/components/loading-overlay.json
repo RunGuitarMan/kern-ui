@@ -9,14 +9,14 @@
   "symbol": "KrnLoadingOverlay",
   "canonicalSymbol": "KrnLoadingOverlay",
   "canonicalId": "loading-overlay",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Loading Overlay. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Loading Overlay. Marks a region as busy and optionally blocks interaction while work is in progress.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -54,7 +54,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Marks the item as the current interaction target without implying selection.",
+      "description": "Defines the component's active behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -64,7 +64,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "true",
-      "description": "Marks feedback as requiring attention before the workflow can continue.",
+      "description": "Defines the component's blocking behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -97,11 +97,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The owned region exposes busy state while visible.",
+      "Blocking mode prevents interaction without removing the region or its status from perception."
     ],
     "manualValidationRequired": true
   },
@@ -120,7 +119,7 @@
       "title": "Controlled blocking save state",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled blocking save state\n *\n * Keep existing content perceivable while a blocking operation is active.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnLoadingOverlay } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-loading-overlay-agent-example',\n  standalone: true,\n  imports: [KrnLoadingOverlay],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-loading-overlay [active]=\"saving\" [blocking]=\"true\" label=\"Saving customer\">\n      <section>\n        <h2>Customer profile</h2>\n        <button type=\"button\" (click)=\"saving = !saving\">Toggle save state</button>\n      </section>\n    </krn-loading-overlay>\n  `,\n})\nexport class KernLoadingOverlayAgentExample {\n  saving = false;\n}\n\nvoid bootstrapApplication(KernLoadingOverlayAgentExample);\n",
+      "code": "/**\n * Controlled blocking save state\n *\n * Keep existing content perceivable while a blocking operation is active.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnLoadingOverlay } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-loading-overlay-agent-example',\n  standalone: true,\n  imports: [KrnLoadingOverlay],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-loading-overlay [active]=\"saving\" [blocking]=\"true\" label=\"Saving customer\">\n      <section>\n        <h2>Customer profile</h2>\n        <button type=\"button\" (click)=\"saving = !saving\">Toggle save state</button>\n      </section>\n    </krn-loading-overlay>\n  `,\n})\nexport class KernLoadingOverlayAgentExample {\n  saving = false;\n}\n\nvoid bootstrapApplication(KernLoadingOverlayAgentExample);\n",
       "verification": "compiled",
       "source": "examples/loading-overlay.ts"
     }
@@ -137,8 +136,8 @@
     "label"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Loading Overlay for this specific contract: Marks a region as busy and optionally blocks interaction while work is in progress.",
+    "avoidWhen": "Do not choose Loading Overlay for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -194,7 +193,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component blocking contract.",
+        "description": "Defines the component's blocking behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "blocking",

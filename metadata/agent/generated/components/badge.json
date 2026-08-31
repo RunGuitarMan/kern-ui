@@ -9,14 +9,14 @@
   "symbol": "KrnBadge",
   "canonicalSymbol": "KrnBadge",
   "canonicalId": "badge",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": ["KrnStatusBadge"],
     "selectors": ["krn-status-badge"],
     "componentIds": ["status-badge"]
   },
-  "summary": "Badge. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Badge. Displays compact supporting metadata or a count without implying interactive state.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -112,11 +112,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -135,7 +134,7 @@
       "title": "Semantic account status badge",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Semantic account status badge\n *\n * Express status through text, marker and semantic tone.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBadge } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-badge-agent-example',\n  standalone: true,\n  imports: [KrnBadge],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-badge tone=\"success\" [status]=\"true\">Healthy</krn-badge> `,\n})\nexport class KernBadgeAgentExample {}\n\nvoid bootstrapApplication(KernBadgeAgentExample);\n",
+      "code": "/**\n * Semantic account status badge\n *\n * Express status through text, marker and semantic tone.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBadge } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-badge-agent-example',\n  standalone: true,\n  imports: [KrnBadge],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-badge tone=\"success\" [status]=\"true\">Healthy</krn-badge> `,\n})\nexport class KernBadgeAgentExample {}\n\nvoid bootstrapApplication(KernBadgeAgentExample);\n",
       "verification": "compiled",
       "source": "examples/badge.ts"
     }
@@ -154,8 +153,8 @@
     "size"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Badge for this specific contract: Displays compact supporting metadata or a count without implying interactive state.",
+    "avoidWhen": "Do not choose Badge for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

@@ -63,6 +63,33 @@
     </div>
   </header>
 
+  @if (featuredPresets().length > 1) {
+    <section class="story-selector" aria-labelledby="story-heading">
+      <header>
+        <span>{{ tr('playground.stories', 'Examples') }}</span>
+        <strong id="story-heading">{{
+          tr('playground.chooseStory', 'Choose a useful state')
+        }}</strong>
+      </header>
+      <div class="story-tabs" role="group" [attr.aria-label]="tr('playground.stories', 'Examples')">
+        @for (preset of featuredPresets(); track preset.id) {
+          <button
+            type="button"
+            [attr.data-story-id]="preset.id"
+            [attr.aria-pressed]="state() === preset.id"
+            (click)="selectPreset(preset.id)"
+          >
+            {{ presetLabel(preset) }}
+          </button>
+        }
+      </div>
+      <p class="story-description" aria-live="polite">
+        <strong>{{ presetLabel(selectedPreset()) }}</strong>
+        <span>{{ storyDescription() }}</span>
+      </p>
+    </section>
+  }
+
   <div
     id="preview-panel"
     class="preview-panel"
@@ -131,6 +158,82 @@
     <krn-code-block language="typescript" [code]="configuredCode()" />
   </div>
 
+  <ng-template #propertyRows let-controlList="controls">
+    @for (control of controlList; track control.key) {
+      <label
+        [attr.title]="controlDescription(control)"
+        [attr.data-control-key]="control.key"
+        [attr.data-binding-kind]="control.binding.kind"
+      >
+        <span class="property-name">
+          <code>{{ control.key }}</code>
+        </span>
+        <small>{{ controlDescription(control) }}</small>
+
+        @switch (control.kind) {
+          @case ('boolean') {
+            <input
+              type="checkbox"
+              [attr.aria-label]="control.key"
+              [checked]="booleanArg(control)"
+              [attr.checked]="booleanArg(control) ? '' : null"
+              (change)="setBooleanArg(control, $event)"
+            />
+          }
+          @case ('select') {
+            <select
+              [attr.aria-label]="control.key"
+              [value]="stringArg(control)"
+              (change)="setStringArg(control, $event)"
+            >
+              @for (option of control.options ?? []; track option.value) {
+                <option
+                  [value]="serializedValue(option.value)"
+                  [attr.selected]="optionSelected(control, option.value) ? '' : null"
+                >
+                  {{ controlOptionLabel(option.label) }}
+                </option>
+              }
+            </select>
+          }
+          @case ('number') {
+            <input
+              type="number"
+              [attr.aria-label]="control.key"
+              [min]="control.min ?? null"
+              [max]="control.max ?? null"
+              [step]="control.step ?? 1"
+              [value]="numberArg(control)"
+              (change)="setNumberArg(control, $event)"
+            />
+          }
+          @case ('range') {
+            <span class="range-control">
+              <input
+                type="range"
+                [attr.aria-label]="control.key"
+                [min]="control.min ?? 0"
+                [max]="control.max ?? 100"
+                [step]="control.step ?? 1"
+                [value]="numberArg(control)"
+                (input)="setNumberArg(control, $event)"
+              />
+              <output>{{ numberArg(control) }}</output>
+            </span>
+          }
+          @default {
+            <input
+              type="text"
+              [attr.aria-label]="control.key"
+              [value]="textArg(control)"
+              (change)="setStringArg(control, $event)"
+            />
+          }
+        }
+      </label>
+    }
+  </ng-template>
+
   @if (controls().length > 0) {
     <section class="property-panel" aria-labelledby="property-heading">
       <header>
@@ -142,81 +245,41 @@
         </div>
         <small>{{ controls().length }} {{ tr('playground.propertiesCount', 'properties') }}</small>
       </header>
-      <div class="property-table">
-        @for (control of controls(); track control.key) {
-          <label
-            [attr.title]="controlDescription(control)"
-            [attr.data-control-key]="control.key"
-            [attr.data-binding-kind]="control.binding.kind"
-          >
-            <span class="property-name">
-              <code>{{ control.key }}</code>
-            </span>
-            <small>{{ controlDescription(control) }}</small>
-
-            @switch (control.kind) {
-              @case ('boolean') {
-                <input
-                  type="checkbox"
-                  [attr.aria-label]="control.key"
-                  [checked]="booleanArg(control)"
-                  [attr.checked]="booleanArg(control) ? '' : null"
-                  (change)="setBooleanArg(control, $event)"
-                />
-              }
-              @case ('select') {
-                <select
-                  [attr.aria-label]="control.key"
-                  [value]="stringArg(control)"
-                  (change)="setStringArg(control, $event)"
-                >
-                  @for (option of control.options ?? []; track option.value) {
-                    <option
-                      [value]="serializedValue(option.value)"
-                      [attr.selected]="optionSelected(control, option.value) ? '' : null"
-                    >
-                      {{ controlOptionLabel(option.label) }}
-                    </option>
-                  }
-                </select>
-              }
-              @case ('number') {
-                <input
-                  type="number"
-                  [attr.aria-label]="control.key"
-                  [min]="control.min ?? null"
-                  [max]="control.max ?? null"
-                  [step]="control.step ?? 1"
-                  [value]="numberArg(control)"
-                  (change)="setNumberArg(control, $event)"
-                />
-              }
-              @case ('range') {
-                <span class="range-control">
-                  <input
-                    type="range"
-                    [attr.aria-label]="control.key"
-                    [min]="control.min ?? 0"
-                    [max]="control.max ?? 100"
-                    [step]="control.step ?? 1"
-                    [value]="numberArg(control)"
-                    (input)="setNumberArg(control, $event)"
-                  />
-                  <output>{{ numberArg(control) }}</output>
-                </span>
-              }
-              @default {
-                <input
-                  type="text"
-                  [attr.aria-label]="control.key"
-                  [value]="stringArg(control)"
-                  (change)="setStringArg(control, $event)"
-                />
-              }
-            }
-          </label>
-        }
+      <div class="property-section-heading">
+        <div>
+          <strong>{{ tr('playground.essential', 'Essential') }}</strong>
+          <small>{{
+            tr(
+              'playground.essentialNote',
+              'The controls most useful for understanding this component.'
+            )
+          }}</small>
+        </div>
+        <span>{{ essentialControls().length }}</span>
       </div>
+      <div class="property-table">
+        <ng-container
+          [ngTemplateOutlet]="propertyRows"
+          [ngTemplateOutletContext]="{ controls: essentialControls() }"
+        />
+      </div>
+      <details class="all-properties">
+        <summary>
+          <span>
+            <strong>{{ tr('playground.allProperties', 'All properties') }}</strong>
+            <small>{{
+              tr('playground.allPropertiesNote', 'Complete API surface for exhaustive QA.')
+            }}</small>
+          </span>
+          <b>{{ controls().length }}</b>
+        </summary>
+        <div class="property-table">
+          <ng-container
+            [ngTemplateOutlet]="propertyRows"
+            [ngTemplateOutletContext]="{ controls: controls() }"
+          />
+        </div>
+      </details>
     </section>
   } @else {
     <p class="fixture-note">

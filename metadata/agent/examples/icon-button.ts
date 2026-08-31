@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnIconButton } from '@kern-ui/angular/kit';
+import { KrnIconButton } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-icon-button-agent-example',

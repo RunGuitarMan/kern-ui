@@ -2,18 +2,18 @@
 
 - ID: `text-input`
 - Selector: `krn-text-input`
-- Import: `import { KrnTextInput } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTextInput } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnTextInput`
 - Lifecycle: **stable**
 - Category: Forms
 
-Text Input. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Text Input. Captures one line of free text and participates in Angular Forms.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Text Input for this specific contract: Captures one line of free text and participates in Angular Forms.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Text Input for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTextInput } from '@kern-ui/angular/kit';
+import { KrnTextInput } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-text-input-agent-example',
@@ -55,19 +55,19 @@ void bootstrapApplication(KernTextInputAgentExample);
 
 | Name              | Kind   | Type                  | Required | Default     | Description                                                                                      |
 | ----------------- | ------ | --------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`              | no       | `''`        | Stable identifier value used by the id contract.                                                 |
-| `name`            | input  | `string`              | no       | `''`        | Required human-readable name for the represented person, item, or action.                        |
+| `id`              | input  | `string`              | no       | `''`        | Stable identifier used by the id contract.                                                       |
+| `name`            | input  | `string`              | no       | `''`        | Native form-control name forwarded to the owned interactive element.                             |
 | `placeholder`     | input  | `string`              | no       | `''`        | Short input hint shown only while no value is present.                                           |
 | `ariaLabel`       | input  | `string`              | no       | `''`        | Accessible name used when visible content is not sufficient.                                     |
 | `ariaLabelledBy`  | input  | `string`              | no       | `''`        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input  | `string`              | no       | `''`        | Space-separated element ids composed with Form Field hints and validation descriptions.          |
 | `autocomplete`    | input  | `string`              | no       | `''`        | Native autocomplete purpose forwarded to the editable control.                                   |
-| `inputMode`       | input  | `KrnInputMode`        | no       | `'text'`    | Virtual-keyboard hint forwarded to the editable control.                                         |
-| `size`            | input  | `KrnSize`             | no       | `'md'`      | Named semantic size resolved through KERN density and sizing tokens.                             |
+| `inputMode`       | input  | `KrnInputMode`        | no       | `'text'`    | Defines the component's input mode behavior or presentation.                                     |
+| `size`            | input  | `KrnSize`             | no       | `'md'`      | Named semantic size resolved through Kern density and sizing tokens.                             |
 | `value`           | input  | `string \| undefined` | no       | `undefined` | Controlled component value.                                                                      |
 | `maxLength`       | input  | `number \| undefined` | no       | `undefined` | Upper or lower bound applied to the length value.                                                |
 | `minLength`       | input  | `number \| undefined` | no       | `undefined` | Upper or lower bound applied to the length value.                                                |
-| `spellcheck`      | input  | `boolean`             | no       | `true`      | Native spell-checking preference forwarded to the editable control.                              |
+| `spellcheck`      | input  | `boolean`             | no       | `true`      | Defines the component's spellcheck behavior or presentation.                                     |
 | `disabled`        | input  | `boolean`             | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.                       |
 | `readonly`        | input  | `boolean`             | no       | `false`     | Keeps the value perceivable while preventing user edits.                                         |
 | `required`        | input  | `boolean`             | no       | `false`     | Marks the value as required and participates in Angular Forms validation.                        |
@@ -89,12 +89,9 @@ Angular Forms control with value type `string`.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab focuses the native input; native editing and selection keys remain available
+- The real form control retains its visible name, described-by relationships, and Angular state.
+- Required, readonly, disabled, and invalid states remain programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -138,21 +135,21 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument       | Control | Default          | Test value                   | Binding                         | Description                                       |
-| -------------- | ------- | ---------------- | ---------------------------- | ------------------------------- | ------------------------------------------------- |
-| `placeholder`  | text    | `"Northstar"`    | `"Northstar · alternate"`    | input `placeholder` (property)  | Sets the empty-value prompt.                      |
-| `size`         | select  | `"md"`           | `"sm"`                       | input `size` (property)         | Changes the control height and inline padding.    |
-| `disabled`     | boolean | `false`          | `true`                       | input `disabled` (property)     | Prevents user interaction.                        |
-| `readOnly`     | boolean | `false`          | `true`                       | input `readonly` (property)     | Keeps the value focusable while preventing edits. |
-| `required`     | boolean | `false`          | `true`                       | input `required` (property)     | Marks the control as required.                    |
-| `invalid`      | boolean | `false`          | `true`                       | input `invalid` (property)      | Exposes the invalid visual and ARIA state.        |
-| `autocomplete` | text    | `"organization"` | `"organization · alternate"` | input `autocomplete` (property) | Configures the component autocomplete contract.   |
-| `id`           | text    | `""`             | `"Alternate value"`          | input `id` (property)           | Configures the component id contract.             |
-| `inputMode`    | select  | `"text"`         | `"none"`                     | input `inputMode` (property)    | Configures the component inputMode contract.      |
-| `maxLength`    | number  | `100`            | `101`                        | input `maxLength` (property)    | Configures the component maxLength contract.      |
-| `minLength`    | number  | `0`              | `1`                          | input `minLength` (property)    | Configures the component minLength contract.      |
-| `spellcheck`   | boolean | `true`           | `false`                      | input `spellcheck` (property)   | Configures the component spellcheck contract.     |
-| `value`        | text    | `""`             | `"Alternate value"`          | input `value` (property)        | Controlled component value.                       |
+| Argument       | Control | Default          | Test value                   | Binding                         | Description                                                    |
+| -------------- | ------- | ---------------- | ---------------------------- | ------------------------------- | -------------------------------------------------------------- |
+| `placeholder`  | text    | `"Northstar"`    | `"Northstar · alternate"`    | input `placeholder` (property)  | Sets the empty-value prompt.                                   |
+| `size`         | select  | `"md"`           | `"sm"`                       | input `size` (property)         | Changes the control height and inline padding.                 |
+| `disabled`     | boolean | `false`          | `true`                       | input `disabled` (property)     | Prevents user interaction.                                     |
+| `readOnly`     | boolean | `false`          | `true`                       | input `readonly` (property)     | Keeps the value focusable while preventing edits.              |
+| `required`     | boolean | `false`          | `true`                       | input `required` (property)     | Marks the control as required.                                 |
+| `invalid`      | boolean | `false`          | `true`                       | input `invalid` (property)      | Exposes the invalid visual and ARIA state.                     |
+| `autocomplete` | text    | `"organization"` | `"organization · alternate"` | input `autocomplete` (property) | Native autocomplete purpose forwarded to the editable control. |
+| `id`           | text    | `""`             | `"Alternate value"`          | input `id` (property)           | Stable identifier used by the id contract.                     |
+| `inputMode`    | select  | `"text"`         | `"none"`                     | input `inputMode` (property)    | Defines the component's input mode behavior or presentation.   |
+| `maxLength`    | number  | `100`            | `101`                        | input `maxLength` (property)    | Upper or lower bound applied to the length value.              |
+| `minLength`    | number  | `0`              | `1`                          | input `minLength` (property)    | Upper or lower bound applied to the length value.              |
+| `spellcheck`   | boolean | `true`           | `false`                      | input `spellcheck` (property)   | Defines the component's spellcheck behavior or presentation.   |
+| `value`        | text    | `""`             | `"Alternate value"`          | input `value` (property)        | Controlled component value.                                    |
 
 Exact API exclusions:
 
@@ -177,7 +174,7 @@ Presets:
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
-- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `filled` — filled; scenario `default`; `value="Acme Europe"`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — Readonly; scenario `default`; `readOnly=true`.
 - `required` — Required; scenario `default`; `required=true`.

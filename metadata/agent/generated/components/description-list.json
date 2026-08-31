@@ -9,14 +9,14 @@
   "symbol": "KrnDescriptionList",
   "canonicalSymbol": "KrnDescriptionList",
   "canonicalId": "description-list",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Description List. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Description List. Presents term-and-description pairs with responsive semantic grouping.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -65,11 +65,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -88,7 +87,7 @@
       "title": "Customer metadata description list",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Customer metadata description list\n *\n * Compose semantic term-value pairs with dedicated items.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDescriptionItem, KrnDescriptionList } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-description-list-agent-example',\n  standalone: true,\n  imports: [KrnDescriptionList, KrnDescriptionItem],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-description-list>\n      <krn-description-item term=\"Account owner\">Ada Lovelace</krn-description-item>\n      <krn-description-item term=\"Renewal date\">15 October 2026</krn-description-item>\n    </krn-description-list>\n  `,\n})\nexport class KernDescriptionListAgentExample {}\n\nvoid bootstrapApplication(KernDescriptionListAgentExample);\n",
+      "code": "/**\n * Customer metadata description list\n *\n * Compose semantic term-value pairs with dedicated items.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDescriptionItem, KrnDescriptionList } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-description-list-agent-example',\n  standalone: true,\n  imports: [KrnDescriptionList, KrnDescriptionItem],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-description-list>\n      <krn-description-item term=\"Account owner\">Ada Lovelace</krn-description-item>\n      <krn-description-item term=\"Renewal date\">15 October 2026</krn-description-item>\n    </krn-description-list>\n  `,\n})\nexport class KernDescriptionListAgentExample {}\n\nvoid bootstrapApplication(KernDescriptionListAgentExample);\n",
       "verification": "compiled",
       "source": "examples/description-list.ts"
     }
@@ -102,8 +101,8 @@
     "KrnDescriptionList"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Description List for this specific contract: Presents term-and-description pairs with responsive semantic grouping.",
+    "avoidWhen": "Do not choose Description List for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

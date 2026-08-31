@@ -2,18 +2,18 @@
 
 - ID: `skip-link`
 - Selector: `krn-skip-link`
-- Import: `import { KrnSkipLink } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSkipLink } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnSkipLink`
 - Lifecycle: **stable**
 - Category: Navigation
 
-Skip Link. A keyboard-first wayfinding primitive that preserves orientation and current location.
+Skip Link. Reveals a keyboard shortcut that moves focus directly to the main content target.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Skip Link for this specific contract: Reveals a keyboard shortcut that moves focus directly to the main content target.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Skip Link for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSkipLink } from '@kern-ui/angular/kit';
+import { KrnSkipLink } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-skip-link-agent-example',
@@ -48,7 +48,7 @@ void bootstrapApplication(KernSkipLinkAgentExample);
 
 | Name        | Kind   | Type                  | Required | Default          | Description                                                      |
 | ----------- | ------ | --------------------- | -------- | ---------------- | ---------------------------------------------------------------- |
-| `targetId`  | input  | `string`              | no       | `'main-content'` | Stable identifier value used by the target contract.             |
+| `targetId`  | input  | `string`              | no       | `'main-content'` | Stable identifier used by the target contract.                   |
 | `label`     | input  | `string \| undefined` | no       | `undefined`      | Visible text that names the control or data value.               |
 | `activated` | output | `void`                | no       | `undefined`      | Notifies the consumer after the activated interaction completes. |
 
@@ -66,12 +66,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys move within composites
-- Home / End jump
-- Enter activates
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab reveals and focuses the link; Enter moves focus to the main content target
+- Destinations retain native link semantics and expose current location where applicable.
+- Composite navigation uses one documented focus model without changing reading order.
 
 Manual assistive-technology validation remains required in the consuming application.
 

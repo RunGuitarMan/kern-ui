@@ -9,14 +9,14 @@
   "symbol": "KrnPagination",
   "canonicalSymbol": "KrnPagination",
   "canonicalId": "pagination",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Pagination. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Pagination. Moves through a bounded page range while exposing the current page and surrounding context.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -78,7 +78,7 @@
       "type": "number",
       "required": false,
       "defaultValue": "1",
-      "description": "Total number of peer items used to expose hierarchical position.",
+      "description": "Defines the component's sibling count behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -148,7 +148,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Accessible copy that explains the empty state.",
+      "description": "Human-readable copy for the empty state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -184,11 +184,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "keyboard": ["Tab visits page actions; Enter activates the focused page or boundary action"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Destinations retain native link semantics and expose current location where applicable.",
+      "Composite navigation uses one documented focus model without changing reading order."
     ],
     "manualValidationRequired": true
   },
@@ -207,7 +206,7 @@
       "title": "Controlled customer pagination",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled customer pagination\n *\n * Keep the current one-based page in application state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnPagination } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-pagination-agent-example',\n  standalone: true,\n  imports: [KrnPagination],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-pagination [totalItems]=\"245\" [pageSize]=\"25\" [(page)]=\"page\" ariaLabel=\"Customer pages\" />\n  `,\n})\nexport class KernPaginationAgentExample {\n  page = 1;\n}\n\nvoid bootstrapApplication(KernPaginationAgentExample);\n",
+      "code": "/**\n * Controlled customer pagination\n *\n * Keep the current one-based page in application state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnPagination } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-pagination-agent-example',\n  standalone: true,\n  imports: [KrnPagination],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-pagination [totalItems]=\"245\" [pageSize]=\"25\" [(page)]=\"page\" ariaLabel=\"Customer pages\" />\n  `,\n})\nexport class KernPaginationAgentExample {\n  page = 1;\n}\n\nvoid bootstrapApplication(KernPaginationAgentExample);\n",
       "verification": "compiled",
       "source": "examples/pagination.ts"
     }
@@ -233,8 +232,8 @@
     "rangeLabelFormatter"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Pagination for this specific contract: Moves through a bounded page range while exposing the current page and surrounding context.",
+    "avoidWhen": "Do not choose Pagination for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

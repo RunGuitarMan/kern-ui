@@ -9,14 +9,14 @@
   "symbol": "KrnAvatar",
   "canonicalSymbol": "KrnAvatar",
   "canonicalId": "avatar",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Avatar. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Avatar. Represents a person or entity with an image, fallback initials, and optional presence status.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -63,7 +63,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Required media source URL loaded by the component.",
+      "description": "Defines the component's src behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -73,7 +73,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Text alternative that communicates the meaning of visual media.",
+      "description": "Defines the component's alt behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -83,7 +83,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Required human-readable name for the represented person, item, or action.",
+      "description": "Native form-control name forwarded to the owned interactive element.",
       "descriptionSource": "inferred"
     },
     {
@@ -93,7 +93,7 @@
       "type": "\"lg\" | \"md\" | \"sm\"",
       "required": false,
       "defaultValue": "'md'",
-      "description": "Named semantic size resolved through KERN density and sizing tokens.",
+      "description": "Named semantic size resolved through Kern density and sizing tokens.",
       "descriptionSource": "inferred"
     },
     {
@@ -103,7 +103,7 @@
       "type": "\"away\" | \"busy\" | \"online\" | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Current domain status rendered as visible text and a non-color-only treatment.",
+      "description": "Defines the component's status behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -129,11 +129,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -152,7 +151,7 @@
       "title": "Named account-owner avatar",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Named account-owner avatar\n *\n * Provide initials fallback and meaningful alternative text.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAvatar } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-avatar-agent-example',\n  standalone: true,\n  imports: [KrnAvatar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-avatar name=\"Ada Lovelace\" alt=\"Ada Lovelace, account owner\" status=\"online\" />\n  `,\n})\nexport class KernAvatarAgentExample {}\n\nvoid bootstrapApplication(KernAvatarAgentExample);\n",
+      "code": "/**\n * Named account-owner avatar\n *\n * Provide initials fallback and meaningful alternative text.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAvatar } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-avatar-agent-example',\n  standalone: true,\n  imports: [KrnAvatar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-avatar name=\"Ada Lovelace\" alt=\"Ada Lovelace, account owner\" status=\"online\" />\n  `,\n})\nexport class KernAvatarAgentExample {}\n\nvoid bootstrapApplication(KernAvatarAgentExample);\n",
       "verification": "compiled",
       "source": "examples/avatar.ts"
     }
@@ -173,8 +172,8 @@
     "imageFailed"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Avatar for this specific contract: Represents a person or entity with an image, fallback initials, and optional presence status.",
+    "avoidWhen": "Do not choose Avatar for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -216,7 +215,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component alt contract.",
+        "description": "Defines the component's alt behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "alt",
@@ -229,7 +228,7 @@
         "kind": "text",
         "defaultValue": "Avery Cole",
         "testValue": "Avery Cole · alternate",
-        "description": "Configures the component name contract.",
+        "description": "Native form-control name forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "name",
@@ -242,7 +241,7 @@
         "kind": "select",
         "defaultValue": "lg",
         "testValue": "md",
-        "description": "Semantic component size.",
+        "description": "Named semantic size resolved through Kern density and sizing tokens.",
         "binding": {
           "kind": "input",
           "publicName": "size",
@@ -269,7 +268,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "/favicon.ico",
-        "description": "Configures the component src contract.",
+        "description": "Defines the component's src behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "src",
@@ -282,7 +281,7 @@
         "kind": "select",
         "defaultValue": "online",
         "testValue": "away",
-        "description": "Configures the component status contract.",
+        "description": "Defines the component's status behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "status",

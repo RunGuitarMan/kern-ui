@@ -9,14 +9,14 @@
   "symbol": "KrnBottomSheet",
   "canonicalSymbol": "KrnBottomSheet",
   "canonicalId": "bottom-sheet",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Bottom Sheet. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Bottom Sheet. Opens a bottom-anchored task surface suited to compact and touch layouts.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -199,7 +199,7 @@
       "type": "TemplateRef<unknown> | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Template used to render the component body with its typed context.",
+      "description": "Template or projected content used to render content.",
       "descriptionSource": "inferred"
     },
     {
@@ -209,7 +209,7 @@
       "type": "TemplateRef<unknown> | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Template used to render product-owned actions in the designated slot.",
+      "description": "Template or projected content used to render actions.",
       "descriptionSource": "inferred"
     },
     {
@@ -285,7 +285,7 @@
       "title": "Controlled mobile action sheet",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled mobile action sheet\n *\n * Present compact actions from the bottom edge on narrow screens.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBottomSheet } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-bottom-sheet-agent-example',\n  standalone: true,\n  imports: [KrnBottomSheet],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button type=\"button\" (click)=\"open = true\">Open Customer actions</button>\n    <krn-bottom-sheet\n      [(open)]=\"open\"\n      title=\"Customer actions\"\n      description=\"Choose an action for the selected customer.\"\n    >\n      <p>Choose an action for the selected customer.</p>\n      <button krnDialogAction type=\"button\" (click)=\"open = false\">Done</button>\n    </krn-bottom-sheet>\n  `,\n})\nexport class KernBottomSheetAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernBottomSheetAgentExample);\n",
+      "code": "/**\n * Controlled mobile action sheet\n *\n * Present compact actions from the bottom edge on narrow screens.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBottomSheet } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-bottom-sheet-agent-example',\n  standalone: true,\n  imports: [KrnBottomSheet],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button type=\"button\" (click)=\"open = true\">Open Customer actions</button>\n    <krn-bottom-sheet\n      [(open)]=\"open\"\n      title=\"Customer actions\"\n      description=\"Choose an action for the selected customer.\"\n    >\n      <p>Choose an action for the selected customer.</p>\n      <button krnDialogAction type=\"button\" (click)=\"open = false\">Done</button>\n    </krn-bottom-sheet>\n  `,\n})\nexport class KernBottomSheetAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernBottomSheetAgentExample);\n",
       "verification": "compiled",
       "source": "examples/bottom-sheet.ts"
     }
@@ -426,7 +426,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component closeOnEscape contract.",
+        "description": "Allows Escape to dismiss the topmost owned overlay.",
         "binding": {
           "kind": "input",
           "publicName": "closeOnEscape",
@@ -439,7 +439,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component description contract.",
+        "description": "Visible supporting description for the component content.",
         "binding": {
           "kind": "input",
           "publicName": "description",
@@ -452,7 +452,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component eyebrow contract.",
+        "description": "Human-readable copy for the eyebrow state or control.",
         "binding": {
           "kind": "input",
           "publicName": "eyebrow",
@@ -465,7 +465,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component showClose contract.",
+        "description": "Controls whether the component applies the show close behavior.",
         "binding": {
           "kind": "input",
           "publicName": "showClose",
@@ -478,7 +478,7 @@
         "kind": "text",
         "defaultValue": "Workspace actions",
         "testValue": "Workspace actions · alternate",
-        "description": "Configures the component title contract.",
+        "description": "Visible title that also names the component surface or data view.",
         "binding": {
           "kind": "input",
           "publicName": "title",

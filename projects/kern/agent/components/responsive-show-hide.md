@@ -2,18 +2,18 @@
 
 - ID: `responsive-show-hide`
 - Selector: `krn-responsive-show-hide`
-- Import: `import { KrnResponsiveShowHide } from '@kern-ui/angular/kit';`
+- Import: `import { KrnResponsiveShowHide } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnShow`
 - Lifecycle: **stable**
 - Category: Layout
 
-Responsive Show Hide. A composable spatial primitive that keeps product layouts predictable across containers.
+Responsive Show Hide. Shows or hides projected content between named responsive boundaries without duplicating it.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Responsive Show Hide for this specific contract: Shows or hides projected content between named responsive boundaries without duplicating it.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Responsive Show Hide for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnResponsiveShowHide } from '@kern-ui/angular/kit';
+import { KrnResponsiveShowHide } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-responsive-show-hide-agent-example',
@@ -67,10 +67,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Hidden content is removed consistently from visual display and the accessibility tree.
+- Responsive visibility never changes the relative order of content that remains present.
 
 Manual assistive-technology validation remains required in the consuming application.
 

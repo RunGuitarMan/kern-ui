@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Global Search. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.",
+  "summary": "Global Search. Searches product-wide destinations and actions from one command-style surface.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -98,7 +98,7 @@
       "type": "((query: string) => string) | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Accessible copy announced when a search has no matching results.",
+      "description": "Human-readable copy for the empty results state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -128,7 +128,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "this.generatedResultsId",
-      "description": "Stable identifier value used by the results contract.",
+      "description": "Stable identifier used by the results contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -158,7 +158,7 @@
       "type": "number",
       "required": false,
       "defaultValue": "0",
-      "description": "Zero-based index currently participating in managed keyboard focus.",
+      "description": "Controlled active index state with a matching Angular model-change output.",
       "descriptionSource": "inferred"
     },
     {
@@ -184,11 +184,12 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": [
+      "Keyboard behavior is provided by the native elements and Kern primitives in the recipe"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.",
+      "Loading, empty, error, and success states remain visible and programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -234,8 +235,8 @@
     "resultSelected"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Global Search for this specific contract: Searches product-wide destinations and actions from one command-style surface.",
+    "avoidWhen": "Do not choose Global Search for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -304,7 +305,7 @@
         "kind": "number",
         "defaultValue": 8,
         "testValue": 9,
-        "description": "Configures the component maxResults contract.",
+        "description": "Upper or lower bound applied to the results value.",
         "binding": {
           "kind": "input",
           "publicName": "maxResults",
@@ -320,7 +321,7 @@
         "kind": "text",
         "defaultValue": "Search workspaces, projects, people…",
         "testValue": "Search workspaces, projects, people… · alternate",
-        "description": "Configures the component placeholder contract.",
+        "description": "Short input hint shown only while no value is present.",
         "binding": {
           "kind": "input",
           "publicName": "placeholder",

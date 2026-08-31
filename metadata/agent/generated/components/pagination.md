@@ -2,18 +2,18 @@
 
 - ID: `pagination`
 - Selector: `krn-pagination`
-- Import: `import { KrnPagination } from '@kern-ui/angular/kit';`
+- Import: `import { KrnPagination } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnPagination`
 - Lifecycle: **stable**
 - Category: Navigation
 
-Pagination. A keyboard-first wayfinding primitive that preserves orientation and current location.
+Pagination. Moves through a bounded page range while exposing the current page and surrounding context.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Pagination for this specific contract: Moves through a bounded page range while exposing the current page and surrounding context.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Pagination for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnPagination } from '@kern-ui/angular/kit';
+import { KrnPagination } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-pagination-agent-example',
@@ -47,20 +47,20 @@ void bootstrapApplication(KernPaginationAgentExample);
 
 ## API
 
-| Name                  | Kind  | Type                                                                   | Required | Default     | Description                                                      |
-| --------------------- | ----- | ---------------------------------------------------------------------- | -------- | ----------- | ---------------------------------------------------------------- |
-| `totalItems`          | input | `number`                                                               | no       | `0`         | Total result count used to calculate the available page range.   |
-| `pageSize`            | input | `number`                                                               | no       | `20`        | Maximum number of records requested or displayed on one page.    |
-| `siblingCount`        | input | `number`                                                               | no       | `1`         | Total number of peer items used to expose hierarchical position. |
-| `page`                | model | `number`                                                               | no       | `1`         | One-based controlled page index.                                 |
-| `ariaLabel`           | input | `string \| undefined`                                                  | no       | `undefined` | Accessible name used when visible content is not sufficient.     |
-| `previousLabel`       | input | `string \| undefined`                                                  | no       | `undefined` | Human-readable copy for the previous state or control.           |
-| `nextLabel`           | input | `string \| undefined`                                                  | no       | `undefined` | Human-readable copy for the next state or control.               |
-| `pageLabel`           | input | `string \| undefined`                                                  | no       | `undefined` | Backward-compatible `{page}` template.                           |
-| `pageLabelFormatter`  | input | `((page: number) => string) \| undefined`                              | no       | `undefined` | Typed alternative to `pageLabel` for locale-specific grammar.    |
-| `emptyLabel`          | input | `string \| undefined`                                                  | no       | `undefined` | Accessible copy that explains the empty state.                   |
-| `rangeLabel`          | input | `string \| undefined`                                                  | no       | `undefined` | Backward-compatible `{start}`, `{end}`, and `{total}` template.  |
-| `rangeLabelFormatter` | input | `((start: number, end: number, total: number) => string) \| undefined` | no       | `undefined` | Typed alternative to `rangeLabel` for locale-specific grammar.   |
+| Name                  | Kind  | Type                                                                   | Required | Default     | Description                                                     |
+| --------------------- | ----- | ---------------------------------------------------------------------- | -------- | ----------- | --------------------------------------------------------------- |
+| `totalItems`          | input | `number`                                                               | no       | `0`         | Total result count used to calculate the available page range.  |
+| `pageSize`            | input | `number`                                                               | no       | `20`        | Maximum number of records requested or displayed on one page.   |
+| `siblingCount`        | input | `number`                                                               | no       | `1`         | Defines the component's sibling count behavior or presentation. |
+| `page`                | model | `number`                                                               | no       | `1`         | One-based controlled page index.                                |
+| `ariaLabel`           | input | `string \| undefined`                                                  | no       | `undefined` | Accessible name used when visible content is not sufficient.    |
+| `previousLabel`       | input | `string \| undefined`                                                  | no       | `undefined` | Human-readable copy for the previous state or control.          |
+| `nextLabel`           | input | `string \| undefined`                                                  | no       | `undefined` | Human-readable copy for the next state or control.              |
+| `pageLabel`           | input | `string \| undefined`                                                  | no       | `undefined` | Backward-compatible `{page}` template.                          |
+| `pageLabelFormatter`  | input | `((page: number) => string) \| undefined`                              | no       | `undefined` | Typed alternative to `pageLabel` for locale-specific grammar.   |
+| `emptyLabel`          | input | `string \| undefined`                                                  | no       | `undefined` | Human-readable copy for the empty state or control.             |
+| `rangeLabel`          | input | `string \| undefined`                                                  | no       | `undefined` | Backward-compatible `{start}`, `{end}`, and `{total}` template. |
+| `rangeLabelFormatter` | input | `((start: number, end: number, total: number) => string) \| undefined` | no       | `undefined` | Typed alternative to `rangeLabel` for locale-specific grammar.  |
 
 ## Deprecated selectors
 
@@ -76,12 +76,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys move within composites
-- Home / End jump
-- Enter activates
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab visits page actions; Enter activates the focused page or boundary action
+- Destinations retain native link semantics and expose current location where applicable.
+- Composite navigation uses one documented focus model without changing reading order.
 
 Manual assistive-technology validation remains required in the consuming application.
 

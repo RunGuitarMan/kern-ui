@@ -2,7 +2,7 @@
 
 - ID: `label`
 - Selector: `krn-label`
-- Import: `import { KrnLabel } from '@kern-ui/angular/kit';`
+- Import: `import { KrnLabel } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnLabel`
 - Lifecycle: **stable**
 - Category: Forms
@@ -27,7 +27,7 @@ Avoid: Do not use Label as a picker; it has no selection behavior of its own.
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnLabel } from '@kern-ui/angular/kit';
+import { KrnLabel } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-label-agent-example',
@@ -48,7 +48,7 @@ void bootstrapApplication(KernLabelAgentExample);
 
 | Name       | Kind  | Type      | Required | Default | Description                                                               |
 | ---------- | ----- | --------- | -------- | ------- | ------------------------------------------------------------------------- |
-| `for`      | input | `string`  | no       | `''`    | Id of the labelable control associated with this label.                   |
+| `for`      | input | `string`  | no       | `''`    | Defines the component's for behavior or presentation.                     |
 | `required` | input | `boolean` | no       | `false` | Marks the value as required and participates in Angular Forms validation. |
 
 ## Deprecated selectors

@@ -9,14 +9,14 @@
   "symbol": "KrnCluster",
   "canonicalSymbol": "KrnCluster",
   "canonicalId": "cluster",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Cluster. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Cluster. Wraps related items into rows with independent row and column spacing.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -116,11 +116,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Projected content retains its document order and native semantics as layout changes.",
+      "Logical sizing and placement work in both LTR and RTL without duplicating content."
     ],
     "manualValidationRequired": true
   },
@@ -139,7 +138,7 @@
       "title": "Wrapping metadata cluster",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Wrapping metadata cluster\n *\n * Wrap independent metadata items without manual margins.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCluster } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-cluster-agent-example',\n  standalone: true,\n  imports: [KrnCluster],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-cluster gap=\"2\">\n      <span>Owner: Platform</span>\n      <span>Region: EU</span>\n      <span>Status: Healthy</span>\n    </krn-cluster>\n  `,\n})\nexport class KernClusterAgentExample {}\n\nvoid bootstrapApplication(KernClusterAgentExample);\n",
+      "code": "/**\n * Wrapping metadata cluster\n *\n * Wrap independent metadata items without manual margins.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCluster } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-cluster-agent-example',\n  standalone: true,\n  imports: [KrnCluster],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-cluster gap=\"2\">\n      <span>Owner: Platform</span>\n      <span>Region: EU</span>\n      <span>Status: Healthy</span>\n    </krn-cluster>\n  `,\n})\nexport class KernClusterAgentExample {}\n\nvoid bootstrapApplication(KernClusterAgentExample);\n",
       "verification": "compiled",
       "source": "examples/cluster.ts"
     }
@@ -158,8 +157,8 @@
     "justify"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Cluster for this specific contract: Wraps related items into rows with independent row and column spacing.",
+    "avoidWhen": "Do not choose Cluster for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -255,7 +254,7 @@
         "kind": "select",
         "defaultValue": "center",
         "testValue": "start",
-        "description": "Configures the component align contract.",
+        "description": "Cross-axis alignment of projected children within each flex line.",
         "binding": {
           "kind": "input",
           "publicName": "align",
@@ -290,7 +289,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "20rem",
-        "description": "Configures the component columnGap contract.",
+        "description": "Optional spacing override between adjacent children within each flex line.",
         "binding": {
           "kind": "input",
           "publicName": "columnGap",
@@ -303,7 +302,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "20rem",
-        "description": "Configures the component rowGap contract.",
+        "description": "Optional spacing override between wrapped flex lines.",
         "binding": {
           "kind": "input",
           "publicName": "rowGap",

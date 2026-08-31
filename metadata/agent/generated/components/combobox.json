@@ -9,8 +9,8 @@
   "symbol": "KrnCombobox",
   "canonicalSymbol": "KrnCombobox",
   "canonicalId": "combobox",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -98,7 +98,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -118,7 +118,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Visible and announced copy when the data collection has no items.",
+      "description": "Human-readable copy for the empty state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -128,7 +128,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Visible and announced copy while asynchronous data is loading.",
+      "description": "Human-readable copy for the loading state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -138,7 +138,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Visible and announced copy when loading the data collection fails.",
+      "description": "Human-readable copy for the error state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -188,7 +188,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Required human-readable name for the represented person, item, or action.",
+      "description": "Native form-control name forwarded to the owned interactive element.",
       "descriptionSource": "inferred"
     },
     {
@@ -371,7 +371,7 @@
       "title": "Typed editable owner combobox",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed editable owner combobox\n *\n * Offer typed suggestions for an application-owned text value.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCombobox, type KrnSelectOption } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-combobox-agent-example',\n  standalone: true,\n  imports: [KrnCombobox, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-combobox\n      ariaLabel=\"Escalation owner\"\n      [options]=\"ownerOptions\"\n      [formControl]=\"control\"\n      [(open)]=\"open\"\n    />\n  `,\n})\nexport class KernComboboxAgentExample {\n  readonly control = new FormControl<string>('Platform team', { nonNullable: true });\n\n  readonly ownerOptions: readonly KrnSelectOption<string>[] = [\n    { value: 'Platform team', label: 'Platform team' },\n    { value: 'Security team', label: 'Security team' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernComboboxAgentExample);\n",
+      "code": "/**\n * Typed editable owner combobox\n *\n * Offer typed suggestions for an application-owned text value.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCombobox, type KrnSelectOption } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-combobox-agent-example',\n  standalone: true,\n  imports: [KrnCombobox, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-combobox\n      ariaLabel=\"Escalation owner\"\n      [options]=\"ownerOptions\"\n      [formControl]=\"control\"\n      [(open)]=\"open\"\n    />\n  `,\n})\nexport class KernComboboxAgentExample {\n  readonly control = new FormControl<string>('Platform team', { nonNullable: true });\n\n  readonly ownerOptions: readonly KrnSelectOption<string>[] = [\n    { value: 'Platform team', label: 'Platform team' },\n    { value: 'Security team', label: 'Security team' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernComboboxAgentExample);\n",
       "verification": "compiled",
       "source": "examples/combobox.ts"
     }
@@ -599,7 +599,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component allowCustomValue contract.",
+        "description": "Controls whether the component applies the allow custom value input behavior.",
         "binding": {
           "kind": "input",
           "publicName": "allowCustomValue",
@@ -612,7 +612,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component filterLocally contract.",
+        "description": "Set to false when the consumer filters options remotely in response to queryChange.",
         "binding": {
           "kind": "input",
           "publicName": "filterLocally",
@@ -625,7 +625,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -638,7 +638,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",
@@ -771,7 +771,9 @@
         "id": "filled",
         "label": "filled",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "value": "team"
+        },
         "fixtureEffect": {
           "kind": "content",
           "mode": "filled",

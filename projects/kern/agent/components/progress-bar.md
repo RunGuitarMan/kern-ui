@@ -2,18 +2,18 @@
 
 - ID: `progress-bar`
 - Selector: `krn-progress-bar`
-- Import: `import { KrnProgressBar } from '@kern-ui/angular/kit';`
+- Import: `import { KrnProgressBar } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnProgressBar`
 - Lifecycle: **stable**
 - Category: Feedback
 
-Progress Bar. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Progress Bar. Shows determinate or indeterminate progress along a horizontal track.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Progress Bar for this specific contract: Shows determinate or indeterminate progress along a horizontal track.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Progress Bar for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnProgressBar } from '@kern-ui/angular/kit';
+import { KrnProgressBar } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-progress-bar-agent-example',
@@ -54,13 +54,13 @@ void bootstrapApplication(KernProgressBarAgentExample);
 
 ## API
 
-| Name            | Kind  | Type                  | Required | Default     | Description                                                      |
-| --------------- | ----- | --------------------- | -------- | ----------- | ---------------------------------------------------------------- |
-| `value`         | input | `number`              | no       | `0`         | Controlled component value.                                      |
-| `max`           | input | `number`              | no       | `100`       | Largest accepted numeric or temporal value.                      |
-| `indeterminate` | input | `boolean`             | no       | `false`     | Represents an unknown progress value or a mixed selection state. |
-| `ariaLabel`     | input | `string \| undefined` | no       | `undefined` | Accessible name used when visible content is not sufficient.     |
-| `valueText`     | input | `string`              | no       | `''`        | Human-readable copy for the value state or control.              |
+| Name            | Kind  | Type                  | Required | Default     | Description                                                           |
+| --------------- | ----- | --------------------- | -------- | ----------- | --------------------------------------------------------------------- |
+| `value`         | input | `number`              | no       | `0`         | Controlled component value.                                           |
+| `max`           | input | `number`              | no       | `100`       | Largest accepted numeric or temporal value.                           |
+| `indeterminate` | input | `boolean`             | no       | `false`     | Controlled mixed state rendered independently from the checked value. |
+| `ariaLabel`     | input | `string \| undefined` | no       | `undefined` | Accessible name used when visible content is not sufficient.          |
+| `valueText`     | input | `string`              | no       | `''`        | Human-readable copy for the value state or control.                   |
 
 ## Deprecated selectors
 
@@ -76,11 +76,8 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Escape closes modal layers
-- Focus returns to the trigger
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Exposes progressbar semantics with current bounds or an indeterminate state.
 
 Manual assistive-technology validation remains required in the consuming application.
 

@@ -287,11 +287,22 @@ async function main() {
   if (evidence.$schema !== './manual-evidence.schema.json') {
     report('Manual evidence must reference ./manual-evidence.schema.json.');
   }
-  if (evidence.schemaVersion !== 3) report('Manual evidence schemaVersion must be 3.');
+  if (evidence.schemaVersion !== 4) report('Manual evidence schemaVersion must be 4.');
   if (evidence.libraryVersion !== packageManifest.version) {
     report(
       `Manual evidence version ${evidence.libraryVersion} does not match package ${packageManifest.version}.`,
     );
+  }
+  let protocol = '';
+  if (
+    typeof evidence.protocol !== 'string' ||
+    evidence.protocol.startsWith('/') ||
+    evidence.protocol.includes('..') ||
+    !existsSync(resolve(workspaceRoot, evidence.protocol))
+  ) {
+    report('Manual evidence protocol must resolve to a repository-relative test plan.');
+  } else {
+    protocol = await readFile(resolve(workspaceRoot, evidence.protocol), 'utf8');
   }
   if (
     !['not-certified', 'certified'].includes(evidence.certification?.status) ||
@@ -359,6 +370,9 @@ async function main() {
     }
     for (const id of evidence.targetComponentIds) {
       if (!knownIds.has(id)) report(`targetComponentIds contains unknown component "${id}".`);
+      if (!protocol.includes(`<a id="${id}"></a>`)) {
+        report(`Manual test protocol has no component scenario anchor for "${id}".`);
+      }
     }
   }
 
@@ -370,6 +384,9 @@ async function main() {
       if (recordIds.has(record?.id)) report(`Manual evidence record "${record.id}" is duplicated.`);
       recordIds.add(record?.id);
       validateRecord(record, index, knownIds);
+      if (typeof record?.id === 'string' && !protocol.includes(`\`${record.id}\``)) {
+        report(`Manual test protocol does not name evidence record "${record.id}".`);
+      }
     }
     for (const id of requiredRecordIds) {
       const record = evidence.records.find((candidate) => candidate.id === id);

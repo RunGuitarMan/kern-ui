@@ -7,7 +7,7 @@
 
 import * as _angular_core from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { KrnOverlayCloseReason } from '@kern-ui/angular/kit';
+import { KrnOverlayCloseReason } from '@kern-ui/angular/feedback';
 
 interface KrnLoginCredentials {
   readonly email: string;
@@ -521,6 +521,7 @@ declare class KrnPageHeader {
   >;
 }
 
+/** @deprecated Compose this recipe with `KrnDrawer` and product-specific settings content. */
 declare class KrnSettingsPanel {
   private readonly translations;
   readonly heading: _angular_core.InputSignal<string | undefined>;
@@ -612,6 +613,7 @@ declare class KrnMasterDetailLayout {
   >;
 }
 
+/** @deprecated Compose this recipe with `KrnCard` and a named product region. */
 declare class KrnDashboardWidget {
   readonly eyebrow: _angular_core.InputSignal<string>;
   readonly heading: _angular_core.InputSignal<string>;
@@ -635,6 +637,7 @@ declare class KrnDashboardWidget {
   >;
 }
 
+/** @deprecated Compose mobile navigation with `KrnAppShell` and navigation primitives. */
 declare class KrnMobileNavigation {
   private readonly translations;
   readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
@@ -654,6 +657,7 @@ declare class KrnMobileNavigation {
   >;
 }
 
+/** @deprecated Compose the responsive navigation behavior with `KrnAppShell`. */
 declare class KrnResponsiveApplicationShell {
   private readonly platform;
   private readonly coordinator;

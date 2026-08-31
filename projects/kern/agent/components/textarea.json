@@ -9,14 +9,14 @@
   "symbol": "KrnTextarea",
   "canonicalSymbol": "KrnTextarea",
   "canonicalId": "textarea",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Textarea. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Textarea. Captures multiline text with optional automatic resizing and character count.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -62,7 +62,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -72,7 +72,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Required human-readable name for the represented person, item, or action.",
+      "description": "Native form-control name forwarded to the owned interactive element.",
       "descriptionSource": "inferred"
     },
     {
@@ -132,7 +132,7 @@
       "type": "KrnSize",
       "required": false,
       "defaultValue": "'md'",
-      "description": "Named semantic size resolved through KERN density and sizing tokens.",
+      "description": "Named semantic size resolved through Kern density and sizing tokens.",
       "descriptionSource": "inferred"
     },
     {
@@ -182,7 +182,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "true",
-      "description": "Native spell-checking preference forwarded to the editable control.",
+      "description": "Defines the component's spellcheck behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -272,14 +272,11 @@
   "a11y": {
     "target": "WCAG 2.2 AA",
     "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
+      "Tab focuses the textarea; native multiline editing and selection keys remain available"
     ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The real form control retains its visible name, described-by relationships, and Angular state.",
+      "Required, readonly, disabled, and invalid states remain programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -298,7 +295,7 @@
       "title": "Typed review notes",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed review notes\n *\n * Edit long-form review notes through a non-nullable control.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTextarea } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-textarea-agent-example',\n  standalone: true,\n  imports: [KrnTextarea, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-textarea id=\"review-notes\" ariaLabel=\"Review notes\" [rows]=\"5\" [formControl]=\"control\" />\n  `,\n})\nexport class KernTextareaAgentExample {\n  readonly control = new FormControl<string>('Renewal approved pending legal review.', {\n    nonNullable: true,\n  });\n}\n\nvoid bootstrapApplication(KernTextareaAgentExample);\n",
+      "code": "/**\n * Typed review notes\n *\n * Edit long-form review notes through a non-nullable control.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTextarea } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-textarea-agent-example',\n  standalone: true,\n  imports: [KrnTextarea, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-textarea id=\"review-notes\" ariaLabel=\"Review notes\" [rows]=\"5\" [formControl]=\"control\" />\n  `,\n})\nexport class KernTextareaAgentExample {\n  readonly control = new FormControl<string>('Renewal approved pending legal review.', {\n    nonNullable: true,\n  });\n}\n\nvoid bootstrapApplication(KernTextareaAgentExample);\n",
       "verification": "compiled",
       "source": "examples/textarea.ts"
     }
@@ -332,8 +329,8 @@
     "valueChange"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Textarea for this specific contract: Captures multiline text with optional automatic resizing and character count.",
+    "avoidWhen": "Do not choose Textarea for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -515,7 +512,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component autocomplete contract.",
+        "description": "Native autocomplete purpose forwarded to the editable control.",
         "binding": {
           "kind": "input",
           "publicName": "autocomplete",
@@ -528,7 +525,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -541,7 +538,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component minLength contract.",
+        "description": "Upper or lower bound applied to the length value.",
         "binding": {
           "kind": "input",
           "publicName": "minLength",
@@ -557,7 +554,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component spellcheck contract.",
+        "description": "Defines the component's spellcheck behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "spellcheck",
@@ -687,7 +684,9 @@
         "id": "filled",
         "label": "filled",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "value": "Renewal approved pending legal review."
+        },
         "fixtureEffect": {
           "kind": "content",
           "mode": "filled",

@@ -2,12 +2,12 @@
 
 - ID: `dialog`
 - Selector: `krn-dialog`
-- Import: `import { KrnDialog } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDialog } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnDialog`
 - Lifecycle: **beta**
 - Category: Feedback
 
-Dialog. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Dialog. Opens a modal or non-modal task surface with title, description, actions, and focus restoration.
 
 ## Use
 
@@ -27,7 +27,7 @@ Avoid: Use Popover for non-modal supplemental content and a route when the task 
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDialog } from '@kern-ui/angular/kit';
+import { KrnDialog } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-dialog-agent-example',
@@ -70,8 +70,8 @@ void bootstrapApplication(KernDialogAgentExample);
 | `closeOnOutside`  | input  | `boolean \| null`              | no       | `null`             | Allows an interaction outside the owned overlay to dismiss it.           |
 | `initialFocus`    | input  | `string`                       | no       | `'first-tabbable'` | Identifies the element that receives focus when the modal surface opens. |
 | `restoreFocus`    | input  | `HTMLElement \| false \| null` | no       | `null`             | Explicit focus return target, or `false` to disable focus restoration.   |
-| `contentTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template used to render the component body with its typed context.       |
-| `actionsTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template used to render product-owned actions in the designated slot.    |
+| `contentTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template or projected content used to render content.                    |
+| `actionsTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template or projected content used to render actions.                    |
 | `closed`          | output | `KrnOverlayCloseReason`        | no       | `undefined`        | Notifies the consumer after the closed interaction completes.            |
 | `afterExited`     | output | `void`                         | no       | `undefined`        | Emits after exit motion and global modal cleanup have completed.         |
 
@@ -144,7 +144,7 @@ component inputs or models.
 | `showClose`      | boolean | `true`                             | `false`                                        | input `showClose` (property)      | Shows the close icon action.                                                                     |
 | `closeOnEscape`  | boolean | `true`                             | `false`                                        | input `closeOnEscape` (property)  | Allows Escape to dismiss the dialog.                                                             |
 | `closeOnOutside` | select  | `null`                             | `true`                                         | input `closeOnOutside` (property) | Inherits the surface policy by default, or explicitly enables or disables outside-click closing. |
-| `eyebrow`        | text    | `""`                               | `"Alternate value"`                            | input `eyebrow` (property)        | Configures the component eyebrow contract.                                                       |
+| `eyebrow`        | text    | `""`                               | `"Alternate value"`                            | input `eyebrow` (property)        | Human-readable copy for the eyebrow state or control.                                            |
 
 Exact API exclusions:
 

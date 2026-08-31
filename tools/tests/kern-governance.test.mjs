@@ -189,8 +189,8 @@ test('catalog documentation overrides cannot bypass the selector literal registr
 
 test('generated repository paths normalize Windows separators to POSIX', () => {
   assert.equal(
-    normalizeRepositoryPath(String.raw`projects\kern\kit\src\lib\actions\button.ts`),
-    'projects/kern/kit/src/lib/actions/button.ts',
+    normalizeRepositoryPath(String.raw`projects\kern\actions\src\lib\actions\button.ts`),
+    'projects/kern/actions/src/lib/actions/button.ts',
   );
 });
 
@@ -455,7 +455,7 @@ test('component and agent generators share the stable type serializer', async ()
 test('committed lifecycle and manual evidence registries verify', () => {
   const lifecycle = run(lifecycleScript);
   assert.equal(lifecycle.status, 0, lifecycle.stderr);
-  assert.match(lifecycle.stdout, /132 catalog entries, 494 public symbols/);
+  assert.match(lifecycle.stdout, /132 catalog entries, 499 public symbols/);
 
   const componentInventory = run(componentInventoryScript);
   assert.equal(componentInventory.status, 0, componentInventory.stderr);
@@ -563,7 +563,7 @@ test('component inventory rejects a missing internal review target', async () =>
   try {
     const result = run(componentInventoryScript, `--inventory=${temporary.path}`);
     assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /references missing kit:KrnMissingReviewTarget/);
+    assert.match(result.stderr, /references missing forms:KrnMissingReviewTarget/);
   } finally {
     await rm(temporary.directory, { recursive: true, force: true });
   }
@@ -573,7 +573,7 @@ test('component inventory rejects an internal review target outside its behavior
   const inventory = JSON.parse(await readFile(componentInventoryPath, 'utf8'));
   const internal = inventory.units.find((unit) => unit.visibility === 'internal');
   assert.ok(internal, 'fixture requires one internal review unit');
-  internal.reviewWith = 'kit:KrnButton';
+  internal.reviewWith = 'actions:KrnButton';
   const temporary = await temporaryJson('component-inventory.json', inventory);
   try {
     const result = run(componentInventoryScript, `--inventory=${temporary.path}`);
@@ -1054,12 +1054,29 @@ test('lifecycle evidence is materialized and release mode requires an attestatio
   ]);
   assert.equal(
     evidence.artifacts['unit-button']?.path,
-    'projects/kern/kit/src/lib/actions/button.spec.ts',
+    'projects/kern/actions/src/lib/actions/button.spec.ts',
   );
   assert.equal(evidence.artifacts['unit-button']?.anchor, 'KrnButton');
   const numberInput = evidence.components.find((component) => component.id === 'number-input');
   assert.ok(numberInput, 'fixture requires Number Input lifecycle evidence');
   assert.equal(numberInput.evidence.find((item) => item.kind === 'mobile-touch')?.status, 'linked');
+  const select = evidence.components.find((component) => component.id === 'select');
+  assert.deepEqual(select?.evidence.find((item) => item.kind === 'consumer-harness')?.artifactIds, [
+    'harness-source-select',
+    'harness-test-select',
+  ]);
+  assert.equal(
+    evidence.artifacts['harness-source-select']?.path,
+    'projects/kern/testing/forms/src/select-harness.ts',
+  );
+  assert.equal(
+    evidence.artifacts['harness-test-select']?.path,
+    'projects/kern/src/lib/testing/harnesses.spec.ts',
+  );
+  const recipe = evidence.components.find((component) => component.id === 'login-form');
+  assert.deepEqual(recipe?.evidence.find((item) => item.kind === 'responsive')?.artifactIds, [
+    'responsive-recipes',
+  ]);
 
   const release = run(lifecycleScript, '--mode=release');
   assert.notEqual(release.status, 0);
@@ -1212,6 +1229,8 @@ test('CI exposes independent required checks for every release-quality layer', a
   }
   assert.match(workflow, /name: Browser behavior and accessibility/);
   assert.match(workflow, /npm run test:e2e/);
+  assert.match(workflow, /name: Mobile and touch behavior/);
+  assert.match(workflow, /npm run test:mobile-touch/);
   assert.match(workspaceManifest.scripts.verify, /verify:contracts/);
   assert.match(workspaceManifest.scripts.verify, /verify:code/);
   assert.match(workspaceManifest.scripts.verify, /verify:package/);

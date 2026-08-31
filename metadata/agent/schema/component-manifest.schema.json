@@ -55,6 +55,7 @@
         "configuration",
         "playground",
         "entrypoints",
+        "compatibilityEntrypoints",
         "sourceDigest"
       ],
       "properties": {
@@ -100,6 +101,12 @@
           "$ref": "#/$defs/playgroundQuery"
         },
         "entrypoints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "compatibilityEntrypoints": {
           "type": "array",
           "items": {
             "type": "string"

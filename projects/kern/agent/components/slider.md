@@ -2,18 +2,18 @@
 
 - ID: `slider`
 - Selector: `krn-slider`
-- Import: `import { KrnSlider } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSlider } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnSlider`
 - Lifecycle: **stable**
 - Category: Forms
 
-Slider. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Slider. Selects one bounded numeric value through pointer, touch, or keyboard adjustment.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Slider for this specific contract: Selects one bounded numeric value through pointer, touch, or keyboard adjustment.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Slider for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSlider } from '@kern-ui/angular/kit';
+import { KrnSlider } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-slider-agent-example',
@@ -50,8 +50,8 @@ void bootstrapApplication(KernSliderAgentExample);
 
 | Name             | Kind   | Type                                       | Required | Default     | Description                                                                |
 | ---------------- | ------ | ------------------------------------------ | -------- | ----------- | -------------------------------------------------------------------------- |
-| `id`             | input  | `string`                                   | no       | `''`        | Stable identifier value used by the id contract.                           |
-| `name`           | input  | `string`                                   | no       | `''`        | Required human-readable name for the represented person, item, or action.  |
+| `id`             | input  | `string`                                   | no       | `''`        | Stable identifier used by the id contract.                                 |
+| `name`           | input  | `string`                                   | no       | `''`        | Native form-control name forwarded to the owned interactive element.       |
 | `label`          | input  | `string`                                   | no       | `''`        | Visible text that names the control or data value.                         |
 | `ariaLabel`      | input  | `string \| undefined`                      | no       | `undefined` | Accessible name used when visible content is not sufficient.               |
 | `min`            | input  | `number`                                   | no       | `0`         | Smallest accepted numeric or temporal value.                               |
@@ -80,12 +80,9 @@ Angular Forms control with value type `number`.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Arrow keys adjust by one step; Page Up, Page Down, Home, and End make larger moves
+- The real form control retains its visible name, described-by relationships, and Angular state.
+- Required, readonly, disabled, and invalid states remain programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -130,19 +127,19 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument    | Control | Default             | Test value                      | Binding                      | Description                                       |
-| ----------- | ------- | ------------------- | ------------------------------- | ---------------------------- | ------------------------------------------------- |
-| `min`       | number  | `1`                 | `2`                             | input `min` (property)       | Sets the start of the range.                      |
-| `max`       | number  | `100`               | `101`                           | input `max` (property)       | Sets the end of the range.                        |
-| `step`      | number  | `1`                 | `2`                             | input `step` (property)      | Sets the keyboard increment.                      |
-| `showValue` | boolean | `true`              | `false`                         | input `showValue` (property) | Shows the current numeric value.                  |
-| `disabled`  | boolean | `false`             | `true`                          | input `disabled` (property)  | Prevents user interaction.                        |
-| `readOnly`  | boolean | `false`             | `true`                          | input `readonly` (property)  | Keeps the value focusable while preventing edits. |
-| `invalid`   | boolean | `false`             | `true`                          | input `invalid` (property)   | Exposes the invalid visual and ARIA state.        |
-| `id`        | text    | `""`                | `"Alternate value"`             | input `id` (property)        | Configures the component id contract.             |
-| `label`     | text    | `"Seat allocation"` | `"Seat allocation · alternate"` | input `label` (property)     | Configures the component label contract.          |
-| `tabindex`  | number  | `0`                 | `1`                             | input `tabindex` (property)  | Configures the component tabindex contract.       |
-| `value`     | number  | `0`                 | `1`                             | input `value` (property)     | Controlled component value.                       |
+| Argument    | Control | Default             | Test value                      | Binding                      | Description                                                               |
+| ----------- | ------- | ------------------- | ------------------------------- | ---------------------------- | ------------------------------------------------------------------------- |
+| `min`       | number  | `1`                 | `2`                             | input `min` (property)       | Sets the start of the range.                                              |
+| `max`       | number  | `100`               | `101`                           | input `max` (property)       | Sets the end of the range.                                                |
+| `step`      | number  | `1`                 | `2`                             | input `step` (property)      | Sets the keyboard increment.                                              |
+| `showValue` | boolean | `true`              | `false`                         | input `showValue` (property) | Shows the current numeric value.                                          |
+| `disabled`  | boolean | `false`             | `true`                          | input `disabled` (property)  | Prevents user interaction.                                                |
+| `readOnly`  | boolean | `false`             | `true`                          | input `readonly` (property)  | Keeps the value focusable while preventing edits.                         |
+| `invalid`   | boolean | `false`             | `true`                          | input `invalid` (property)   | Exposes the invalid visual and ARIA state.                                |
+| `id`        | text    | `""`                | `"Alternate value"`             | input `id` (property)        | Stable identifier used by the id contract.                                |
+| `label`     | text    | `"Seat allocation"` | `"Seat allocation · alternate"` | input `label` (property)     | Visible text that names the control or data value.                        |
+| `tabindex`  | number  | `0`                 | `1`                             | input `tabindex` (property)  | Native sequential-focus order forwarded to the owned interactive element. |
+| `value`     | number  | `0`                 | `1`                             | input `value` (property)     | Controlled component value.                                               |
 
 Exact API exclusions:
 
@@ -170,8 +167,8 @@ Presets:
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — Readonly; scenario `default`; `readOnly=true`.
 - `invalid` — Invalid; scenario `default`; `invalid=true`.
-- `minimum` — minimum; scenario `default`; fixture effect `status/neutral` — minimum: The fixture exposes the minimum status without claiming a public component input..
-- `maximum` — maximum; scenario `default`; fixture effect `status/neutral` — maximum: The fixture exposes the maximum status without claiming a public component input..
+- `minimum` — minimum; scenario `default`; `value=1`; fixture effect `status/neutral` — minimum: The fixture exposes the minimum status without claiming a public component input..
+- `maximum` — maximum; scenario `default`; `value=100`; fixture effect `status/neutral` — maximum: The fixture exposes the maximum status without claiming a public component input..
 - `value-hidden` — Value Hidden; scenario `default`; `showValue=false`.
 
 ## Related

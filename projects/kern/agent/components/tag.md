@@ -2,18 +2,18 @@
 
 - ID: `tag`
 - Selector: `krn-tag`
-- Import: `import { KrnTag } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTag } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnChip`
 - Lifecycle: **stable**
 - Category: Data display
 
-Tag. A dense, readable data primitive with semantic structure and resilient overflow.
+Tag. Displays a compact removable label for a user- or system-assigned value.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Tag for this specific contract: Displays a compact removable label for a user- or system-assigned value.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Tag for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTag } from '@kern-ui/angular/kit';
+import { KrnTag } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-tag-agent-example',
@@ -54,14 +54,14 @@ void bootstrapApplication(KernTagAgentExample);
 
 ## API
 
-| Name              | Kind   | Type                  | Required | Default     | Description                                                                   |
-| ----------------- | ------ | --------------------- | -------- | ----------- | ----------------------------------------------------------------------------- |
-| `selected`        | model  | `boolean`             | no       | `false`     | Controlled selected state, distinct from keyboard focus.                      |
-| `interactive`     | input  | `boolean`             | no       | `false`     | Enables the documented user interaction for an otherwise presentational item. |
-| `removable`       | input  | `boolean`             | no       | `false`     | Displays a named action for removing the represented value.                   |
-| `disabled`        | input  | `boolean`             | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.    |
-| `accessibleLabel` | input  | `string \| undefined` | no       | `undefined` | Accessible name for the complete composite widget.                            |
-| `remove`          | output | `void`                | no       | `undefined` | Notifies the consumer after the remove interaction completes.                 |
+| Name              | Kind   | Type                  | Required | Default     | Description                                                                |
+| ----------------- | ------ | --------------------- | -------- | ----------- | -------------------------------------------------------------------------- |
+| `selected`        | model  | `boolean`             | no       | `false`     | Controlled selected state, distinct from keyboard focus.                   |
+| `interactive`     | input  | `boolean`             | no       | `false`     | Defines the component's interactive behavior or presentation.              |
+| `removable`       | input  | `boolean`             | no       | `false`     | Defines the component's removable behavior or presentation.                |
+| `disabled`        | input  | `boolean`             | no       | `false`     | Prevents user interaction and participates in the disabled-state contract. |
+| `accessibleLabel` | input  | `string \| undefined` | no       | `undefined` | Human-readable copy for the accessible state or control.                   |
+| `remove`          | output | `void`                | no       | `undefined` | Notifies the consumer after the remove interaction completes.              |
 
 ## Deprecated selectors
 
@@ -77,11 +77,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys navigate interactive data
-- Enter expands or selects
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Visible labels and semantic structure preserve the meaning and relationships in the data.
+- Interactive descendants retain native names and a predictable focus order.
 
 Manual assistive-technology validation remains required in the consuming application.
 

@@ -9,14 +9,14 @@
   "symbol": "KrnSpacer",
   "canonicalSymbol": "KrnSpacer",
   "canonicalId": "spacer",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Spacer. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Spacer. Reserves decorative horizontal or vertical space and stays hidden from assistive technology.",
   "acceptanceStates": ["default", "dark", "high contrast", "compact", "RTL", "mobile"],
   "lifecycle": {
     "status": "stable",
@@ -70,12 +70,8 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
-    "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
-    ],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
+    "notes": ["Is always aria-hidden because it communicates spacing, not content."],
     "manualValidationRequired": true
   },
   "ssr": {
@@ -93,7 +89,7 @@
       "title": "Semantic layout spacer",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Semantic layout spacer\n *\n * Reserve tokenized vertical space between independent regions.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSpacer } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-spacer-agent-example',\n  standalone: true,\n  imports: [KrnSpacer],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <p>Summary</p>\n    <krn-spacer size=\"6\" axis=\"vertical\" />\n    <p>Detailed report</p>\n  `,\n})\nexport class KernSpacerAgentExample {}\n\nvoid bootstrapApplication(KernSpacerAgentExample);\n",
+      "code": "/**\n * Semantic layout spacer\n *\n * Reserve tokenized vertical space between independent regions.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSpacer } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-spacer-agent-example',\n  standalone: true,\n  imports: [KrnSpacer],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <p>Summary</p>\n    <krn-spacer size=\"6\" axis=\"vertical\" />\n    <p>Detailed report</p>\n  `,\n})\nexport class KernSpacerAgentExample {}\n\nvoid bootstrapApplication(KernSpacerAgentExample);\n",
       "verification": "compiled",
       "source": "examples/spacer.ts"
     }
@@ -101,8 +97,8 @@
   "related": ["app-shell", "header", "sidebar", "navigation-rail"],
   "keywords": ["spacer", "Spacer", "Layout", "krn-spacer", "KrnSpacer", "size", "axis"],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Spacer for this specific contract: Reserves decorative horizontal or vertical space and stays hidden from assistive technology.",
+    "avoidWhen": "Do not choose Spacer for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

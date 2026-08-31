@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSuccessState } from '@kern-ui/angular/kit';
+import { KrnSuccessState } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-success-state-agent-example',

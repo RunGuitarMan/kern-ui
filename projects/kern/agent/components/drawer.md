@@ -2,12 +2,12 @@
 
 - ID: `drawer`
 - Selector: `krn-drawer`
-- Import: `import { KrnDrawer } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDrawer } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnDrawer`
 - Lifecycle: **beta**
 - Category: Feedback
 
-Drawer. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Drawer. Opens a side-anchored task surface with configurable modality, size, and focus restoration.
 
 ## Use
 
@@ -27,7 +27,7 @@ Avoid: Do not use a modal Drawer as permanent application navigation; use Sideba
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDrawer } from '@kern-ui/angular/kit';
+import { KrnDrawer } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-drawer-agent-example',
@@ -71,8 +71,8 @@ void bootstrapApplication(KernDrawerAgentExample);
 | `closeOnOutside`  | input  | `boolean \| null`              | no       | `null`             | Allows an interaction outside the owned overlay to dismiss it.              |
 | `initialFocus`    | input  | `string`                       | no       | `'first-tabbable'` | Identifies the element that receives focus when the modal surface opens.    |
 | `restoreFocus`    | input  | `HTMLElement \| false \| null` | no       | `null`             | Explicit focus return target, or `false` to disable focus restoration.      |
-| `contentTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template used to render the component body with its typed context.          |
-| `actionsTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template used to render product-owned actions in the designated slot.       |
+| `contentTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template or projected content used to render content.                       |
+| `actionsTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template or projected content used to render actions.                       |
 | `closed`          | output | `KrnOverlayCloseReason`        | no       | `undefined`        | Notifies the consumer after the closed interaction completes.               |
 | `afterExited`     | output | `void`                         | no       | `undefined`        | Emits after exit motion and global modal cleanup have completed.            |
 
@@ -142,11 +142,11 @@ component inputs or models.
 | `size`           | select  | `"md"`              | `"sm"`                          | input `size` (property)           | Sets the sheet width or height.                                                                  |
 | `modal`          | boolean | `true`              | `false`                         | input `modal` (property)          | Controls focus trapping and backdrop behavior.                                                   |
 | `closeOnOutside` | select  | `null`              | `true`                          | input `closeOnOutside` (property) | Inherits the surface policy by default, or explicitly enables or disables outside-click closing. |
-| `closeOnEscape`  | boolean | `true`              | `false`                         | input `closeOnEscape` (property)  | Configures the component closeOnEscape contract.                                                 |
-| `description`    | text    | `""`                | `"Alternate value"`             | input `description` (property)    | Configures the component description contract.                                                   |
-| `eyebrow`        | text    | `"AUDIT"`           | `"AUDIT · alternate"`           | input `eyebrow` (property)        | Configures the component eyebrow contract.                                                       |
-| `showClose`      | boolean | `true`              | `false`                         | input `showClose` (property)      | Configures the component showClose contract.                                                     |
-| `title`          | text    | `"Recent activity"` | `"Recent activity · alternate"` | input `title` (property)          | Configures the component title contract.                                                         |
+| `closeOnEscape`  | boolean | `true`              | `false`                         | input `closeOnEscape` (property)  | Allows Escape to dismiss the topmost owned overlay.                                              |
+| `description`    | text    | `""`                | `"Alternate value"`             | input `description` (property)    | Visible supporting description for the component content.                                        |
+| `eyebrow`        | text    | `"AUDIT"`           | `"AUDIT · alternate"`           | input `eyebrow` (property)        | Human-readable copy for the eyebrow state or control.                                            |
+| `showClose`      | boolean | `true`              | `false`                         | input `showClose` (property)      | Controls whether the component applies the show close behavior.                                  |
+| `title`          | text    | `"Recent activity"` | `"Recent activity · alternate"` | input `title` (property)          | Visible title that also names the component surface or data view.                                |
 
 Exact API exclusions:
 

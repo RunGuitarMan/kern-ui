@@ -2,18 +2,18 @@
 
 - ID: `hint`
 - Selector: `krn-hint`
-- Import: `import { KrnHint } from '@kern-ui/angular/kit';`
+- Import: `import { KrnHint } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnHint`
 - Lifecycle: **stable**
 - Category: Forms
 
-Hint. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Hint. Provides supporting guidance that a Form Field associates with its control.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Hint for this specific contract: Provides supporting guidance that a Form Field associates with its control.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Hint for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnHint } from '@kern-ui/angular/kit';
+import { KrnHint } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-hint-agent-example',
@@ -43,9 +43,9 @@ void bootstrapApplication(KernHintAgentExample);
 
 ## API
 
-| Name | Kind  | Type     | Required | Default | Description                                          |
-| ---- | ----- | -------- | -------- | ------- | ---------------------------------------------------- |
-| `id` | input | `string` | no       | `''`    | Stable identifier value used by the custom contract. |
+| Name | Kind  | Type     | Required | Default | Description                                    |
+| ---- | ----- | -------- | -------- | ------- | ---------------------------------------------- |
+| `id` | input | `string` | no       | `''`    | Stable identifier used by the custom contract. |
 
 ## Deprecated selectors
 
@@ -61,12 +61,8 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Hint is not focusable and adds no keyboard interaction
+- The hint id is composed into the associated control aria-describedby relationship.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -101,10 +97,10 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument  | Control | Default                         | Test value                                  | Binding               | Description                           |
-| --------- | ------- | ------------------------------- | ------------------------------------------- | --------------------- | ------------------------------------- |
-| `content` | text    | `"Use at least 12 characters."` | `"Use at least 12 characters. · alternate"` | fixture content       | Changes the projected hint content.   |
-| `id`      | text    | `""`                            | `"Alternate value"`                         | input `id` (property) | Configures the component id contract. |
+| Argument  | Control | Default                         | Test value                                  | Binding               | Description                                    |
+| --------- | ------- | ------------------------------- | ------------------------------------------- | --------------------- | ---------------------------------------------- |
+| `content` | text    | `"Use at least 12 characters."` | `"Use at least 12 characters. · alternate"` | fixture content       | Changes the projected hint content.            |
+| `id`      | text    | `""`                            | `"Alternate value"`                         | input `id` (property) | Stable identifier used by the custom contract. |
 
 Exact API exclusions:
 

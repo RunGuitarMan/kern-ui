@@ -10,6 +10,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { KrnGlobalSearch, type KrnSearchResult } from '@kern-ui/angular/patterns';
 import { KERN_CATALOG } from '@kern-ui/showcase';
+import { KERN_CANONICAL_CATALOG_INDEX, catalogAliasesFor } from '@kern-ui/showcase/catalog-index';
 import { filter, map, startWith } from 'rxjs';
 
 import { DocsI18n } from './docs-i18n';
@@ -35,14 +36,27 @@ export class DocsGlobalSearch {
   );
 
   protected readonly results = computed<readonly KrnSearchResult[]>(() =>
-    KERN_CATALOG.map((source) => {
+    KERN_CANONICAL_CATALOG_INDEX.map((indexItem) => {
+      const source = KERN_CATALOG.find((item) => item.id === indexItem.id);
+      if (!source) {
+        throw new Error(`Canonical catalog entry "${indexItem.id}" has no documentation contract.`);
+      }
       const item = this.i18n.catalogItem(source);
+      const aliasKeywords = catalogAliasesFor(item.id).flatMap((alias) => {
+        const aliasSource = KERN_CATALOG.find((candidate) => candidate.id === alias.id);
+        return [alias.id, alias.name, aliasSource?.selector ?? ''];
+      });
       return {
         id: item.id,
         label: item.name,
         description: item.summary,
         group: this.i18n.category(item.category),
-        keywords: [item.selector, item.category, this.i18n.category(item.category)],
+        keywords: [
+          item.selector,
+          item.category,
+          this.i18n.category(item.category),
+          ...aliasKeywords,
+        ],
       };
     }),
   );

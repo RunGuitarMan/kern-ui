@@ -2,7 +2,7 @@
 
 - ID: `button-group`
 - Selector: `div[krnButtonGroup]`
-- Import: `import { KrnButtonGroup } from '@kern-ui/angular/kit';`
+- Import: `import { KrnButtonGroup } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnButtonGroup`
 - Lifecycle: **stable**
 - Category: Actions
@@ -27,7 +27,7 @@ Avoid: Do not add Arrow-key navigation, selected state, or group-level disabled/
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnButton, KrnButtonGroup } from '@kern-ui/angular/kit';
+import { KrnButton, KrnButtonGroup } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-button-group-agent-example',

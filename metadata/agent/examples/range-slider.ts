@@ -8,7 +8,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnRangeSlider, type KrnRangeValue } from '@kern-ui/angular/kit';
+import { KrnRangeSlider, type KrnRangeValue } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-range-slider-agent-example',

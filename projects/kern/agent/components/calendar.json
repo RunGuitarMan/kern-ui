@@ -9,14 +9,14 @@
   "symbol": "KrnCalendar",
   "canonicalSymbol": "KrnCalendar",
   "canonicalId": "calendar",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Calendar. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Calendar. Displays a localized month grid and manages bounded date focus and selection.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -99,7 +99,7 @@
       "type": "ReadonlySet<string>",
       "required": false,
       "defaultValue": "new Set<string>()",
-      "description": "Returns whether a plain date is unavailable for selection.",
+      "description": "Controls whether the component applies the disabled dates behavior.",
       "descriptionSource": "inferred"
     },
     {
@@ -185,11 +185,13 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": [
+      "Arrow keys move the focused date; Page keys change month",
+      "Home and End move within the week; Enter or Space selects the date"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -208,7 +210,7 @@
       "title": "Controlled renewal calendar",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled renewal calendar\n *\n * Own ISO date, active month and focus state with stable disabled dates.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCalendar } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-calendar-agent-example',\n  standalone: true,\n  imports: [KrnCalendar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-calendar\n      ariaLabel=\"Renewal calendar\"\n      locale=\"en-GB\"\n      today=\"2026-07-29\"\n      [disabledDates]=\"disabledDates\"\n      [(value)]=\"selectedDate\"\n      [(activeMonth)]=\"activeMonth\"\n      [(focusedDate)]=\"focusedDate\"\n    />\n  `,\n})\nexport class KernCalendarAgentExample {\n  selectedDate = '2026-08-14';\n\n  activeMonth = '2026-08';\n\n  focusedDate = '2026-08-14';\n\n  readonly disabledDates: ReadonlySet<string> = new Set(['2026-08-16']);\n}\n\nvoid bootstrapApplication(KernCalendarAgentExample);\n",
+      "code": "/**\n * Controlled renewal calendar\n *\n * Own ISO date, active month and focus state with stable disabled dates.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCalendar } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-calendar-agent-example',\n  standalone: true,\n  imports: [KrnCalendar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-calendar\n      ariaLabel=\"Renewal calendar\"\n      locale=\"en-GB\"\n      today=\"2026-07-29\"\n      [disabledDates]=\"disabledDates\"\n      [(value)]=\"selectedDate\"\n      [(activeMonth)]=\"activeMonth\"\n      [(focusedDate)]=\"focusedDate\"\n    />\n  `,\n})\nexport class KernCalendarAgentExample {\n  selectedDate = '2026-08-14';\n\n  activeMonth = '2026-08';\n\n  focusedDate = '2026-08-14';\n\n  readonly disabledDates: ReadonlySet<string> = new Set(['2026-08-16']);\n}\n\nvoid bootstrapApplication(KernCalendarAgentExample);\n",
       "verification": "compiled",
       "source": "examples/calendar.ts"
     }
@@ -237,8 +239,8 @@
     "focusedDate"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Calendar for this specific contract: Displays a localized month grid and manages bounded date focus and selection.",
+    "avoidWhen": "Do not choose Calendar for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -306,7 +308,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "2026-11-30",
-        "description": "Configures the component max contract.",
+        "description": "Largest accepted numeric or temporal value.",
         "binding": {
           "kind": "input",
           "publicName": "max",
@@ -319,7 +321,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "2026-02-01",
-        "description": "Configures the component min contract.",
+        "description": "Smallest accepted numeric or temporal value.",
         "binding": {
           "kind": "input",
           "publicName": "min",
@@ -332,7 +334,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component showTodayAction contract.",
+        "description": "Controls whether the component applies the show today action behavior.",
         "binding": {
           "kind": "input",
           "publicName": "showTodayAction",
@@ -345,7 +347,7 @@
         "kind": "text",
         "defaultValue": "2026-07-26",
         "testValue": "2026-08-15",
-        "description": "Configures the component today contract.",
+        "description": "Deterministic plain date treated as today on both server and client.",
         "binding": {
           "kind": "input",
           "publicName": "today",
@@ -358,7 +360,7 @@
         "kind": "select",
         "defaultValue": 1,
         "testValue": 0,
-        "description": "Configures the component weekStartsOn contract.",
+        "description": "Zero-based weekday used as the first calendar column.",
         "binding": {
           "kind": "input",
           "publicName": "weekStartsOn",

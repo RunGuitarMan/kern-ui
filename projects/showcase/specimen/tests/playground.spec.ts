@@ -15,6 +15,9 @@ import {
   KERN_PLAYGROUND_AUTO_CONTROL_KEYS,
   KERN_PLAYGROUND_DEFINITIONS,
   findKernPlaygroundDefinition,
+  localizeKernPlaygroundFixtureEffect,
+  localizeKernPlaygroundPresetLabel,
+  localizeKernPlaygroundStringArgument,
   normalizeKernPlaygroundApiType,
   normalizeKernPlaygroundValues,
   normalizeKernPlaygroundStateId,
@@ -29,6 +32,127 @@ function definition(id: string): KernPlaygroundDefinition {
 }
 
 describe('KERN playground registry', () => {
+  it('localizes every preset label and fixture-effect description for Russian previews', () => {
+    const cyrillic = /[А-Яа-яЁё]/;
+
+    for (const entry of KERN_PLAYGROUND_DEFINITIONS) {
+      for (const preset of entry.presets) {
+        const context = `${entry.id}.${preset.id}`;
+        expect(localizeKernPlaygroundPresetLabel('ru-RU', preset), context).toMatch(cyrillic);
+        expect(localizeKernPlaygroundPresetLabel('en-US', preset), context).toBe(preset.label);
+
+        if (preset.fixtureEffect) {
+          const localized = localizeKernPlaygroundFixtureEffect('ru-RU', preset.fixtureEffect);
+          expect(localized.label, `${context}.fixtureEffect.label`).toMatch(cyrillic);
+          expect(localized.description, `${context}.fixtureEffect.description`).toMatch(cyrillic);
+          expect(
+            localizeKernPlaygroundFixtureEffect('en-US', preset.fixtureEffect),
+            `${context}.fixtureEffect.english`,
+          ).toBe(preset.fixtureEffect);
+        }
+      }
+    }
+  });
+
+  it('localizes visible string arguments without changing enum, value, or id contracts', () => {
+    const errorState = definition('error-state');
+    const title = errorState.controls.find(({ key }) => key === 'title');
+    const description = errorState.controls.find(({ key }) => key === 'description');
+    expect(title?.binding.kind).toBe('input');
+    expect(description?.binding.kind).toBe('input');
+    expect(
+      localizeKernPlaygroundStringArgument('ru-RU', 'title', String(title?.defaultValue)),
+    ).toBe('Не удалось загрузить рабочие пространства');
+    expect(
+      localizeKernPlaygroundStringArgument(
+        'ru-RU',
+        'description',
+        String(description?.defaultValue),
+      ),
+    ).toBe('Сервис не ответил. Ваши изменения сохранены.');
+    expect(localizeKernPlaygroundStringArgument('ru-RU', 'title', String(title?.testValue))).toBe(
+      'Не удалось загрузить рабочие пространства · альтернативный вариант',
+    );
+
+    const textarea = definition('textarea');
+    const filled = textarea.presets.find(({ id }) => id === 'filled');
+    expect(
+      localizeKernPlaygroundStringArgument('ru-RU', 'value', String(filled?.args['value'])),
+    ).toBe('Продление одобрено и ожидает юридической проверки.');
+    expect(
+      localizeKernPlaygroundStringArgument(
+        'ru-RU',
+        'description',
+        'Renewal approved pending legal review.',
+      ),
+    ).toBe('Продление одобрено и ожидает юридической проверки.');
+
+    expect(localizeKernPlaygroundStringArgument('ru-RU', 'tone', 'danger')).toBe('danger');
+    expect(localizeKernPlaygroundStringArgument('ru-RU', 'value', 'Example value')).toBe(
+      'Example value',
+    );
+    expect(localizeKernPlaygroundStringArgument('ru-RU', 'id', 'Alternate value')).toBe(
+      'Alternate value',
+    );
+    expect(
+      localizeKernPlaygroundStringArgument('en-US', 'title', 'Could not load workspaces'),
+    ).toBe('Could not load workspaces');
+  });
+
+  it('covers every prose control value produced by the playground registry', () => {
+    const proseKeys = new Set([
+      'alt',
+      'content',
+      'description',
+      'detail',
+      'dirtyMessage',
+      'emptyText',
+      'error',
+      'errorMessage',
+      'errorText',
+      'eyebrow',
+      'filter',
+      'filterPlaceholder',
+      'heading',
+      'hideText',
+      'hint',
+      'label',
+      'loadingText',
+      'name',
+      'optionalText',
+      'placeholder',
+      'prompt',
+      'query',
+      'showText',
+      'text',
+      'title',
+      'valueText',
+    ]);
+    const intentionalIdentities = new Set(['20rem', 'Avery Cole', 'Northstar', 'avery@north.ops']);
+    const cyrillic = /[А-Яа-яЁё]/;
+
+    for (const entry of KERN_PLAYGROUND_DEFINITIONS) {
+      for (const control of entry.controls) {
+        if (!proseKeys.has(control.key)) continue;
+
+        for (const [source, candidate] of [
+          ['default', control.defaultValue],
+          ['test', control.testValue],
+        ] as const) {
+          if (typeof candidate !== 'string' || candidate === '') continue;
+          const localized = localizeKernPlaygroundStringArgument('ru-RU', control.key, candidate);
+          const context = `${entry.id}.${control.key}.${source}`;
+
+          if (localized === candidate) {
+            expect(intentionalIdentities.has(candidate), context).toBe(true);
+          } else {
+            expect(localized, context).toMatch(cyrillic);
+          }
+        }
+      }
+    }
+  });
+
   it('covers every catalog item exactly once with an interactive contract', () => {
     expect(KERN_CATALOG).toHaveLength(132);
     expect(KERN_PLAYGROUND_DEFINITIONS).toHaveLength(KERN_CATALOG.length);
@@ -51,6 +175,79 @@ describe('KERN playground registry', () => {
       expect(Object.isFrozen(entry.controls), `${item.id}.controls`).toBe(true);
       expect(Object.isFrozen(entry.presets), `${item.id}.presets`).toBe(true);
     }
+  });
+
+  it('publishes a small curated teaching surface without reducing exhaustive QA coverage', () => {
+    const catalogIds = new Set(KERN_CATALOG.map(({ id }) => id));
+
+    for (const entry of KERN_PLAYGROUND_DEFINITIONS) {
+      expect(entry.featuredPresetIds[0], `${entry.id}.featured.default`).toBe(entry.defaultStoryId);
+      expect(
+        entry.presets.some(({ id }) => id === entry.defaultStoryId),
+        entry.id,
+      ).toBe(true);
+      expect(entry.featuredPresetIds.length, `${entry.id}.featured.minimum`).toBeGreaterThanOrEqual(
+        Math.min(3, entry.presets.length),
+      );
+      expect(entry.featuredPresetIds.length, `${entry.id}.featured.maximum`).toBeLessThanOrEqual(5);
+      expect(new Set(entry.featuredPresetIds).size, `${entry.id}.featured.unique`).toBe(
+        entry.featuredPresetIds.length,
+      );
+      expect(Object.isFrozen(entry.featuredPresetIds), `${entry.id}.featured.frozen`).toBe(true);
+      for (const presetId of entry.featuredPresetIds) {
+        expect(
+          entry.presets.some(({ id }) => id === presetId),
+          `${entry.id}.${presetId}`,
+        ).toBe(true);
+      }
+
+      expect(
+        entry.essentialControlKeys.length,
+        `${entry.id}.essential.minimum`,
+      ).toBeGreaterThanOrEqual(Math.min(4, entry.controls.length));
+      expect(
+        entry.essentialControlKeys.length,
+        `${entry.id}.essential.maximum`,
+      ).toBeLessThanOrEqual(6);
+      expect(Object.isFrozen(entry.essentialControlKeys), `${entry.id}.essential.frozen`).toBe(
+        true,
+      );
+      for (const controlKey of entry.essentialControlKeys) {
+        expect(
+          entry.controls.some(({ key }) => key === controlKey),
+          `${entry.id}.${controlKey}`,
+        ).toBe(true);
+      }
+
+      expect(Object.isFrozen(entry.supportingComponentIds), `${entry.id}.supporting.frozen`).toBe(
+        true,
+      );
+      for (const componentId of entry.supportingComponentIds) {
+        expect(catalogIds.has(componentId), `${entry.id}.supporting.${componentId}`).toBe(true);
+      }
+    }
+
+    expect(definition('text-input').featuredPresetIds).toEqual([
+      'filled',
+      'default',
+      'focus-visible',
+      'invalid',
+      'disabled',
+    ]);
+    expect(definition('text-input').defaultStoryId).toBe('filled');
+    expect(definition('multi-select').defaultStoryId).toBe('open');
+    expect(definition('date-picker').defaultStoryId).toBe('open');
+    expect(definition('text-input').essentialControlKeys).toEqual([
+      'value',
+      'placeholder',
+      'size',
+      'invalid',
+      'disabled',
+      'readOnly',
+    ]);
+    expect(definition('header').interactive).toBe(false);
+    expect(definition('text-input').interactive).toBe(true);
+    expect(definition('text-input').supportingComponentIds).toEqual(['form-field']);
   });
 
   it('maps every catalog acceptance state to the same stable preset id', () => {
@@ -263,6 +460,37 @@ describe('KERN playground registry', () => {
       presets.filter(({ fixtureEffect }) => fixtureEffect !== undefined),
     );
     expect(fixturePresets.length).toBeGreaterThanOrEqual(500);
+  });
+
+  it('turns filled form stories into visible component values', () => {
+    const signatures: Readonly<Record<string, string | number | boolean>> = {
+      'text-input': 'Acme Europe',
+      textarea: 'Renewal approved pending legal review.',
+      'password-input': 'northstar-secure',
+      'search-input': 'Northstar',
+      'number-input': 250,
+      select: 'team',
+      'native-select': 'team',
+      combobox: 'team',
+      autocomplete: 'Northstar',
+      'date-picker': '2026-10-15',
+      'time-picker': '18:30',
+      'color-picker': '#4666da',
+      'verification-code': '482731',
+    };
+
+    for (const [componentId, value] of Object.entries(signatures)) {
+      const entry = definition(componentId);
+      const filled = entry.presets.find(({ id }) => id === 'filled');
+      expect(filled?.args['value'], `${componentId}.filled.value`).toBe(value);
+      expect(resolveKernPlaygroundState(entry, { state: 'filled' }).args['value']).toBe(value);
+    }
+
+    for (const componentId of ['checkbox', 'radio', 'switch']) {
+      const entry = definition(componentId);
+      expect(entry.presets.find(({ id }) => id === 'filled')?.args['selected']).toBe(true);
+      expect(resolveKernPlaygroundState(entry, { state: 'filled' }).args['selected']).toBe(true);
+    }
   });
 
   it('normalizes primitive values, drops unknown keys, and is idempotent', () => {
@@ -586,12 +814,12 @@ describe('KERN playground registry', () => {
 
   it('classifies every public input/model as one real control or one exact exclusion', () => {
     expect(KERN_PLAYGROUND_API_COVERAGE).toEqual({
-      publicInputsAndModels: 1057,
-      controlled: 663,
-      excluded: 394,
+      publicInputsAndModels: 1066,
+      controlled: 665,
+      excluded: 401,
       unclassified: 0,
     });
-    expect(KERN_PLAYGROUND_API_EXCLUSIONS).toHaveLength(394);
+    expect(KERN_PLAYGROUND_API_EXCLUSIONS).toHaveLength(401);
     expect(Object.values(KERN_PLAYGROUND_AUTO_CONTROL_KEYS).flat().length).toBeGreaterThan(0);
 
     for (const item of KERN_CATALOG) {

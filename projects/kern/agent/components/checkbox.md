@@ -2,18 +2,18 @@
 
 - ID: `checkbox`
 - Selector: `krn-checkbox`
-- Import: `import { KrnCheckbox } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCheckbox } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnCheckbox`
 - Lifecycle: **stable**
 - Category: Forms
 
-Checkbox. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Checkbox. Represents an independent boolean choice and supports a separate indeterminate state.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Checkbox for this specific contract: Represents an independent boolean choice and supports a separate indeterminate state.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Checkbox for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCheckbox } from '@kern-ui/angular/kit';
+import { KrnCheckbox } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-checkbox-agent-example',
@@ -52,8 +52,8 @@ void bootstrapApplication(KernCheckboxAgentExample);
 
 | Name                  | Kind   | Type                   | Required | Default                          | Description                                                                                      |
 | --------------------- | ------ | ---------------------- | -------- | -------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `id`                  | input  | `string`               | no       | `''`                             | Stable identifier value used by the id contract.                                                 |
-| `name`                | input  | `string`               | no       | `''`                             | Required human-readable name for the represented person, item, or action.                        |
+| `id`                  | input  | `string`               | no       | `''`                             | Stable identifier used by the id contract.                                                       |
+| `name`                | input  | `string`               | no       | `''`                             | Native form-control name forwarded to the owned interactive element.                             |
 | `value`               | input  | `string`               | no       | `createKrnId('checkbox-option')` | Controlled component value.                                                                      |
 | `checked`             | input  | `boolean \| undefined` | no       | `undefined`                      | Controlled checked state rendered by the native choice control.                                  |
 | `ariaLabel`           | input  | `string`               | no       | `''`                             | Accessible name used when visible content is not sufficient.                                     |
@@ -64,7 +64,7 @@ void bootstrapApplication(KernCheckboxAgentExample);
 | `readonly`            | input  | `boolean`              | no       | `false`                          | Keeps the value perceivable while preventing user edits.                                         |
 | `required`            | input  | `boolean`              | no       | `false`                          | Marks the value as required and participates in Angular Forms validation.                        |
 | `invalid`             | input  | `boolean`              | no       | `false`                          | Exposes an externally controlled invalid presentation state.                                     |
-| `indeterminate`       | input  | `boolean`              | no       | `false`                          | Represents an unknown progress value or a mixed selection state.                                 |
+| `indeterminate`       | input  | `boolean`              | no       | `false`                          | Controlled mixed state rendered independently from the checked value.                            |
 | `tabindex`            | input  | `number`               | no       | `0`                              | Native sequential-focus order forwarded to the owned interactive element.                        |
 | `checkedChange`       | output | `boolean`              | no       | `undefined`                      | Notifies the consumer after the checked change interaction completes.                            |
 | `indeterminateChange` | output | `boolean`              | no       | `undefined`                      | Notifies the consumer after the indeterminate change interaction completes.                      |
@@ -83,12 +83,9 @@ Angular Forms control with value type `boolean | null`.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab focuses the checkbox; Space toggles checked state
+- The real form control retains its visible name, described-by relationships, and Angular state.
+- Required, readonly, disabled, and invalid states remain programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -134,19 +131,19 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument        | Control | Default                                      | Test value                                               | Binding                          | Description                                       |
-| --------------- | ------- | -------------------------------------------- | -------------------------------------------------------- | -------------------------------- | ------------------------------------------------- |
-| `selected`      | boolean | `false`                                      | `true`                                                   | fixture interaction              | Shows the checked state.                          |
-| `indeterminate` | boolean | `false`                                      | `true`                                                   | input `indeterminate` (property) | Shows a mixed selection state.                    |
-| `disabled`      | boolean | `false`                                      | `true`                                                   | input `disabled` (property)      | Prevents user interaction.                        |
-| `readOnly`      | boolean | `false`                                      | `true`                                                   | input `readonly` (property)      | Keeps the value focusable while preventing edits. |
-| `required`      | boolean | `false`                                      | `true`                                                   | input `required` (property)      | Marks the control as required.                    |
-| `invalid`       | boolean | `false`                                      | `true`                                                   | input `invalid` (property)       | Exposes the invalid visual and ARIA state.        |
-| `checked`       | boolean | `false`                                      | `true`                                                   | input `checked` (property)       | Configures the component checked contract.        |
-| `description`   | text    | `"Receive a summary every Monday at 09:00."` | `"Receive a summary every Monday at 09:00. · alternate"` | input `description` (property)   | Configures the component description contract.    |
-| `id`            | text    | `""`                                         | `"Alternate value"`                                      | input `id` (property)            | Configures the component id contract.             |
-| `tabindex`      | number  | `0`                                          | `1`                                                      | input `tabindex` (property)      | Configures the component tabindex contract.       |
-| `value`         | text    | `"Example value"`                            | `"Example value · alternate"`                            | input `value` (property)         | Controlled component value.                       |
+| Argument        | Control | Default                                      | Test value                                               | Binding                          | Description                                                               |
+| --------------- | ------- | -------------------------------------------- | -------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------- |
+| `selected`      | boolean | `false`                                      | `true`                                                   | fixture interaction              | Shows the checked state.                                                  |
+| `indeterminate` | boolean | `false`                                      | `true`                                                   | input `indeterminate` (property) | Shows a mixed selection state.                                            |
+| `disabled`      | boolean | `false`                                      | `true`                                                   | input `disabled` (property)      | Prevents user interaction.                                                |
+| `readOnly`      | boolean | `false`                                      | `true`                                                   | input `readonly` (property)      | Keeps the value focusable while preventing edits.                         |
+| `required`      | boolean | `false`                                      | `true`                                                   | input `required` (property)      | Marks the control as required.                                            |
+| `invalid`       | boolean | `false`                                      | `true`                                                   | input `invalid` (property)       | Exposes the invalid visual and ARIA state.                                |
+| `checked`       | boolean | `false`                                      | `true`                                                   | input `checked` (property)       | Controlled checked state rendered by the native choice control.           |
+| `description`   | text    | `"Receive a summary every Monday at 09:00."` | `"Receive a summary every Monday at 09:00. · alternate"` | input `description` (property)   | Visible supporting description for the component content.                 |
+| `id`            | text    | `""`                                         | `"Alternate value"`                                      | input `id` (property)            | Stable identifier used by the id contract.                                |
+| `tabindex`      | number  | `0`                                          | `1`                                                      | input `tabindex` (property)      | Native sequential-focus order forwarded to the owned interactive element. |
+| `value`         | text    | `"Example value"`                            | `"Example value · alternate"`                            | input `value` (property)         | Controlled component value.                                               |
 
 Exact API exclusions:
 
@@ -171,7 +168,7 @@ Presets:
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
-- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `filled` — filled; scenario `default`; `selected=true`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — Readonly; scenario `default`; `readOnly=true`.
 - `required` — Required; scenario `default`; `required=true`.

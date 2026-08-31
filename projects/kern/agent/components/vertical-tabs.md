@@ -2,18 +2,18 @@
 
 - ID: `vertical-tabs`
 - Selector: `krn-vertical-tabs`
-- Import: `import { KrnVerticalTabs } from '@kern-ui/angular/kit';`
+- Import: `import { KrnVerticalTabs } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnTabs`
 - Lifecycle: **stable**
 - Category: Navigation
 
-Vertical Tabs. A keyboard-first wayfinding primitive that preserves orientation and current location.
+Vertical Tabs. Presents the Tabs interaction model on a vertical axis.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Vertical Tabs for this specific contract: Presents the Tabs interaction model on a vertical axis.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Vertical Tabs for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnVerticalTabs, type KrnTabItem } from '@kern-ui/angular/kit';
+import { KrnVerticalTabs, type KrnTabItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-vertical-tabs-agent-example',
@@ -75,12 +75,10 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys move within composites
-- Home / End jump
-- Enter activates
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Arrow Up and Arrow Down move focus between tabs
+- Home and End move to the first and last tab; Enter or Space selects when activation is manual
+- Destinations retain native link semantics and expose current location where applicable.
+- Composite navigation uses one documented focus model without changing reading order.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -121,10 +119,10 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default      | Test value     | Binding                        | Description                                                                               |
-| ------------- | ------- | ------------ | -------------- | ------------------------------ | ----------------------------------------------------------------------------------------- |
-| `selected`    | select  | `"overview"` | `"activity"`   | model `value`                  | Chooses the active tab panel.                                                             |
-| `orientation` | select  | `"vertical"` | `"horizontal"` | input `orientation` (property) | Logical axis exposed by the component; behavior follows its documented keyboard contract. |
+| Argument      | Control | Default      | Test value     | Binding                        | Description                                                      |
+| ------------- | ------- | ------------ | -------------- | ------------------------------ | ---------------------------------------------------------------- |
+| `selected`    | select  | `"overview"` | `"activity"`   | model `value`                  | Chooses the active tab panel.                                    |
+| `orientation` | select  | `"vertical"` | `"horizontal"` | input `orientation` (property) | Defines the logical axis used by layout and keyboard navigation. |
 
 Exact API exclusions:
 

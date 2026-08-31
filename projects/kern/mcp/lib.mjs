@@ -361,9 +361,7 @@ function matchesSelector(element, selector) {
   if (elementName && element.name !== elementName) return false;
 
   const bindings = elementBindingNames(element);
-  const attributes = [...attributeSource.matchAll(/\[([-\w:]+)\]/g)].map(
-    (match) => match[1],
-  );
+  const attributes = [...attributeSource.matchAll(/\[([-\w:]+)\]/g)].map((match) => match[1]);
   return attributes.every((attribute) => bindings.has(attribute));
 }
 
@@ -420,6 +418,7 @@ export function createKernAgentApi(manifest) {
       requiredStyles: manifest.library.requiredStyles,
       configuration: manifest.library.configuration,
       entrypoints: manifest.library.entrypoints,
+      compatibilityEntrypoints: manifest.library.compatibilityEntrypoints,
       totals: {
         components: manifest.components.length,
         publicSymbolGroups: manifest.symbols.length,
@@ -636,10 +635,15 @@ export function createKernAgentApi(manifest) {
     const imports = [...importedSymbols(code), ...explicitImports];
     const issues = [];
 
+    const compatibilityEntrypoints = manifest.library.compatibilityEntrypoints ?? [];
+    const supportedEntrypoints = new Set([
+      ...manifest.library.entrypoints,
+      ...compatibilityEntrypoints,
+    ]);
     const deepImports = imports.filter(
       (entry) =>
         entry.from.startsWith(`${packageName}/`) &&
-        !manifest.library.entrypoints.includes(entry.from) &&
+        !supportedEntrypoints.has(entry.from) &&
         !entry.from.startsWith(`${packageName}/testing`),
     );
     for (const entry of deepImports) {
@@ -660,7 +664,9 @@ export function createKernAgentApi(manifest) {
           entry.exported,
         ) &&
         !entry.typeOnly &&
-        (entry.from === component.importPath || entry.from === packageName),
+        (entry.from === component.importPath ||
+          entry.from === packageName ||
+          compatibilityEntrypoints.includes(entry.from)),
     );
     const componentImport =
       componentImports.find((entry) => entry.from === component.importPath) ?? componentImports[0];
@@ -680,6 +686,16 @@ export function createKernAgentApi(manifest) {
           'warning',
           'KRN_USAGE_ROOT_IMPORT',
           'The package root is supported compatibility API, but the owner entrypoint is more explicit.',
+          `Prefer ${component.importPath} for new code.`,
+          component,
+        ),
+      );
+    } else if (compatibilityEntrypoints.includes(componentImport.from)) {
+      issues.push(
+        issue(
+          'warning',
+          'KRN_USAGE_COMPATIBILITY_IMPORT',
+          `${componentImport.from} is supported compatibility API, but the owner entrypoint is more explicit.`,
           `Prefer ${component.importPath} for new code.`,
           component,
         ),

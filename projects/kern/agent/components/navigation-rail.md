@@ -2,18 +2,18 @@
 
 - ID: `navigation-rail`
 - Selector: `krn-navigation-rail`
-- Import: `import { KrnNavigationRail } from '@kern-ui/angular/kit';`
+- Import: `import { KrnNavigationRail } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnNavigationRail`
 - Lifecycle: **stable**
 - Category: Layout
 
-Navigation Rail. A composable spatial primitive that keeps product layouts predictable across containers.
+Navigation Rail. Provides compact primary navigation that expands from a narrow rail to a labelled panel.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Navigation Rail for this specific contract: Provides compact primary navigation that expands from a narrow rail to a labelled panel.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Navigation Rail for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnNavigationRail } from '@kern-ui/angular/kit';
+import { KrnNavigationRail } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-navigation-rail-agent-example',
@@ -59,7 +59,7 @@ void bootstrapApplication(KernNavigationRailAgentExample);
 | `ariaLabel`       | input | `string \| undefined`        | no       | `undefined`                             | Accessible name used when visible content is not sufficient.              |
 | `ariaLabelledBy`  | input | `string`                     | no       | `''`                                    | Space-separated element ids that name the native navigation landmark.     |
 | `ariaDescribedBy` | input | `string`                     | no       | `''`                                    | Space-separated element ids that describe the native navigation landmark. |
-| `side`            | input | `"auto" \| "end" \| "start"` | no       | `'auto'`                                | Logical side on which the anchored or modal surface is placed.            |
+| `side`            | input | `"auto" \| "end" \| "start"` | no       | `'auto'`                                | Defines the component's side behavior or presentation.                    |
 
 ## Deprecated selectors
 
@@ -77,10 +77,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Renders a navigation landmark with a stable accessible name and description relationship.
+- Expansion changes available labels and width without changing destination order.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -117,12 +116,12 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument        | Control | Default                                 | Test value | Binding                          | Description                                      |
-| --------------- | ------- | --------------------------------------- | ---------- | -------------------------------- | ------------------------------------------------ |
-| `expanded`      | boolean | `false`                                 | `true`     | model `expanded`                 | Expands the rail to show persistent labels.      |
-| `expandedWidth` | text    | `"14rem"`                               | `"20rem"`  | input `expandedWidth` (property) | Configures the component expandedWidth contract. |
-| `side`          | select  | `"auto"`                                | `"end"`    | input `side` (property)          | Configures the component side contract.          |
-| `width`         | text    | `"var(--krn-shell-rail-width, 3.5rem)"` | `"20rem"`  | input `width` (property)         | Configures the component width contract.         |
+| Argument        | Control | Default                                 | Test value | Binding                          | Description                                                         |
+| --------------- | ------- | --------------------------------------- | ---------- | -------------------------------- | ------------------------------------------------------------------- |
+| `expanded`      | boolean | `false`                                 | `true`     | model `expanded`                 | Expands the rail to show persistent labels.                         |
+| `expandedWidth` | text    | `"14rem"`                               | `"20rem"`  | input `expandedWidth` (property) | Controls whether the component applies the expanded width behavior. |
+| `side`          | select  | `"auto"`                                | `"end"`    | input `side` (property)          | Defines the component's side behavior or presentation.              |
+| `width`         | text    | `"var(--krn-shell-rail-width, 3.5rem)"` | `"20rem"`  | input `width` (property)         | Explicit inline size of the rendered surface.                       |
 
 Exact API exclusions:
 

@@ -7,13 +7,13 @@
 - Lifecycle: **recipe**
 - Category: Patterns
 
-Multi Step Form. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.
+Multi Step Form. Coordinates validation, progress, and navigation across a multi-stage form.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Multi Step Form for this specific contract: Coordinates validation, progress, and navigation across a multi-stage form.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Multi Step Form for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -91,10 +91,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Keyboard behavior is provided by the native elements and Kern primitives in the recipe
+- The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.
+- Loading, empty, error, and success states remain visible and programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -134,12 +133,12 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument              | Control | Default        | Test value   | Binding                                | Description                                                                               |
-| --------------------- | ------- | -------------- | ------------ | -------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `current`             | number  | `0`            | `1`          | model `current`                        | Changes the current form step.                                                            |
-| `furthestStep`        | number  | `0`            | `1`          | model `furthestStep`                   | Changes the furthest completed or visited step.                                           |
-| `allowStepNavigation` | boolean | `true`         | `false`      | input `allowStepNavigation` (property) | Configures the component allowStepNavigation contract.                                    |
-| `orientation`         | select  | `"horizontal"` | `"vertical"` | input `orientation` (property)         | Logical axis exposed by the component; behavior follows its documented keyboard contract. |
+| Argument              | Control | Default        | Test value   | Binding                                | Description                                                                |
+| --------------------- | ------- | -------------- | ------------ | -------------------------------------- | -------------------------------------------------------------------------- |
+| `current`             | number  | `0`            | `1`          | model `current`                        | Changes the current form step.                                             |
+| `furthestStep`        | number  | `0`            | `1`          | model `furthestStep`                   | Changes the furthest completed or visited step.                            |
+| `allowStepNavigation` | boolean | `true`         | `false`      | input `allowStepNavigation` (property) | Controls whether the component applies the allow step navigation behavior. |
+| `orientation`         | select  | `"horizontal"` | `"vertical"` | input `orientation` (property)         | Defines the logical axis used by layout and keyboard navigation.           |
 
 Exact API exclusions:
 

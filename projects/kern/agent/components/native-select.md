@@ -2,7 +2,7 @@
 
 - ID: `native-select`
 - Selector: `krn-native-select`
-- Import: `import { KrnNativeSelect } from '@kern-ui/angular/kit';`
+- Import: `import { KrnNativeSelect } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnNativeSelect`
 - Lifecycle: **stable**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Do not expect the option popup to inherit Kern surface styling across ope
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnNativeSelect, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnNativeSelect, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-native-select-agent-example',
@@ -55,8 +55,8 @@ void bootstrapApplication(KernNativeSelectAgentExample);
 
 | Name              | Kind   | Type                                | Required | Default                                | Description                                                                                      |
 | ----------------- | ------ | ----------------------------------- | -------- | -------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`                            | no       | `''`                                   | Stable identifier value used by the id contract.                                                 |
-| `name`            | input  | `string`                            | no       | `''`                                   | Required human-readable name for the represented person, item, or action.                        |
+| `id`              | input  | `string`                            | no       | `''`                                   | Stable identifier used by the id contract.                                                       |
+| `name`            | input  | `string`                            | no       | `''`                                   | Native form-control name forwarded to the owned interactive element.                             |
 | `size`            | input  | `KrnSize`                           | no       | `'md'`                                 | Controls the native select trigger height and content density.                                   |
 | `placeholder`     | input  | `string`                            | no       | `''`                                   | Short input hint shown only while no value is present.                                           |
 | `ariaLabel`       | input  | `string`                            | no       | `''`                                   | Accessible name used when visible content is not sufficient.                                     |
@@ -66,7 +66,7 @@ void bootstrapApplication(KernNativeSelectAgentExample);
 | `identityMatcher` | input  | `KrnIdentityMatcher<T>`             | no       | `Object.is`                            | Compares option values when object identity is not stable across refreshes.                      |
 | `trackBy`         | input  | `KrnOptionTrackBy<T>`               | no       | `(option) => option.value`             | Returns the stable identity used to retain rendered items across updates.                        |
 | `stringify`       | input  | `KrnOptionStringifier<T>`           | no       | `(option) => option.label`             | Converts a domain value into the human-readable label shown to users.                            |
-| `disabledHandler` | input  | `KrnOptionDisabledHandler<T>`       | no       | `(option) => option.disabled ?? false` | Determines whether an individual option or item is unavailable.                                  |
+| `disabledHandler` | input  | `KrnOptionDisabledHandler<T>`       | no       | `(option) => option.disabled ?? false` | Controls whether the component applies the disabled handler behavior.                            |
 | `disabled`        | input  | `boolean`                           | no       | `false`                                | Prevents user interaction and participates in the disabled-state contract.                       |
 | `readonly`        | input  | `boolean`                           | no       | `false`                                | Keeps the value perceivable while preventing user edits.                                         |
 | `required`        | input  | `boolean`                           | no       | `false`                                | Marks the value as required and participates in Angular Forms validation.                        |
@@ -90,12 +90,9 @@ Angular Forms control with value type `T | null`.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Uses the browser and operating system keyboard behavior for a native select
+- The real form control retains its visible name, described-by relationships, and Angular state.
+- Required, readonly, disabled, and invalid states remain programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -139,16 +136,17 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default             | Test value                      | Binding                        | Description                                       |
-| ------------- | ------- | ------------------- | ------------------------------- | ------------------------------ | ------------------------------------------------- |
-| `placeholder` | text    | `"Choose a region"` | `"Choose a region · alternate"` | input `placeholder` (property) | Sets the empty selection prompt.                  |
-| `size`        | select  | `"md"`              | `"sm"`                          | input `size` (property)        | Changes the control height.                       |
-| `disabled`    | boolean | `false`             | `true`                          | input `disabled` (property)    | Prevents user interaction.                        |
-| `readOnly`    | boolean | `false`             | `true`                          | input `readonly` (property)    | Keeps the value focusable while preventing edits. |
-| `required`    | boolean | `false`             | `true`                          | input `required` (property)    | Marks the control as required.                    |
-| `invalid`     | boolean | `false`             | `true`                          | input `invalid` (property)     | Exposes the invalid visual and ARIA state.        |
-| `id`          | text    | `""`                | `"Alternate value"`             | input `id` (property)          | Configures the component id contract.             |
-| `tabindex`    | number  | `0`                 | `1`                             | input `tabindex` (property)    | Configures the component tabindex contract.       |
+| Argument      | Control | Default             | Test value                      | Binding                        | Description                                                               |
+| ------------- | ------- | ------------------- | ------------------------------- | ------------------------------ | ------------------------------------------------------------------------- |
+| `value`       | select  | `""`                | `"starter"`                     | fixture interaction            | Seeds the native selection with one committed option.                     |
+| `placeholder` | text    | `"Choose a region"` | `"Choose a region · alternate"` | input `placeholder` (property) | Sets the empty selection prompt.                                          |
+| `size`        | select  | `"md"`              | `"sm"`                          | input `size` (property)        | Changes the control height.                                               |
+| `disabled`    | boolean | `false`             | `true`                          | input `disabled` (property)    | Prevents user interaction.                                                |
+| `readOnly`    | boolean | `false`             | `true`                          | input `readonly` (property)    | Keeps the value focusable while preventing edits.                         |
+| `required`    | boolean | `false`             | `true`                          | input `required` (property)    | Marks the control as required.                                            |
+| `invalid`     | boolean | `false`             | `true`                          | input `invalid` (property)     | Exposes the invalid visual and ARIA state.                                |
+| `id`          | text    | `""`                | `"Alternate value"`             | input `id` (property)          | Stable identifier used by the id contract.                                |
+| `tabindex`    | number  | `0`                 | `1`                             | input `tabindex` (property)    | Native sequential-focus order forwarded to the owned interactive element. |
 
 Exact API exclusions:
 
@@ -179,7 +177,7 @@ Presets:
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
-- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `filled` — filled; scenario `default`; `value="team"`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — Readonly; scenario `default`; `readOnly=true`.
 - `required` — Required; scenario `default`; `required=true`.

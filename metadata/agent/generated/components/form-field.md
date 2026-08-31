@@ -2,7 +2,7 @@
 
 - ID: `form-field`
 - Selector: `krn-form-field`
-- Import: `import { KrnFormField } from '@kern-ui/angular/kit';`
+- Import: `import { KrnFormField } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnFormField`
 - Lifecycle: **stable**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Do not project multiple controls or proxy id, required, disabled, readonl
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnFormField, KrnHint, KrnLabel, KrnTextInput } from '@kern-ui/angular/kit';
+import { KrnFormField, KrnHint, KrnLabel, KrnTextInput } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-form-field-agent-example',
@@ -52,12 +52,12 @@ void bootstrapApplication(KernFormFieldAgentExample);
 
 ## API
 
-| Name           | Kind  | Type     | Required | Default | Description                                                             |
-| -------------- | ----- | -------- | -------- | ------- | ----------------------------------------------------------------------- |
-| `label`        | input | `string` | no       | `''`    | Visible text that names the control or data value.                      |
-| `hint`         | input | `string` | no       | `''`    | Supporting guidance displayed with a form control or product action.    |
-| `error`        | input | `string` | no       | `''`    | Current failure message or error state exposed by asynchronous content. |
-| `optionalText` | input | `string` | no       | `''`    | Human-readable copy for the optional state or control.                  |
+| Name           | Kind  | Type     | Required | Default | Description                                             |
+| -------------- | ----- | -------- | -------- | ------- | ------------------------------------------------------- |
+| `label`        | input | `string` | no       | `''`    | Visible text that names the control or data value.      |
+| `hint`         | input | `string` | no       | `''`    | Defines the component's hint behavior or presentation.  |
+| `error`        | input | `string` | no       | `''`    | Defines the component's error behavior or presentation. |
+| `optionalText` | input | `string` | no       | `''`    | Human-readable copy for the optional state or control.  |
 
 ## Deprecated selectors
 
@@ -123,9 +123,9 @@ component inputs or models.
 | `disabled`     | boolean | `false`                        | `true`                                     | fixture interaction             | Disables the projected FormControl.                                                    |
 | `readonly`     | boolean | `false`                        | `true`                                     | fixture interaction             | Keeps the projected control focusable while preventing edits.                          |
 | `required`     | boolean | `true`                         | `false`                                    | fixture interaction             | Marks the projected control as required.                                               |
-| `error`        | text    | `""`                           | `"Alternate value"`                        | input `error` (property)        | Configures the component error contract.                                               |
-| `hint`         | text    | `"Required enterprise value."` | `"Required enterprise value. · alternate"` | input `hint` (property)         | Configures the component hint contract.                                                |
-| `optionalText` | text    | `""`                           | `"Alternate value"`                        | input `optionalText` (property) | Configures the component optionalText contract.                                        |
+| `error`        | text    | `""`                           | `"Alternate value"`                        | input `error` (property)        | Defines the component's error behavior or presentation.                                |
+| `hint`         | text    | `"Required enterprise value."` | `"Required enterprise value. · alternate"` | input `hint` (property)         | Defines the component's hint behavior or presentation.                                 |
+| `optionalText` | text    | `""`                           | `"Alternate value"`                        | input `optionalText` (property) | Human-readable copy for the optional state or control.                                 |
 
 Exact API exclusions:
 

@@ -2,18 +2,18 @@
 
 - ID: `confirmation-pattern`
 - Selector: `krn-confirmation-pattern`
-- Import: `import { KrnConfirmationPattern } from '@kern-ui/angular/kit';`
+- Import: `import { KrnConfirmationPattern } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnConfirmation`
 - Lifecycle: **stable**
 - Category: Feedback
 
-Confirmation Pattern. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Confirmation Pattern. Adds an explicit confirmation step before a consequential product action.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Confirmation Pattern for this specific contract: Adds an explicit confirmation step before a consequential product action.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Confirmation Pattern for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnConfirmationPattern } from '@kern-ui/angular/kit';
+import { KrnConfirmationPattern } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-confirmation-pattern-agent-example',
@@ -76,11 +76,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Escape closes modal layers
-- Focus returns to the trigger
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Visible copy and semantic role communicate feedback independently of color or motion.
+- Announcements use only the urgency required by the message.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -115,10 +113,10 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument     | Control | Default                                          | Test value                                                   | Binding                   | Description                               |
-| ------------ | ------- | ------------------------------------------------ | ------------------------------------------------------------ | ------------------------- | ----------------------------------------- |
-| `confirming` | boolean | `false`                                          | `true`                                                       | model `confirming`        | Opens the confirmation surface.           |
-| `prompt`     | text    | `"Archive Northstar and pause all automations?"` | `"Archive Northstar and pause all automations? · alternate"` | input `prompt` (property) | Configures the component prompt contract. |
+| Argument     | Control | Default                                          | Test value                                                   | Binding                   | Description                                          |
+| ------------ | ------- | ------------------------------------------------ | ------------------------------------------------------------ | ------------------------- | ---------------------------------------------------- |
+| `confirming` | boolean | `false`                                          | `true`                                                       | model `confirming`        | Opens the confirmation surface.                      |
+| `prompt`     | text    | `"Archive Northstar and pause all automations?"` | `"Archive Northstar and pause all automations? · alternate"` | input `prompt` (property) | Human-readable copy for the prompt state or control. |
 
 Exact API exclusions:
 

@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Login Form. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.",
+  "summary": "Login Form. Collects credentials, exposes validation, and provides recovery navigation.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -56,7 +56,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Prevents duplicate actions and exposes accessible busy state.",
+      "description": "Prevents duplicate actions and exposes an accessible busy state.",
       "descriptionSource": "inferred"
     },
     {
@@ -76,7 +76,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Destination URL for the error-state recovery action.",
+      "description": "Defines the component's recovery href behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -192,11 +192,12 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": [
+      "Keyboard behavior is provided by the native elements and Kern primitives in the recipe"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.",
+      "Loading, empty, error, and success states remain visible and programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -243,8 +244,8 @@
     "submitted"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Login Form for this specific contract: Collects credentials, exposes validation, and provides recovery navigation.",
+    "avoidWhen": "Do not choose Login Form for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -287,7 +288,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component errorMessage contract.",
+        "description": "Human-readable copy for the error state or control.",
         "binding": {
           "kind": "input",
           "publicName": "errorMessage",
@@ -300,7 +301,7 @@
         "kind": "number",
         "defaultValue": 8,
         "testValue": 9,
-        "description": "Configures the component minimumPasswordLength contract.",
+        "description": "Upper or lower bound applied to the password length value.",
         "binding": {
           "kind": "input",
           "publicName": "minimumPasswordLength",
@@ -316,7 +317,7 @@
         "kind": "text",
         "defaultValue": "#specimen",
         "testValue": "#specimen-overview",
-        "description": "Configures the component recoveryHref contract.",
+        "description": "Defines the component's recovery href behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "recoveryHref",

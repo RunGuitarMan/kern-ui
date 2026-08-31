@@ -2,18 +2,18 @@
 
 - ID: `radio-group`
 - Selector: `krn-radio-group`
-- Import: `import { KrnRadioGroup } from '@kern-ui/angular/kit';`
+- Import: `import { KrnRadioGroup } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnRadioGroup`
 - Lifecycle: **stable**
 - Category: Forms
 
-Radio Group. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Radio Group. Enforces one choice from a labelled set and manages orientation-aware arrow navigation.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Radio Group for this specific contract: Enforces one choice from a labelled set and manages orientation-aware arrow navigation.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Radio Group for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnRadio, KrnRadioGroup } from '@kern-ui/angular/kit';
+import { KrnRadio, KrnRadioGroup } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-radio-group-agent-example',
@@ -53,19 +53,19 @@ void bootstrapApplication(KernRadioGroupAgentExample);
 
 | Name              | Kind   | Type                          | Required | Default      | Description                                                                                      |
 | ----------------- | ------ | ----------------------------- | -------- | ------------ | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`                      | no       | `''`         | Stable identifier value used by the id contract.                                                 |
+| `id`              | input  | `string`                      | no       | `''`         | Stable identifier used by the id contract.                                                       |
 | `label`           | input  | `string`                      | no       | `''`         | Visible text that names the control or data value.                                               |
 | `ariaLabel`       | input  | `string`                      | no       | `''`         | Accessible name used when visible content is not sufficient.                                     |
 | `ariaLabelledBy`  | input  | `string`                      | no       | `''`         | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input  | `string`                      | no       | `''`         | Space-separated element ids composed with Form Field hints and validation descriptions.          |
-| `name`            | input  | `string`                      | no       | `''`         | Native form-control name shared by every radio option in the group.                              |
+| `name`            | input  | `string`                      | no       | `''`         | Defines the component's custom name behavior or presentation.                                    |
 | `orientation`     | input  | `KrnOrientation`              | no       | `'vertical'` | Defines the logical axis used by layout and keyboard navigation.                                 |
 | `value`           | input  | `string \| null \| undefined` | no       | `undefined`  | Controlled component value.                                                                      |
 | `disabled`        | input  | `boolean`                     | no       | `false`      | Prevents user interaction and participates in the disabled-state contract.                       |
 | `readonly`        | input  | `boolean`                     | no       | `false`      | Keeps the value perceivable while preventing user edits.                                         |
 | `required`        | input  | `boolean`                     | no       | `false`      | Marks the value as required and participates in Angular Forms validation.                        |
 | `invalid`         | input  | `boolean`                     | no       | `false`      | Exposes an externally controlled invalid presentation state.                                     |
-| `describedBy`     | input  | `string`                      | no       | `''`         | Space-separated element ids that provide the accessible description.                             |
+| `describedBy`     | input  | `string`                      | no       | `''`         | Defines the component's described by behavior or presentation.                                   |
 | `valueChange`     | output | `string \| null`              | no       | `undefined`  | Notifies the consumer after the value change interaction completes.                              |
 
 ## Deprecated selectors
@@ -82,12 +82,10 @@ Angular Forms control with value type `string | null`.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab enters or leaves the group through its selected or first enabled radio
+- Arrow keys move and select within the configured orientation
+- The real form control retains its visible name, described-by relationships, and Angular state.
+- Required, readonly, disabled, and invalid states remain programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -136,9 +134,9 @@ component inputs or models.
 | `disabled`    | boolean | `false`                | `true`                             | input `disabled` (property)    | Prevents user interaction.                                                |
 | `label`       | text    | `"Default visibility"` | `"Default visibility · alternate"` | input `label` (property)       | Names the radio group.                                                    |
 | `orientation` | select  | `"horizontal"`         | `"vertical"`                       | input `orientation` (property) | Changes the choice layout axis.                                           |
-| `id`          | text    | `""`                   | `"Alternate value"`                | input `id` (property)          | Configures the component id contract.                                     |
+| `id`          | text    | `""`                   | `"Alternate value"`                | input `id` (property)          | Stable identifier used by the id contract.                                |
 | `invalid`     | boolean | `false`                | `true`                             | input `invalid` (property)     | Exposes an externally controlled invalid presentation state.              |
-| `readonly`    | boolean | `false`                | `true`                             | input `readonly` (property)    | Configures the component readonly contract.                               |
+| `readonly`    | boolean | `false`                | `true`                             | input `readonly` (property)    | Keeps the value perceivable while preventing user edits.                  |
 | `required`    | boolean | `false`                | `true`                             | input `required` (property)    | Marks the value as required and participates in Angular Forms validation. |
 | `value`       | text    | `""`                   | `"Alternate value"`                | input `value` (property)       | Controlled component value.                                               |
 

@@ -5,6 +5,7 @@ import {
   KRN_CLIPBOARD_WRITER,
   KrnAutocomplete,
   KrnBarChart,
+  KrnBottomSheet,
   KrnButton,
   KrnButtonGroup,
   KrnCalendar,
@@ -16,16 +17,19 @@ import {
   KrnCommandPalette,
   KrnCopyButton,
   KrnDataGrid,
+  KrnDataTable,
   KrnDatePicker,
   KrnDateRangePicker,
   KrnDialog,
   KrnDonutChart,
   KrnDropUpload,
+  KrnDrawer,
   KrnDropdownButton,
   KrnFileUpload,
   KrnFloatingActionButton,
   KrnFormField,
   KrnIconButton,
+  KrnJsonView,
   KrnLineChart,
   KrnLink,
   KrnMenu,
@@ -61,6 +65,7 @@ import type {
 import {
   KrnAutocompleteHarness,
   KrnBarChartHarness,
+  KrnBottomSheetHarness,
   KrnButtonGroupHarness,
   KrnButtonHarness,
   KrnCalendarHarness,
@@ -76,11 +81,13 @@ import {
   KrnDonutChartHarness,
   KrnDropUploadHarness,
   KrnDropdownButtonHarness,
+  KrnDrawerHarness,
   KrnFileUploadHarness,
   KrnFloatingActionButtonHarness,
   KrnFormControlHarness,
   KrnFormFieldHarness,
   KrnIconButtonHarness,
+  KrnJsonViewHarness,
   KrnLineChartHarness,
   KrnLinkHarness,
   KrnMenuHarness,
@@ -107,10 +114,13 @@ interface HarnessDemoRow extends Record<string, unknown> {
   imports: [
     KrnButton,
     KrnButtonGroup,
+    KrnBottomSheet,
     KrnCopyButton,
     KrnDataGrid,
+    KrnDataTable,
     KrnDialog,
     KrnDropdownButton,
+    KrnDrawer,
     KrnFloatingActionButton,
     KrnFormField,
     KrnIconButton,
@@ -233,6 +243,14 @@ interface HarnessDemoRow extends Record<string, unknown> {
       <button krnDialogAction type="button">Confirm</button>
     </krn-dialog>
 
+    <krn-drawer title="Customer details" [(open)]="drawerOpen">
+      Customer account context.
+    </krn-drawer>
+
+    <krn-bottom-sheet title="Mobile actions" [(open)]="bottomSheetOpen">
+      Choose an action.
+    </krn-bottom-sheet>
+
     <krn-data-grid
       ariaLabel="Workspace plans"
       [columns]="columns"
@@ -241,11 +259,21 @@ interface HarnessDemoRow extends Record<string, unknown> {
       [pageSize]="2"
       [rowIdentity]="rowIdentity"
     />
+
+    <krn-data-table
+      ariaLabel="Workspace plan table"
+      [columns]="columns"
+      [data]="rows"
+      [pageSize]="2"
+      [rowIdentity]="rowIdentity"
+    />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class HarnessDemo {
+  readonly bottomSheetOpen = signal(true);
   readonly dialogOpen = signal(true);
+  readonly drawerOpen = signal(true);
   readonly activationCount = signal(0);
   readonly iconActivationCount = signal(0);
   readonly floatingActionActivationCount = signal(0);
@@ -335,6 +363,7 @@ class CompositeFormFieldHarnessDemo {
     KrnDateRangePicker,
     KrnDropUpload,
     KrnFileUpload,
+    KrnJsonView,
     KrnMenu,
     KrnMultiSelect,
     KrnTabs,
@@ -368,6 +397,7 @@ class CompositeFormFieldHarnessDemo {
     <krn-time-picker ariaLabel="Deployment time" />
 
     <krn-tree ariaLabel="Repository tree" [nodes]="treeNodes" />
+    <krn-json-view ariaLabel="Deployment payload" [data]="payload" />
     <krn-tree-navigation ariaLabel="Product areas" [items]="treeNavigationItems" />
     <krn-menu
       triggerLabel="Workspace actions"
@@ -385,6 +415,10 @@ class CompositeFormFieldHarnessDemo {
 class ExtendedHarnessDemo {
   readonly selectedMenuItem = signal('');
   readonly disabledDates = new Set(['2025-03-19']);
+  readonly payload = {
+    deployment: { id: 'dep_01KERN', active: true },
+    region: 'eu-central',
+  } as const;
   readonly people: readonly KrnSelectOption<string>[] = [
     { value: 'ada', label: 'Ada Lovelace' },
     { value: 'grace', label: 'Grace Hopper' },
@@ -889,6 +923,24 @@ describe('@kern-ui/angular/testing', () => {
     expect(fixture.componentInstance.dialogOpen()).toBe(false);
   });
 
+  it('uses the same public harness contract for drawer and bottom-sheet overlays', async () => {
+    const fixture = TestBed.createComponent(HarnessDemo);
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const drawer = await loader.getHarness(
+      KrnDrawerHarness.with({ title: 'Customer details', open: true }),
+    );
+    const bottomSheet = await loader.getHarness(
+      KrnBottomSheetHarness.with({ title: 'Mobile actions', open: true }),
+    );
+
+    expect(await drawer.getPosition()).toBe('right');
+    expect(await bottomSheet.getPosition()).toBe('bottom');
+    await drawer.close();
+    await bottomSheet.close();
+    expect(fixture.componentInstance.drawerOpen()).toBe(false);
+    expect(fixture.componentInstance.bottomSheetOpen()).toBe(false);
+  });
+
   it('filters, sorts, and pages data grids through semantic rows and headers', async () => {
     const fixture = TestBed.createComponent(HarnessDemo);
     const loader = TestbedHarnessEnvironment.loader(fixture);
@@ -912,6 +964,21 @@ describe('@kern-ui/angular/testing', () => {
     await grid.setFilter('Cirrus');
     expect(await grid.getRowCount()).toBe(1);
     expect(await grid.getCellText(0, 0)).toBe('Cirrus');
+  });
+
+  it('drives the data-table alias through its public harness contract', async () => {
+    const fixture = TestBed.createComponent(HarnessDemo);
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const table = await loader.getHarness(
+      KrnDataGridHarness.with({
+        ariaLabel: 'Workspace plan table',
+        loading: false,
+        rowCount: 2,
+      }),
+    );
+
+    expect(await table.getHeaderTexts()).toEqual(['Workspace', 'Seats']);
+    expect(await table.getCellText(0, 0)).toBe('Atlas');
   });
 
   it('drives multi-select, combobox, and autocomplete contracts', async () => {
@@ -1034,6 +1101,20 @@ describe('@kern-ui/angular/testing', () => {
     expect(await tabs.getSelectedTabText()).toBe('Overview');
     await tabs.selectTab('Activity');
     expect(await tabs.getSelectedTabText()).toBe('Activity');
+  });
+
+  it('drives JSON view nodes through a labelled public harness', async () => {
+    const fixture = TestBed.createComponent(ExtendedHarnessDemo);
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const json = await loader.getHarness(
+      KrnJsonViewHarness.with({ ariaLabel: 'Deployment payload', nodeCount: 5 }),
+    );
+
+    expect(await json.getAriaLabel()).toBe('Deployment payload');
+    const deployment = (await json.getNodes({ path: '$/deployment', expanded: true }))[0];
+    expect(deployment).toBeDefined();
+    await deployment?.toggle();
+    expect(await json.getNodes({ path: '$/deployment', expanded: false })).toHaveLength(1);
   });
 
   it('reads exact toast messages and operates upload controls', async () => {

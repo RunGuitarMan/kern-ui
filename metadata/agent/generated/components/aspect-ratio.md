@@ -2,18 +2,18 @@
 
 - ID: `aspect-ratio`
 - Selector: `krn-aspect-ratio`
-- Import: `import { KrnAspectRatio } from '@kern-ui/angular/kit';`
+- Import: `import { KrnAspectRatio } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnAspectRatio`
 - Lifecycle: **stable**
 - Category: Layout
 
-Aspect Ratio. A composable spatial primitive that keeps product layouts predictable across containers.
+Aspect Ratio. Maintains a chosen width-to-height ratio while controlling how media fits its box.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Aspect Ratio for this specific contract: Maintains a chosen width-to-height ratio while controlling how media fits its box.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Aspect Ratio for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAspectRatio } from '@kern-ui/angular/kit';
+import { KrnAspectRatio } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-aspect-ratio-agent-example',
@@ -66,10 +66,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Projected content retains its document order and native semantics as layout changes.
+- Logical sizing and placement work in both LTR and RTL without duplicating content.
 
 Manual assistive-technology validation remains required in the consuming application.
 

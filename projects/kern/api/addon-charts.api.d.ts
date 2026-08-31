@@ -60,6 +60,7 @@ interface KrnTooltipPosition {
   readonly x: number;
   readonly y: number;
 }
+/** @deprecated Use `KrnChart` with `type="line"`. */
 declare class KrnChart {
   private readonly destroyRef;
   private readonly platform;
@@ -225,6 +226,7 @@ declare class KrnLineChart {
     never
   >;
 }
+/** @deprecated Use `KrnChart` with `type="bar"`. */
 declare class KrnBarChart {
   readonly title: _angular_core.InputSignal<string>;
   readonly eyebrow: _angular_core.InputSignal<string>;
@@ -273,6 +275,7 @@ declare class KrnBarChart {
     never
   >;
 }
+/** @deprecated Use `KrnChart` with `type="donut"`. */
 declare class KrnDonutChart {
   readonly title: _angular_core.InputSignal<string>;
   readonly eyebrow: _angular_core.InputSignal<string>;

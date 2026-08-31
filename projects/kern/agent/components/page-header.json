@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Page Header. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.",
+  "summary": "Page Header. Composes page context, heading, description, index, and actions into one heading region.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -56,7 +56,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "'01'",
-      "description": "Zero-based position of the represented item in its ordered collection.",
+      "description": "Defines the component's index behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -115,11 +115,12 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": [
+      "Keyboard behavior is provided by the native elements and Kern primitives in the recipe"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.",
+      "Loading, empty, error, and success states remain visible and programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -157,8 +158,8 @@
     "description"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Page Header for this specific contract: Composes page context, heading, description, index, and actions into one heading region.",
+    "avoidWhen": "Do not choose Page Header for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Do not omit required inputs: `heading`.",
@@ -202,7 +203,7 @@
         "kind": "text",
         "defaultValue": "Monitor runs, failures, and throughput across environments.",
         "testValue": "Monitor runs, failures, and throughput across environments. · alternate",
-        "description": "Configures the component description contract.",
+        "description": "Visible supporting description for the component content.",
         "binding": {
           "kind": "input",
           "publicName": "description",
@@ -215,7 +216,7 @@
         "kind": "text",
         "defaultValue": "Workspace / Northstar",
         "testValue": "Workspace / Northstar · alternate",
-        "description": "Configures the component eyebrow contract.",
+        "description": "Human-readable copy for the eyebrow state or control.",
         "binding": {
           "kind": "input",
           "publicName": "eyebrow",
@@ -228,7 +229,7 @@
         "kind": "text",
         "defaultValue": "07",
         "testValue": "07 · alternate",
-        "description": "Configures the component index contract.",
+        "description": "Defines the component's index behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "index",

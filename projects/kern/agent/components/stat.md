@@ -2,18 +2,18 @@
 
 - ID: `stat`
 - Selector: `krn-stat`
-- Import: `import { KrnStat } from '@kern-ui/angular/kit';`
+- Import: `import { KrnStat } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnStat`
 - Lifecycle: **stable**
 - Category: Data display
 
-Stat. A dense, readable data primitive with semantic structure and resilient overflow.
+Stat. Pairs one prominent value with its label, context, and optional trend.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Stat for this specific contract: Pairs one prominent value with its label, context, and optional trend.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Stat for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnStat } from '@kern-ui/angular/kit';
+import { KrnStat } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-stat-agent-example',
@@ -50,12 +50,12 @@ void bootstrapApplication(KernStatAgentExample);
 
 ## API
 
-| Name     | Kind  | Type                       | Required | Default    | Description                                                                         |
-| -------- | ----- | -------------------------- | -------- | ---------- | ----------------------------------------------------------------------------------- |
-| `label`  | input | `string`                   | yes      | `required` | Visible text that names the control or data value.                                  |
-| `value`  | input | `string`                   | yes      | `required` | Controlled component value.                                                         |
-| `detail` | input | `string`                   | no       | `''`       | Supporting detail text displayed with the primary content.                          |
-| `trend`  | input | `"down" \| "flat" \| "up"` | no       | `'flat'`   | Direction of change communicated by the statistic in addition to its numeric value. |
+| Name     | Kind  | Type                       | Required | Default    | Description                                              |
+| -------- | ----- | -------------------------- | -------- | ---------- | -------------------------------------------------------- |
+| `label`  | input | `string`                   | yes      | `required` | Visible text that names the control or data value.       |
+| `value`  | input | `string`                   | yes      | `required` | Controlled component value.                              |
+| `detail` | input | `string`                   | no       | `''`       | Defines the component's detail behavior or presentation. |
+| `trend`  | input | `"down" \| "flat" \| "up"` | no       | `'flat'`   | Defines the component's trend behavior or presentation.  |
 
 ## Deprecated selectors
 
@@ -71,11 +71,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys navigate interactive data
-- Enter expands or selects
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Visible labels and semantic structure preserve the meaning and relationships in the data.
+- Interactive descendants retain native names and a predictable focus order.
 
 Manual assistive-technology validation remains required in the consuming application.
 

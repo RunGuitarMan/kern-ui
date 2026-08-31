@@ -2,18 +2,18 @@
 
 - ID: `radio`
 - Selector: `krn-radio`
-- Import: `import { KrnRadio } from '@kern-ui/angular/kit';`
+- Import: `import { KrnRadio } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnRadio`
 - Lifecycle: **stable**
 - Category: Forms
 
-Radio. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Radio. Represents one option inside a radio group while retaining native radio semantics.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Radio for this specific contract: Represents one option inside a radio group while retaining native radio semantics.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Radio for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnRadio } from '@kern-ui/angular/kit';
+import { KrnRadio } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-radio-agent-example',
@@ -45,9 +45,9 @@ void bootstrapApplication(KernRadioAgentExample);
 
 | Name              | Kind   | Type      | Required | Default            | Description                                                                                      |
 | ----------------- | ------ | --------- | -------- | ------------------ | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`  | no       | `''`               | Stable identifier value used by the id contract.                                                 |
+| `id`              | input  | `string`  | no       | `''`               | Stable identifier used by the id contract.                                                       |
 | `value`           | input  | `string`  | yes      | `required`         | Controlled component value.                                                                      |
-| `name`            | input  | `string`  | no       | `this.generatedId` | Required human-readable name for the represented person, item, or action.                        |
+| `name`            | input  | `string`  | no       | `this.generatedId` | Native form-control name forwarded to the owned interactive element.                             |
 | `checked`         | input  | `boolean` | no       | `false`            | Controlled checked state rendered by the native choice control.                                  |
 | `ariaLabel`       | input  | `string`  | no       | `''`               | Accessible name used when visible content is not sufficient.                                     |
 | `ariaLabelledBy`  | input  | `string`  | no       | `''`               | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
@@ -72,12 +72,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab follows the owning radio-group contract; Arrow keys change the group selection
+- The real form control retains its visible name, described-by relationships, and Angular state.
+- Required, readonly, disabled, and invalid states remain programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -121,16 +118,16 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default                         | Test value                                  | Binding                        | Description                                       |
-| ------------- | ------- | ------------------------------- | ------------------------------------------- | ------------------------------ | ------------------------------------------------- |
-| `selected`    | boolean | `false`                         | `true`                                      | fixture interaction            | Selects the annual billing option.                |
-| `disabled`    | boolean | `false`                         | `true`                                      | input `disabled` (property)    | Prevents user interaction.                        |
-| `readOnly`    | boolean | `false`                         | `true`                                      | input `readonly` (property)    | Keeps the value focusable while preventing edits. |
-| `checked`     | boolean | `false`                         | `true`                                      | input `checked` (property)     | Configures the component checked contract.        |
-| `description` | text    | `"Flexible, billed each month"` | `"Flexible, billed each month · alternate"` | input `description` (property) | Configures the component description contract.    |
-| `id`          | text    | `""`                            | `"Alternate value"`                         | input `id` (property)          | Configures the component id contract.             |
-| `tabindex`    | number  | `0`                             | `1`                                         | input `tabindex` (property)    | Configures the component tabindex contract.       |
-| `value`       | text    | `"monthly"`                     | `"monthly · alternate"`                     | input `value` (property)       | Controlled component value.                       |
+| Argument      | Control | Default                         | Test value                                  | Binding                        | Description                                                               |
+| ------------- | ------- | ------------------------------- | ------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------- |
+| `selected`    | boolean | `false`                         | `true`                                      | fixture interaction            | Selects the annual billing option.                                        |
+| `disabled`    | boolean | `false`                         | `true`                                      | input `disabled` (property)    | Prevents user interaction.                                                |
+| `readOnly`    | boolean | `false`                         | `true`                                      | input `readonly` (property)    | Keeps the value focusable while preventing edits.                         |
+| `checked`     | boolean | `false`                         | `true`                                      | input `checked` (property)     | Controlled checked state rendered by the native choice control.           |
+| `description` | text    | `"Flexible, billed each month"` | `"Flexible, billed each month · alternate"` | input `description` (property) | Visible supporting description for the component content.                 |
+| `id`          | text    | `""`                            | `"Alternate value"`                         | input `id` (property)          | Stable identifier used by the id contract.                                |
+| `tabindex`    | number  | `0`                             | `1`                                         | input `tabindex` (property)    | Native sequential-focus order forwarded to the owned interactive element. |
+| `value`       | text    | `"monthly"`                     | `"monthly · alternate"`                     | input `value` (property)       | Controlled component value.                                               |
 
 Exact API exclusions:
 
@@ -155,7 +152,7 @@ Presets:
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
-- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `filled` — filled; scenario `default`; `selected=true`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — Readonly; scenario `default`; `readOnly=true`.
 - `selected` — Selected; scenario `default`; `selected=true`.

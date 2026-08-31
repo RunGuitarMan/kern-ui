@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCircularProgress } from '@kern-ui/angular/kit';
+import { KrnCircularProgress } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-circular-progress-agent-example',

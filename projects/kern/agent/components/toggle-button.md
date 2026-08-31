@@ -2,7 +2,7 @@
 
 - ID: `toggle-button`
 - Selector: `button[krnToggleButton]`
-- Import: `import { KrnToggleButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnToggleButton } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnToggleButton`
 - Lifecycle: **stable**
 - Category: Actions
@@ -27,7 +27,7 @@ Avoid: Do not nest a button, link, or other interactive control inside Toggle Bu
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnToggleButton } from '@kern-ui/angular/kit';
+import { KrnToggleButton } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-toggle-button-agent-example',
@@ -50,11 +50,11 @@ void bootstrapApplication(KernToggleButtonAgentExample);
 | Name               | Kind  | Type               | Required | Default                         | Description                                                                                                                                                                                                         |
 | ------------------ | ----- | ------------------ | -------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `value`            | input | `string`           | yes      | `required`                      | Stable native value used by `KrnToggleGroup` as the selection identity. It remains required because group selection is represented by serializable string values rather than child indices or component identities. |
-| `size`             | input | `KrnSize`          | no       | `this.options.size`             | Named semantic size resolved through KERN density and sizing tokens.                                                                                                                                                |
-| `pressedVariant`   | input | `KrnActionVariant` | no       | `this.options.pressedVariant`   | Visual emphasis rendered while Toggle Button is pressed.                                                                                                                                                            |
-| `pressedTone`      | input | `KrnTone`          | no       | `this.options.pressedTone`      | Semantic tone rendered while Toggle Button is pressed.                                                                                                                                                              |
-| `unpressedVariant` | input | `KrnActionVariant` | no       | `this.options.unpressedVariant` | Visual emphasis rendered while Toggle Button is not pressed.                                                                                                                                                        |
-| `unpressedTone`    | input | `KrnTone`          | no       | `this.options.unpressedTone`    | Semantic tone rendered while Toggle Button is not pressed.                                                                                                                                                          |
+| `size`             | input | `KrnSize`          | no       | `this.options.size`             | Named semantic size resolved through Kern density and sizing tokens.                                                                                                                                                |
+| `pressedVariant`   | input | `KrnActionVariant` | no       | `this.options.pressedVariant`   | Defines the component's pressed variant behavior or presentation.                                                                                                                                                   |
+| `pressedTone`      | input | `KrnTone`          | no       | `this.options.pressedTone`      | Defines the component's pressed tone behavior or presentation.                                                                                                                                                      |
+| `unpressedVariant` | input | `KrnActionVariant` | no       | `this.options.unpressedVariant` | Defines the component's unpressed variant behavior or presentation.                                                                                                                                                 |
+| `unpressedTone`    | input | `KrnTone`          | no       | `this.options.unpressedTone`    | Defines the component's unpressed tone behavior or presentation.                                                                                                                                                    |
 | `disabled`         | input | `boolean`          | no       | `false`                         | Prevents user interaction and participates in the disabled-state contract.                                                                                                                                          |
 | `pressed`          | model | `boolean`          | no       | `false`                         | Standalone state model. Inside a Toggle Group, the group values are authoritative.                                                                                                                                  |
 
@@ -121,16 +121,19 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument           | Control | Default     | Test value            | Binding                             | Description                                           |
-| ------------------ | ------- | ----------- | --------------------- | ----------------------------------- | ----------------------------------------------------- |
-| `disabled`         | boolean | `false`     | `true`                | input `disabled` (property)         | Prevents user interaction.                            |
-| `selected`         | boolean | `false`     | `true`                | model `pressed`                     | Selects the action.                                   |
-| `pressedTone`      | select  | `"brand"`   | `"neutral"`           | input `pressedTone` (property)      | Semantic tone used while the toggle is pressed.       |
-| `pressedVariant`   | select  | `"soft"`    | `"solid"`             | input `pressedVariant` (property)   | Visual emphasis used while the toggle is pressed.     |
-| `size`             | select  | `"md"`      | `"sm"`                | input `size` (property)             | Semantic component size.                              |
-| `unpressedTone`    | select  | `"neutral"` | `"brand"`             | input `unpressedTone` (property)    | Semantic tone used while the toggle is not pressed.   |
-| `unpressedVariant` | select  | `"ghost"`   | `"solid"`             | input `unpressedVariant` (property) | Visual emphasis used while the toggle is not pressed. |
-| `value`            | text    | `"watch"`   | `"watch · alternate"` | input `value` (property)            | Controlled component value.                           |
+| Argument           | Control | Default     | Test value            | Binding                             | Description                                                             |
+| ------------------ | ------- | ----------- | --------------------- | ----------------------------------- | ----------------------------------------------------------------------- |
+| `disabled`         | boolean | `false`     | `true`                | input `disabled` (property)         | Prevents user interaction.                                              |
+| `selected`         | boolean | `false`     | `true`                | model `pressed`                     | Selects the action.                                                     |
+| `pressedTone`      | select  | `"brand"`   | `"neutral"`           | input `pressedTone` (property)      | Defines the component's pressed tone behavior or presentation.          |
+| `pressedVariant`   | select  | `"soft"`    | `"solid"`             | input `pressedVariant` (property)   | Defines the component's pressed variant behavior or presentation.       |
+| `size`             | select  | `"md"`      | `"sm"`                | input `size` (property)             | Named semantic size resolved through Kern density and sizing tokens.    |
+| `unpressedTone`    | select  | `"neutral"` | `"brand"`             | input `unpressedTone` (property)    | Defines the component's unpressed tone behavior or presentation.        |
+| `unpressedVariant` | select  | `"ghost"`   | `"solid"`             | input `unpressedVariant` (property) | Defines the component's unpressed variant behavior or presentation.     |
+| `value`            | text    | `"watch"`   | `"watch · alternate"` | input `value` (property)            | Stable native value used by `KrnToggleGroup` as the selection identity. |
+
+It remains required because group selection is represented by serializable
+string values rather than child indices or component identities. |
 
 Exact API exclusions:
 

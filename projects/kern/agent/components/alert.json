@@ -9,14 +9,14 @@
   "symbol": "KrnAlert",
   "canonicalSymbol": "KrnAlert",
   "canonicalId": "alert",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Alert. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Alert. Displays an inline status message with semantic tone and an optional dismiss action.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -67,6 +67,16 @@
       "descriptionSource": "source"
     },
     {
+      "name": "placement",
+      "property": "placement",
+      "kind": "input",
+      "type": "KrnAlertPlacement",
+      "required": false,
+      "defaultValue": "'inline'",
+      "description": "Places the message inline or stretches it into a page-level banner treatment.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "title",
       "property": "title",
       "kind": "input",
@@ -83,7 +93,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Semantic icon name rendered alongside the visible component content.",
+      "description": "Defines the component's icon behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -93,7 +103,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Controls whether the user can dismiss the surface before completing an action.",
+      "description": "Defines the component's dismissible behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -148,11 +158,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible copy and semantic role communicate feedback independently of color or motion.",
+      "Announcements use only the urgency required by the message."
     ],
     "manualValidationRequired": true
   },
@@ -171,7 +180,7 @@
       "title": "Persistent warning alert",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Persistent warning alert\n *\n * Communicate a recoverable issue with title and supporting action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAlert } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-alert-agent-example',\n  standalone: true,\n  imports: [KrnAlert],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-alert tone=\"warning\" title=\"Verification required\">\n      Confirm the billing owner before the next renewal.\n      <button type=\"button\">Review owner</button>\n    </krn-alert>\n  `,\n})\nexport class KernAlertAgentExample {}\n\nvoid bootstrapApplication(KernAlertAgentExample);\n",
+      "code": "/**\n * Persistent warning alert\n *\n * Communicate a recoverable issue with title and supporting action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAlert } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-alert-agent-example',\n  standalone: true,\n  imports: [KrnAlert],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-alert tone=\"warning\" title=\"Verification required\">\n      Confirm the billing owner before the next renewal.\n      <button type=\"button\">Review owner</button>\n    </krn-alert>\n  `,\n})\nexport class KernAlertAgentExample {}\n\nvoid bootstrapApplication(KernAlertAgentExample);\n",
       "verification": "compiled",
       "source": "examples/alert.ts"
     }
@@ -185,6 +194,7 @@
     "KrnAlert",
     "tone",
     "appearance",
+    "placement",
     "title",
     "icon",
     "dismissible",
@@ -192,8 +202,8 @@
     "closed"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Alert for this specific contract: Displays an inline status message with semantic tone and an optional dismiss action.",
+    "avoidWhen": "Do not choose Alert for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -311,7 +321,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component icon contract.",
+        "description": "Defines the component's icon behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "icon",
@@ -405,9 +415,9 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 6,
+      "publicInputsAndModels": 7,
       "controlled": 5,
-      "excluded": 1,
+      "excluded": 2,
       "unclassified": 0
     },
     "exclusions": [
@@ -421,6 +431,18 @@
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#alert"
+        }
+      },
+      {
+        "componentId": "alert",
+        "publicName": "placement",
+        "kind": "input",
+        "type": "KrnAlertPlacement",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/alert?state=default"
         }
       }
     ]

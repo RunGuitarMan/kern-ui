@@ -2,18 +2,18 @@
 
 - ID: `menubar`
 - Selector: `krn-menubar`
-- Import: `import { KrnMenubar } from '@kern-ui/angular/kit';`
+- Import: `import { KrnMenubar } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnMenubar`
 - Lifecycle: **stable**
 - Category: Navigation
 
-Menubar. A keyboard-first wayfinding primitive that preserves orientation and current location.
+Menubar. Provides persistent top-level commands with roving focus and nested menu navigation.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Menubar for this specific contract: Provides persistent top-level commands with roving focus and nested menu navigation.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Menubar for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnMenubar, type KrnNavigationItem } from '@kern-ui/angular/kit';
+import { KrnMenubar, type KrnNavigationItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-menubar-agent-example',
@@ -68,12 +68,10 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys move within composites
-- Home / End jump
-- Enter activates
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Arrow keys move across top-level items and through open submenus
+- Enter or Space opens or activates; Escape closes the active submenu
+- Destinations retain native link semantics and expose current location where applicable.
+- Composite navigation uses one documented focus model without changing reading order.
 
 Manual assistive-technology validation remains required in the consuming application.
 

@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnLabel } from '@kern-ui/angular/kit';
+import { KrnLabel } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-label-agent-example',

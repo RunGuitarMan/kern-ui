@@ -2,18 +2,18 @@
 
 - ID: `list`
 - Selector: `krn-list`
-- Import: `import { KrnList } from '@kern-ui/angular/kit';`
+- Import: `import { KrnList } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnList`
 - Lifecycle: **stable**
 - Category: Data display
 
-List. A dense, readable data primitive with semantic structure and resilient overflow.
+List. Provides semantic structure and spacing for a related sequence of items.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use List for this specific contract: Provides semantic structure and spacing for a related sequence of items.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose List for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnList, KrnListItem } from '@kern-ui/angular/kit';
+import { KrnList, KrnListItem } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-list-agent-example',
@@ -48,10 +48,10 @@ void bootstrapApplication(KernListAgentExample);
 
 ## API
 
-| Name        | Kind  | Type                  | Required | Default     | Description                                                                    |
-| ----------- | ----- | --------------------- | -------- | ----------- | ------------------------------------------------------------------------------ |
-| `role`      | input | `"list" \| "listbox"` | no       | `'list'`    | ARIA role used when the consumer must refine the component’s semantic purpose. |
-| `ariaLabel` | input | `string \| undefined` | no       | `undefined` | Accessible name used when visible content is not sufficient.                   |
+| Name        | Kind  | Type                  | Required | Default     | Description                                                  |
+| ----------- | ----- | --------------------- | -------- | ----------- | ------------------------------------------------------------ |
+| `role`      | input | `"list" \| "listbox"` | no       | `'list'`    | Defines the component's role behavior or presentation.       |
+| `ariaLabel` | input | `string \| undefined` | no       | `undefined` | Accessible name used when visible content is not sufficient. |
 
 ## Deprecated selectors
 
@@ -67,11 +67,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys navigate interactive data
-- Enter expands or selects
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Visible labels and semantic structure preserve the meaning and relationships in the data.
+- Interactive descendants retain native names and a predictable focus order.
 
 Manual assistive-technology validation remains required in the consuming application.
 

@@ -1,0 +1,176 @@
+import {
+  actionSize,
+  actionTone,
+  actionVariant,
+  boolean,
+  disabled,
+  fixtureBinding,
+  loading,
+  modelBinding,
+  number,
+  select,
+  text,
+  type KernPlaygroundControl,
+} from '../playground-foundation';
+
+export const ACTIONS_CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> = {
+  'button-group': [
+    select(
+      'orientation',
+      'Orientation',
+      'horizontal',
+      'Changes only the visual layout; native actions keep document-order keyboard navigation.',
+      ['horizontal', 'vertical'],
+    ),
+    boolean(
+      'connected',
+      'Connected',
+      false,
+      'Joins adjacent action borders without changing their semantics or keyboard order.',
+    ),
+  ],
+  'split-button': [
+    boolean('open', 'Open', false, 'Opens the secondary action menu.', modelBinding('open')),
+    select(
+      'menuAlign',
+      'Menu alignment',
+      'end',
+      'Aligns the connected menu to the logical start or end edge of the trigger.',
+      ['start', 'end'],
+    ),
+  ],
+  'toggle-group': [
+    select(
+      'orientation',
+      'Orientation',
+      'horizontal',
+      'Changes the visual layout and Arrow-key axis exposed by the toolbar.',
+      ['horizontal', 'vertical'],
+    ),
+    select('size', 'Size', 'sm', 'Changes the segmented control density.', ['sm', 'md', 'lg']),
+    boolean('connected', 'Connected', true, 'Joins toggles into one segmented surface.'),
+    boolean('multiple', 'Multiple', false, 'Allows more than one toggle to be selected.'),
+    boolean(
+      'disabled',
+      'Disabled',
+      false,
+      'Disables every native toggle button while preserving perceivable toolbar semantics.',
+    ),
+  ],
+  'copy-button': [
+    select(
+      'variant',
+      'Variant',
+      'outline',
+      'Changes visual emphasis without changing clipboard behavior.',
+      ['solid', 'soft', 'outline', 'ghost'],
+    ),
+    select(
+      'tone',
+      'Tone',
+      'neutral',
+      'Changes semantic action emphasis without becoming copy-result feedback.',
+      ['neutral', 'brand', 'info', 'success', 'warning', 'danger'],
+    ),
+    actionSize,
+    number(
+      'feedbackDuration',
+      'Feedback duration',
+      1_800,
+      'Keeps copied or error feedback visible for this many milliseconds.',
+      0,
+      60_000,
+      100,
+    ),
+    disabled,
+    text(
+      'value',
+      'Value',
+      'npm i @kern-ui/angular',
+      'Supplies the exact immutable string sent to the clipboard writer.',
+    ),
+    select(
+      'copyState',
+      'Operation state',
+      'live',
+      'Uses the live clipboard by default or a deterministic specimen writer for async states.',
+      ['live', 'idle', 'pending', 'copied', 'error'],
+      fixtureBinding(
+        'interaction',
+        'Selects a deterministic clipboard-writer outcome; it is not a component input.',
+      ),
+    ),
+  ],
+  link: [
+    boolean(
+      'externalDestination',
+      'External destination',
+      false,
+      'Switches the fixture from internal navigation to an explicit privacy-hardened external link.',
+      fixtureBinding(
+        'data',
+        'Changes native href, target, and rel attributes; it is not a KrnLink input.',
+      ),
+    ),
+  ],
+  'dropdown-button': [
+    boolean('open', 'Open', false, 'Opens the dropdown action menu.', modelBinding('open')),
+    select(
+      'menuAlign',
+      'Menu alignment',
+      'end',
+      'Aligns the connected menu to the logical start or end edge of the trigger.',
+      ['start', 'end'],
+    ),
+  ],
+  button: [actionVariant, actionTone, actionSize, loading],
+  'icon-button': [
+    select('variant', 'Variant', 'ghost', 'Changes icon-action emphasis.', [
+      'solid',
+      'soft',
+      'outline',
+      'ghost',
+    ]),
+    select('tone', 'Tone', 'neutral', 'Changes the semantic action tone.', [
+      'neutral',
+      'brand',
+      'info',
+      'success',
+      'warning',
+      'danger',
+    ]),
+    actionSize,
+    loading,
+    boolean(
+      'disabled',
+      'Disabled',
+      false,
+      'Binds the native disabled attribute and prevents user interaction.',
+      fixtureBinding(
+        'interaction',
+        'Binds disabled directly to the native icon-button host; it is not a component input.',
+      ),
+    ),
+  ],
+  'floating-action-button': [
+    actionVariant,
+    actionTone,
+    select('size', 'Size', 'lg', 'Changes the action target and label size.', ['sm', 'md', 'lg']),
+    boolean('extended', 'Extended', true, 'Shows or hides the text label.'),
+    loading,
+    boolean(
+      'disabled',
+      'Disabled',
+      false,
+      'Binds the native disabled attribute and prevents user interaction.',
+      fixtureBinding(
+        'interaction',
+        'Binds disabled directly to the native floating-action host; it is not a component input.',
+      ),
+    ),
+  ],
+  'toggle-button': [
+    disabled,
+    boolean('selected', 'Selected', false, 'Selects the action.', modelBinding('pressed')),
+  ],
+};

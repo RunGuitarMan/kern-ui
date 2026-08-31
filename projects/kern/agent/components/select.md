@@ -2,7 +2,7 @@
 
 - ID: `select`
 - Selector: `krn-select`
-- Import: `import { KrnSelect } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSelect } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnSelect`
 - Lifecycle: **beta**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Use Native Select for platform selection, Combobox for searchable options
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSelect, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnSelect, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-select-agent-example',
@@ -62,12 +62,12 @@ void bootstrapApplication(KernSelectAgentExample);
 
 | Name               | Kind   | Type                                             | Required | Default                                | Description                                                                                      |
 | ------------------ | ------ | ------------------------------------------------ | -------- | -------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `id`               | input  | `string`                                         | no       | `''`                                   | Stable identifier value used by the id contract.                                                 |
+| `id`               | input  | `string`                                         | no       | `''`                                   | Stable identifier used by the id contract.                                                       |
 | `size`             | input  | `KrnSize`                                        | no       | `'md'`                                 | Controls the custom select trigger height and content density.                                   |
 | `placeholder`      | input  | `string \| undefined`                            | no       | `undefined`                            | Short input hint shown only while no value is present.                                           |
-| `emptyText`        | input  | `string \| undefined`                            | no       | `undefined`                            | Visible and announced copy when the data collection has no items.                                |
-| `loadingText`      | input  | `string \| undefined`                            | no       | `undefined`                            | Visible and announced copy while asynchronous data is loading.                                   |
-| `errorText`        | input  | `string \| undefined`                            | no       | `undefined`                            | Visible and announced copy when loading the data collection fails.                               |
+| `emptyText`        | input  | `string \| undefined`                            | no       | `undefined`                            | Human-readable copy for the empty state or control.                                              |
+| `loadingText`      | input  | `string \| undefined`                            | no       | `undefined`                            | Human-readable copy for the loading state or control.                                            |
+| `errorText`        | input  | `string \| undefined`                            | no       | `undefined`                            | Human-readable copy for the error state or control.                                              |
 | `ariaLabel`        | input  | `string`                                         | no       | `''`                                   | Accessible name used when visible content is not sufficient.                                     |
 | `ariaLabelledBy`   | input  | `string`                                         | no       | `''`                                   | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy`  | input  | `string`                                         | no       | `''`                                   | Space-separated element ids composed with Form Field hints and validation descriptions.          |
@@ -76,9 +76,9 @@ void bootstrapApplication(KernSelectAgentExample);
 | `identityMatcher`  | input  | `KrnIdentityMatcher<T>`                          | no       | `Object.is`                            | Compares option values when object identity is not stable across refreshes.                      |
 | `trackBy`          | input  | `KrnOptionTrackBy<T>`                            | no       | `(option) => option.value`             | Returns the stable identity used to retain rendered items across updates.                        |
 | `stringify`        | input  | `KrnOptionStringifier<T>`                        | no       | `(option) => option.label`             | Converts a domain value into the human-readable label shown to users.                            |
-| `disabledHandler`  | input  | `KrnOptionDisabledHandler<T>`                    | no       | `(option) => option.disabled ?? false` | Determines whether an individual option or item is unavailable.                                  |
-| `optionTemplate`   | input  | `TemplateRef<KrnSelectOptionContext<T>> \| null` | no       | `null`                                 | Template used to render one option with its typed context.                                       |
-| `selectedTemplate` | input  | `TemplateRef<KrnSelectOptionContext<T>> \| null` | no       | `null`                                 | Template used to render the committed selection.                                                 |
+| `disabledHandler`  | input  | `KrnOptionDisabledHandler<T>`                    | no       | `(option) => option.disabled ?? false` | Controls whether the component applies the disabled handler behavior.                            |
+| `optionTemplate`   | input  | `TemplateRef<KrnSelectOptionContext<T>> \| null` | no       | `null`                                 | Template or projected content used to render option.                                             |
+| `selectedTemplate` | input  | `TemplateRef<KrnSelectOptionContext<T>> \| null` | no       | `null`                                 | Template or projected content used to render selected.                                           |
 | `disabled`         | input  | `boolean`                                        | no       | `false`                                | Prevents user interaction and participates in the disabled-state contract.                       |
 | `readonly`         | input  | `boolean`                                        | no       | `false`                                | Keeps the value perceivable while preventing user edits.                                         |
 | `required`         | input  | `boolean`                                        | no       | `false`                                | Marks the value as required and participates in Angular Forms validation.                        |
@@ -157,21 +157,22 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument       | Control | Default                    | Test value                             | Binding                         | Description                                                          |
-| -------------- | ------- | -------------------------- | -------------------------------------- | ------------------------------- | -------------------------------------------------------------------- |
-| `placeholder`  | text    | `"Choose a plan"`          | `"Choose a plan · alternate"`          | input `placeholder` (property)  | Sets the empty selection prompt.                                     |
-| `size`         | select  | `"md"`                     | `"sm"`                                 | input `size` (property)         | Changes the control height.                                          |
-| `optionsState` | select  | `"ready"`                  | `"loading"`                            | input `optionsState` (property) | Shows ready, loading, or error option content.                       |
-| `emptyText`    | text    | `"No options"`             | `"No options · alternate"`             | input `emptyText` (property)    | Uses locale-aware empty-options copy until explicitly changed.       |
-| `errorText`    | text    | `"Could not load options"` | `"Could not load options · alternate"` | input `errorText` (property)    | Uses locale-aware option-load failure copy until explicitly changed. |
-| `loadingText`  | text    | `"Loading options…"`       | `"Loading options… · alternate"`       | input `loadingText` (property)  | Uses locale-aware loading copy until explicitly changed.             |
-| `open`         | boolean | `false`                    | `true`                                 | model `open`                    | Opens the listbox.                                                   |
-| `disabled`     | boolean | `false`                    | `true`                                 | input `disabled` (property)     | Prevents user interaction.                                           |
-| `readOnly`     | boolean | `false`                    | `true`                                 | input `readonly` (property)     | Keeps the value focusable while preventing edits.                    |
-| `required`     | boolean | `false`                    | `true`                                 | input `required` (property)     | Marks the control as required.                                       |
-| `invalid`      | boolean | `false`                    | `true`                                 | input `invalid` (property)      | Exposes the invalid visual and ARIA state.                           |
-| `id`           | text    | `""`                       | `"Alternate value"`                    | input `id` (property)           | Configures the component id contract.                                |
-| `tabindex`     | number  | `0`                        | `1`                                    | input `tabindex` (property)     | Configures the component tabindex contract.                          |
+| Argument       | Control | Default                    | Test value                             | Binding                         | Description                                                                   |
+| -------------- | ------- | -------------------------- | -------------------------------------- | ------------------------------- | ----------------------------------------------------------------------------- |
+| `value`        | select  | `""`                       | `"starter"`                            | fixture interaction             | Seeds the Forms API with one selected plan so the committed value is visible. |
+| `placeholder`  | text    | `"Choose a plan"`          | `"Choose a plan · alternate"`          | input `placeholder` (property)  | Sets the empty selection prompt.                                              |
+| `size`         | select  | `"md"`                     | `"sm"`                                 | input `size` (property)         | Changes the control height.                                                   |
+| `optionsState` | select  | `"ready"`                  | `"loading"`                            | input `optionsState` (property) | Shows ready, loading, or error option content.                                |
+| `emptyText`    | text    | `"No options"`             | `"No options · alternate"`             | input `emptyText` (property)    | Uses locale-aware empty-options copy until explicitly changed.                |
+| `errorText`    | text    | `"Could not load options"` | `"Could not load options · alternate"` | input `errorText` (property)    | Uses locale-aware option-load failure copy until explicitly changed.          |
+| `loadingText`  | text    | `"Loading options…"`       | `"Loading options… · alternate"`       | input `loadingText` (property)  | Uses locale-aware loading copy until explicitly changed.                      |
+| `open`         | boolean | `false`                    | `true`                                 | model `open`                    | Opens the listbox.                                                            |
+| `disabled`     | boolean | `false`                    | `true`                                 | input `disabled` (property)     | Prevents user interaction.                                                    |
+| `readOnly`     | boolean | `false`                    | `true`                                 | input `readonly` (property)     | Keeps the value focusable while preventing edits.                             |
+| `required`     | boolean | `false`                    | `true`                                 | input `required` (property)     | Marks the control as required.                                                |
+| `invalid`      | boolean | `false`                    | `true`                                 | input `invalid` (property)      | Exposes the invalid visual and ARIA state.                                    |
+| `id`           | text    | `""`                       | `"Alternate value"`                    | input `id` (property)           | Stable identifier used by the id contract.                                    |
+| `tabindex`     | number  | `0`                        | `1`                                    | input `tabindex` (property)     | Native sequential-focus order forwarded to the owned interactive element.     |
 
 Exact API exclusions:
 
@@ -203,7 +204,7 @@ Presets:
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
-- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `filled` — filled; scenario `default`; `value="team"`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — Readonly; scenario `default`; `readOnly=true`.
 - `required` — Required; scenario `default`; `required=true`.

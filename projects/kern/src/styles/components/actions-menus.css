@@ -1,0 +1,139 @@
+.krn-split-button,
+.krn-dropdown {
+  align-items: stretch;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  position: relative;
+  isolation: isolate;
+  vertical-align: middle;
+}
+
+.krn-split-button > .krn-action,
+.krn-dropdown > .krn-action {
+  inline-size: auto;
+}
+
+.krn-split-button > .krn-action:is(:hover, :focus-visible, [data-loading='true']) {
+  z-index: 1;
+}
+
+.krn-split-button > .krn-action:first-child {
+  border-end-end-radius: 0;
+  border-start-end-radius: 0;
+}
+
+.krn-split-button > .krn-action[aria-haspopup='menu'] {
+  border-end-start-radius: 0;
+  border-inline-start-width: 0;
+  border-start-start-radius: 0;
+  inline-size: var(--_action-height);
+  padding-inline: 0;
+}
+
+.krn-chevron {
+  block-size: 0.55rem;
+  border-block-end: 1.5px solid currentColor;
+  border-inline-end: 1.5px solid currentColor;
+  display: block;
+  inline-size: 0.55rem;
+  rotate: 45deg;
+  translate: 0 -0.15rem;
+  transition:
+    rotate var(--krn-motion-duration-interaction) var(--krn-ease-standard, ease),
+    translate var(--krn-motion-duration-interaction) var(--krn-ease-standard, ease);
+}
+
+.krn-action[aria-expanded='true'] .krn-chevron {
+  rotate: 225deg;
+  translate: 0 0.15rem;
+}
+
+.krn-action-menu {
+  --_action-menu-item-active: color-mix(
+    in oklch,
+    var(--krn-color-text, #17201c) 10%,
+    var(--krn-color-surface-overlay, #fff)
+  );
+  --_action-menu-item-hover: color-mix(
+    in oklch,
+    var(--krn-color-text, #17201c) 6%,
+    var(--krn-color-surface-overlay, #fff)
+  );
+  animation: krn-action-menu-in var(--krn-motion-duration-enter) var(--krn-ease-enter, ease-out);
+  background: var(--krn-color-surface-overlay, #fff);
+  border: 1px solid var(--krn-color-border, #cbd3cf);
+  border-radius: var(--krn-radius-lg, 0.75rem);
+  box-shadow: var(
+    --krn-shadow-overlay,
+    0 18px 44px rgb(20 38 30 / 18%),
+    0 3px 8px rgb(20 38 30 / 10%)
+  );
+  color: var(--krn-color-text, #17201c);
+  inline-size: max-content;
+  max-inline-size: min(20rem, calc(100vw - var(--krn-space-8, 2rem)));
+  max-block-size: min(24rem, calc(100dvh - var(--krn-space-8, 2rem)));
+  min-inline-size: 12rem;
+  overflow: auto;
+  padding: var(--krn-space-1, 0.25rem);
+  transform-origin: top right;
+}
+
+.krn-action-menu[data-match-trigger-width='true'] {
+  inline-size: 100%;
+  max-inline-size: none;
+  min-inline-size: 0;
+}
+
+.krn-action-menu :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']) {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: var(--krn-radius-sm, 0.375rem);
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  font: 500 var(--krn-font-size-md, 0.9375rem) / 1.25
+    var(--krn-font-family-sans, 'IBM Plex Sans Condensed', sans-serif);
+  gap: var(--krn-space-3, 0.75rem);
+  inline-size: 100%;
+  justify-content: space-between;
+  min-block-size: var(--krn-control-height-md);
+  padding-block: var(--krn-density-cell-padding-block);
+  padding-inline: var(--krn-density-cell-padding-inline);
+  text-align: start;
+  text-decoration: none;
+  transition: background-color var(--krn-motion-duration-interaction) var(--krn-ease-standard, ease);
+  white-space: nowrap;
+}
+
+.krn-action-menu
+  :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']):is(
+    :hover,
+    :focus-visible
+  ):not(:disabled):not([aria-disabled='true']) {
+  background: var(--_action-menu-item-hover);
+  outline: 0;
+}
+
+.krn-action-menu
+  :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']):active:not(
+    :disabled
+  ):not([aria-disabled='true']) {
+  background: var(--_action-menu-item-active);
+}
+
+.krn-action-menu
+  :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']):focus-visible {
+  box-shadow: inset 0 0 0 2px var(--krn-color-focus);
+}
+
+.krn-action-menu
+  :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']):is(
+    :disabled,
+    [aria-disabled='true']
+  ) {
+  color: var(--krn-color-text-disabled);
+  cursor: not-allowed;
+}

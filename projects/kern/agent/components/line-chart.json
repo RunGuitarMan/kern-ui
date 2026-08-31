@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Line Chart. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Line Chart. Plots change across an ordered axis and exposes each datum through keyboard navigation.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -109,7 +109,7 @@
       "type": "ReadonlyArray<string>",
       "required": false,
       "defaultValue": "['var(--krn-chart-1, #4f6feb)']",
-      "description": "Ordered semantic color values available to the color control.",
+      "description": "Defines the component's palette behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -149,7 +149,7 @@
       "type": "KrnChartValueFormatter | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Formats a normalized value for visible and accessible percentage copy.",
+      "description": "Consumer function used by the component to resolve percent formatter.",
       "descriptionSource": "inferred"
     },
     {
@@ -348,7 +348,7 @@
         "kind": "text",
         "defaultValue": "THROUGHPUT",
         "testValue": "THROUGHPUT · alternate",
-        "description": "Configures the component eyebrow contract.",
+        "description": "Human-readable copy for the eyebrow state or control.",
         "binding": {
           "kind": "input",
           "publicName": "eyebrow",
@@ -361,7 +361,7 @@
         "kind": "select",
         "defaultValue": "clamp",
         "testValue": "reject",
-        "description": "Configures the component negativeValuePolicy contract.",
+        "description": "Clamps negative values to zero by default or rejects them with a validation error.",
         "binding": {
           "kind": "input",
           "publicName": "negativeValuePolicy",
@@ -384,7 +384,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Controlled tableVisible state with a matching tableVisibleChange output.",
+        "description": "Controls source-data disclosure and reflects user toggles.",
         "binding": {
           "kind": "model",
           "publicName": "tableVisible"

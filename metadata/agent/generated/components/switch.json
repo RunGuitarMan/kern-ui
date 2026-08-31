@@ -9,14 +9,14 @@
   "symbol": "KrnSwitch",
   "canonicalSymbol": "KrnSwitch",
   "canonicalId": "switch",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Switch. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Switch. Controls an immediate on or off setting with switch semantics and supporting description.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -64,7 +64,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -74,7 +74,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Required human-readable name for the represented person, item, or action.",
+      "description": "Native form-control name forwarded to the owned interactive element.",
       "descriptionSource": "inferred"
     },
     {
@@ -210,15 +210,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
-    ],
+    "keyboard": ["Tab focuses the switch; Space toggles its checked state"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The real form control retains its visible name, described-by relationships, and Angular state.",
+      "Required, readonly, disabled, and invalid states remain programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -237,7 +232,7 @@
       "title": "Typed audit-alert switch",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed audit-alert switch\n *\n * Bind a boolean preference with a visible label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSwitch } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-switch-agent-example',\n  standalone: true,\n  imports: [KrnSwitch, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-switch [formControl]=\"control\"> Send an alert when audit policy changes </krn-switch>\n  `,\n})\nexport class KernSwitchAgentExample {\n  readonly control = new FormControl<boolean>(true, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernSwitchAgentExample);\n",
+      "code": "/**\n * Typed audit-alert switch\n *\n * Bind a boolean preference with a visible label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSwitch } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-switch-agent-example',\n  standalone: true,\n  imports: [KrnSwitch, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-switch [formControl]=\"control\"> Send an alert when audit policy changes </krn-switch>\n  `,\n})\nexport class KernSwitchAgentExample {\n  readonly control = new FormControl<boolean>(true, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernSwitchAgentExample);\n",
       "verification": "compiled",
       "source": "examples/switch.ts"
     }
@@ -264,8 +259,8 @@
     "checkedChange"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Switch for this specific contract: Controls an immediate on or off setting with switch semantics and supporting description.",
+    "avoidWhen": "Do not choose Switch for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -362,7 +357,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component checked contract.",
+        "description": "Controlled checked state rendered by the native choice control.",
         "binding": {
           "kind": "input",
           "publicName": "checked",
@@ -375,7 +370,7 @@
         "kind": "text",
         "defaultValue": "Members will authenticate through your identity provider.",
         "testValue": "Members will authenticate through your identity provider. · alternate",
-        "description": "Configures the component description contract.",
+        "description": "Visible supporting description for the component content.",
         "binding": {
           "kind": "input",
           "publicName": "description",
@@ -388,7 +383,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -401,7 +396,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",
@@ -521,7 +516,9 @@
         "id": "filled",
         "label": "filled",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "selected": true
+        },
         "fixtureEffect": {
           "kind": "content",
           "mode": "filled",

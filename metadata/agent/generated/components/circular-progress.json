@@ -9,14 +9,14 @@
   "symbol": "KrnCircularProgress",
   "canonicalSymbol": "KrnCircularProgress",
   "canonicalId": "circular-progress",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Circular Progress. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Circular Progress. Shows determinate or indeterminate progress in a compact circular indicator.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -76,7 +76,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Represents an unknown progress value or a mixed selection state.",
+      "description": "Controlled mixed state rendered independently from the checked value.",
       "descriptionSource": "inferred"
     },
     {
@@ -122,12 +122,8 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
-    "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
-    ],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
+    "notes": ["Exposes progressbar semantics independent of its circular presentation."],
     "manualValidationRequired": true
   },
   "ssr": {
@@ -145,7 +141,7 @@
       "title": "Compact sync progress",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Compact sync progress\n *\n * Show known progress where horizontal space is constrained.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCircularProgress } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-circular-progress-agent-example',\n  standalone: true,\n  imports: [KrnCircularProgress],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-circular-progress\n      ariaLabel=\"Account sync progress\"\n      [value]=\"72\"\n      [max]=\"100\"\n      [showValue]=\"true\"\n    />\n  `,\n})\nexport class KernCircularProgressAgentExample {}\n\nvoid bootstrapApplication(KernCircularProgressAgentExample);\n",
+      "code": "/**\n * Compact sync progress\n *\n * Show known progress where horizontal space is constrained.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCircularProgress } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-circular-progress-agent-example',\n  standalone: true,\n  imports: [KrnCircularProgress],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-circular-progress\n      ariaLabel=\"Account sync progress\"\n      [value]=\"72\"\n      [max]=\"100\"\n      [showValue]=\"true\"\n    />\n  `,\n})\nexport class KernCircularProgressAgentExample {}\n\nvoid bootstrapApplication(KernCircularProgressAgentExample);\n",
       "verification": "compiled",
       "source": "examples/circular-progress.ts"
     }
@@ -165,8 +161,8 @@
     "locale"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Circular Progress for this specific contract: Shows determinate or indeterminate progress in a compact circular indicator.",
+    "avoidWhen": "Do not choose Circular Progress for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

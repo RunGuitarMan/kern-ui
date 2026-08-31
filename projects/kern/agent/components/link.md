@@ -2,7 +2,7 @@
 
 - ID: `link`
 - Selector: `a[krnLink]`
-- Import: `import { KrnLink } from '@kern-ui/angular/kit';`
+- Import: `import { KrnLink } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnLink`
 - Lifecycle: **stable**
 - Category: Actions
@@ -27,7 +27,7 @@ Avoid: Do not simulate disabled navigation or use Link for an action in the curr
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnLink } from '@kern-ui/angular/kit';
+import { KrnLink } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-link-agent-example',

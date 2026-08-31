@@ -1,2291 +1,63 @@
-import { KERN_CATALOG, type KernApiRow, type KernCatalogItem } from '@kern-ui/showcase';
+import { KERN_CATALOG, type KernCatalogItem } from '@kern-ui/showcase';
 
-export type KernSpecimenScenario = 'default' | 'states' | 'stress' | 'virtual';
+import { CONTROL_SETS } from './playground-control-sets';
+import {
+  boolean,
+  compositionBinding,
+  disabled,
+  inputBinding,
+  invalid,
+  loading,
+  number,
+  option,
+  placeholder,
+  publicApiControl,
+  range,
+  readOnly,
+  required,
+  select,
+  text,
+  textTestValue,
+  type KernPlaygroundApiCoverage,
+  type KernPlaygroundApiExclusion,
+  type KernPlaygroundControl,
+  type KernPlaygroundDefinition,
+  type KernPlaygroundFixtureEffect,
+  type KernPlaygroundStatePreset,
+  type KernPlaygroundStateRequest,
+  type KernPlaygroundValue,
+  type KernPlaygroundValues,
+  type KernResolvedPlaygroundState,
+  type KernSpecimenScenario,
+} from './playground-foundation';
 
-export type KernPlaygroundValue = string | number | boolean | null;
+export {
+  localizeKernPlaygroundFixtureEffect,
+  localizeKernPlaygroundPresetLabel,
+  localizeKernPlaygroundStateLabel,
+  localizeKernPlaygroundStringArgument,
+  normalizeKernPlaygroundApiType,
+} from './playground-foundation';
+export type {
+  KernSpecimenScenario,
+  KernPlaygroundValue,
+  KernPlaygroundValues,
+  KernPlaygroundControlKind,
+  KernPlaygroundVisualPseudoState,
+  KernPlaygroundFixtureEffect,
+  KernPlaygroundEnvironment,
+  KernPlaygroundCodeBinding,
+  KernPlaygroundOption,
+  KernPlaygroundControl,
+  KernPlaygroundStatePreset,
+  KernPlaygroundDefinition,
+  KernPlaygroundApiExclusionCode,
+  KernPlaygroundApiExclusion,
+  KernPlaygroundApiCoverage,
+  KernPlaygroundStateRequest,
+  KernResolvedPlaygroundState,
+} from './playground-foundation';
 
-export type KernPlaygroundValues = Readonly<Record<string, KernPlaygroundValue>>;
-
-export type KernPlaygroundControlKind = 'boolean' | 'number' | 'range' | 'select' | 'text';
-
-export type KernPlaygroundVisualPseudoState = 'active' | 'focus-visible' | 'hover';
-
-/**
- * A deterministic specimen-only effect for an acceptance state that cannot be
- * represented by the component's public inputs/models. Code generators must
- * not serialize this metadata as component API.
- */
-export type KernPlaygroundFixtureEffect =
-  | {
-      readonly kind: 'layout';
-      readonly mode: 'alternate' | 'constrained' | 'expanded' | 'overflow';
-      readonly label: string;
-      readonly description: string;
-    }
-  | {
-      readonly kind: 'content';
-      readonly mode:
-        'alternate' | 'empty' | 'filled' | 'long-text' | 'with-action' | 'without-action';
-      readonly label: string;
-      readonly description: string;
-    }
-  | {
-      readonly kind: 'data';
-      readonly mode:
-        | 'alternate'
-        | 'empty'
-        | 'error'
-        | 'filtered'
-        | 'loading'
-        | 'selected'
-        | 'sorted'
-        | 'success'
-        | 'virtualized';
-      readonly label: string;
-      readonly description: string;
-    }
-  | {
-      readonly kind: 'status';
-      readonly mode: 'danger' | 'info' | 'neutral' | 'success' | 'warning';
-      readonly label: string;
-      readonly description: string;
-    };
-
-export interface KernPlaygroundEnvironment {
-  readonly theme?: 'system' | 'light' | 'dark' | 'high-contrast';
-  readonly density?: 'compact' | 'comfortable' | 'spacious';
-  readonly direction?: 'ltr' | 'rtl';
-  readonly viewport?: 'responsive' | 'phone' | 'tablet';
-}
-
-export type KernPlaygroundCodeBinding =
-  | {
-      readonly kind: 'input';
-      readonly publicName: string;
-      readonly syntax?: 'attribute' | 'property';
-    }
-  | {
-      readonly kind: 'model';
-      readonly publicName: string;
-    }
-  | {
-      readonly kind: 'fixture';
-      readonly target: 'content' | 'data' | 'interaction' | 'overlay';
-      readonly description: string;
-    }
-  | {
-      readonly kind: 'composition';
-      readonly target: 'canvas';
-      readonly attribute: 'data-composition';
-    };
-
-export interface KernPlaygroundOption {
-  readonly label: string;
-  readonly value: KernPlaygroundValue;
-}
-
-export interface KernPlaygroundControl {
-  readonly key: string;
-  readonly label: string;
-  readonly kind: KernPlaygroundControlKind;
-  readonly defaultValue: KernPlaygroundValue;
-  /** A valid, deterministic non-default value used by catalog-wide browser verification. */
-  readonly testValue: KernPlaygroundValue;
-  readonly description: string;
-  readonly binding: KernPlaygroundCodeBinding;
-  readonly options?: readonly KernPlaygroundOption[];
-  readonly min?: number;
-  readonly max?: number;
-  readonly step?: number;
-}
-
-export interface KernPlaygroundStatePreset {
-  readonly id: string;
-  readonly label: string;
-  readonly scenario: KernSpecimenScenario;
-  readonly args: KernPlaygroundValues;
-  readonly environment?: KernPlaygroundEnvironment;
-  readonly visualPseudoState?: KernPlaygroundVisualPseudoState;
-  /** Rendered by KernComponentSpecimen; never a public component binding. */
-  readonly fixtureEffect?: KernPlaygroundFixtureEffect;
-}
-
-export interface KernPlaygroundDefinition {
-  readonly id: string;
-  readonly scenarios: readonly KernSpecimenScenario[];
-  /**
-   * Stable query-string identifiers. Use `presets` when label, arguments, or
-   * environment effects are required.
-   */
-  readonly states: readonly string[];
-  readonly presets: readonly KernPlaygroundStatePreset[];
-  readonly controls: readonly KernPlaygroundControl[];
-}
-
-export type KernPlaygroundApiExclusionCode =
-  | 'accessibility-copy'
-  | 'callback'
-  | 'complex-data'
-  | 'dom-wiring'
-  | 'form-serialization'
-  | 'locale-environment'
-  | 'polymorphic-value'
-  | 'template'
-  | 'translation-object';
-
-/**
- * Machine-readable accounting for public inputs/models that are intentionally
- * not represented by a scalar playground control.
- */
-export interface KernPlaygroundApiExclusion {
-  readonly componentId: string;
-  readonly publicName: string;
-  readonly kind: 'input' | 'model';
-  readonly type: string;
-  readonly code: KernPlaygroundApiExclusionCode;
-  readonly reason: string;
-  readonly evidence: {
-    readonly category:
-      | 'a11y-test'
-      | 'component-example'
-      | 'forms-integration'
-      | 'locale-preview'
-      | 'specimen-fixture';
-    readonly pointer: string;
-  };
-}
-
-export interface KernPlaygroundApiCoverage {
-  readonly publicInputsAndModels: number;
-  readonly controlled: number;
-  readonly excluded: number;
-  readonly unclassified: number;
-}
-
-export interface KernPlaygroundStateRequest {
-  readonly state?: string;
-  readonly scenario?: KernSpecimenScenario;
-  readonly args?: KernPlaygroundValues;
-}
-
-export interface KernResolvedPlaygroundState {
-  readonly preset: KernPlaygroundStatePreset;
-  readonly scenario: KernSpecimenScenario;
-  readonly args: KernPlaygroundValues;
-  readonly environment: KernPlaygroundEnvironment;
-  readonly visualPseudoState: KernPlaygroundVisualPseudoState | null;
-  readonly fixtureEffect: KernPlaygroundFixtureEffect | null;
-}
-
-const inputBinding = (
-  publicName: string,
-  syntax: 'attribute' | 'property' = 'property',
-): KernPlaygroundCodeBinding => Object.freeze({ kind: 'input', publicName, syntax });
-
-const modelBinding = (publicName: string): KernPlaygroundCodeBinding =>
-  Object.freeze({ kind: 'model', publicName });
-
-const fixtureBinding = (
-  target: 'content' | 'data' | 'interaction' | 'overlay',
-  description: string,
-): KernPlaygroundCodeBinding => Object.freeze({ kind: 'fixture', target, description });
-
-const compositionBinding: KernPlaygroundCodeBinding = Object.freeze({
-  kind: 'composition',
-  target: 'canvas',
-  attribute: 'data-composition',
-});
-
-const option = (label: string, value: KernPlaygroundValue): KernPlaygroundOption =>
-  Object.freeze({
-    label,
-    value,
-  });
-
-const select = (
-  key: string,
-  label: string,
-  defaultValue: KernPlaygroundValue,
-  description: string,
-  values: readonly KernPlaygroundValue[],
-  binding: KernPlaygroundCodeBinding = inputBinding(key),
-): KernPlaygroundControl => {
-  const options = Object.freeze(values.map((value) => option(String(value), value)));
-  return Object.freeze({
-    key,
-    label,
-    kind: 'select',
-    defaultValue,
-    testValue: options.find(({ value }) => !Object.is(value, defaultValue))?.value ?? defaultValue,
-    description,
-    binding,
-    options,
-  });
-};
-
-const boolean = (
-  key: string,
-  label: string,
-  defaultValue: boolean,
-  description: string,
-  binding: KernPlaygroundCodeBinding = inputBinding(key),
-): KernPlaygroundControl =>
-  Object.freeze({
-    key,
-    label,
-    kind: 'boolean',
-    defaultValue,
-    testValue: !defaultValue,
-    description,
-    binding,
-  });
-
-const number = (
-  key: string,
-  label: string,
-  defaultValue: number,
-  description: string,
-  min: number,
-  max: number,
-  step = 1,
-  binding: KernPlaygroundCodeBinding = inputBinding(key),
-): KernPlaygroundControl => {
-  const candidate = defaultValue + step <= max ? defaultValue + step : defaultValue - step;
-  return Object.freeze({
-    key,
-    label,
-    kind: 'number',
-    defaultValue,
-    testValue: Math.min(max, Math.max(min, candidate)),
-    description,
-    binding,
-    min,
-    max,
-    step,
-  });
-};
-
-const range = (
-  key: string,
-  label: string,
-  defaultValue: number,
-  description: string,
-  min: number,
-  max: number,
-  step = 1,
-  binding: KernPlaygroundCodeBinding = inputBinding(key),
-): KernPlaygroundControl => {
-  const candidate = defaultValue + step <= max ? defaultValue + step : defaultValue - step;
-  return Object.freeze({
-    key,
-    label,
-    kind: 'range',
-    defaultValue,
-    testValue: Math.min(max, Math.max(min, candidate)),
-    description,
-    binding,
-    min,
-    max,
-    step,
-  });
-};
-
-function textTestValue(key: string, defaultValue: string): string {
-  const normalized = key.toLocaleLowerCase();
-  if (normalized === 'min') {
-    if (/^\d{4}-\d{2}-\d{2}$/.test(defaultValue)) return '2026-02-01';
-    if (/^\d{2}:\d{2}$/.test(defaultValue)) {
-      return defaultValue === '08:00' ? '09:00' : '08:00';
-    }
-    if (defaultValue.length === 0) return '2026-02-01';
-  }
-  if (normalized === 'max') {
-    if (/^\d{4}-\d{2}-\d{2}$/.test(defaultValue)) return '2026-11-30';
-    if (/^\d{2}:\d{2}$/.test(defaultValue)) return '18:00';
-    if (defaultValue.length === 0) return '2026-11-30';
-  }
-  if (normalized.includes('month')) return '2026-08';
-  if (normalized.includes('ratio')) return '4 / 3';
-  if (
-    normalized.includes('date') ||
-    normalized === 'today' ||
-    /^\d{4}-\d{2}-\d{2}$/.test(defaultValue)
-  ) {
-    return '2026-08-15';
-  }
-  if (/^\d{2}:\d{2}$/.test(defaultValue)) return '14:30';
-  if (normalized.includes('href')) return '#specimen-overview';
-  if (normalized === 'src') return '/favicon.ico';
-  if (normalized === 'sortkey') return 'usage';
-  if (normalized === 'accept') return '.png,.jpg';
-  if (normalized.endsWith('offset')) return defaultValue === '0' ? '1rem' : '0';
-  if (
-    /(width|height|gutters?|gap|inset|indent|space|size)$/.test(normalized) ||
-    /(?:rem|px|%|var\()/.test(defaultValue)
-  ) {
-    return '20rem';
-  }
-  if (normalized === 'code') return 'const status = 2;';
-  if (defaultValue.length === 0) return 'Alternate value';
-  return `${defaultValue} · alternate`;
-}
-
-const text = (
-  key: string,
-  label: string,
-  defaultValue: string,
-  description: string,
-  binding: KernPlaygroundCodeBinding = inputBinding(key),
-): KernPlaygroundControl =>
-  Object.freeze({
-    key,
-    label,
-    kind: 'text',
-    defaultValue,
-    testValue: textTestValue(key, defaultValue),
-    description,
-    binding,
-  });
-
-const disabled = boolean('disabled', 'Disabled', false, 'Prevents user interaction.');
-const invalid = boolean('invalid', 'Invalid', false, 'Exposes the invalid visual and ARIA state.');
-const readOnly = boolean(
-  'readOnly',
-  'Read only',
-  false,
-  'Keeps the value focusable while preventing edits.',
-  inputBinding('readonly'),
-);
-const required = boolean('required', 'Required', false, 'Marks the control as required.');
-const formSize = select('size', 'Size', 'md', 'Changes the control height and inline padding.', [
-  'sm',
-  'md',
-  'lg',
-]);
-const placeholder = text('placeholder', 'Placeholder', 'Northstar', 'Sets the empty-value prompt.');
-const actionVariant = select(
-  'variant',
-  'Variant',
-  'solid',
-  'Changes action emphasis without changing its semantics.',
-  ['solid', 'soft', 'outline', 'ghost'],
-);
-const actionTone = select(
-  'tone',
-  'Tone',
-  'brand',
-  'Communicates neutral, branded, informational, or destructive intent.',
-  ['neutral', 'brand', 'info', 'success', 'warning', 'danger'],
-);
-const actionSize = select('size', 'Size', 'md', 'Changes the action target and label size.', [
-  'sm',
-  'md',
-  'lg',
-]);
-const loading = boolean('loading', 'Loading', false, 'Shows progress and disables activation.');
-const closeOnOutside = Object.freeze({
-  ...select(
-    'closeOnOutside',
-    'Outside click',
-    null,
-    'Inherits the surface policy by default, or explicitly enables or disables outside-click closing.',
-    [null, true, false],
-  ),
-  options: Object.freeze([
-    option('Inherit', null),
-    option('Enabled', true),
-    option('Disabled', false),
-  ]),
-});
-const displayTone = select('tone', 'Tone', 'neutral', 'Changes the semantic color treatment.', [
-  'neutral',
-  'brand',
-  'info',
-  'success',
-  'warning',
-  'danger',
-]);
-const chartTitle = text('title', 'Title', 'Weekly active users', 'Sets the visible chart title.');
-const chartDescription = text(
-  'description',
-  'Description',
-  'Unique members, last 6 days',
-  'Adds concise context for the dataset.',
-);
-const chartSummaryLimit = number(
-  'summaryItemLimit',
-  'Summary limit',
-  12,
-  'Limits items in the accessible data summary.',
-  1,
-  120,
-);
-
-const PUBLIC_API_SELECT_OPTIONS: Readonly<Record<string, readonly string[]>> = Object.freeze({
-  KrnActionVariant: ['solid', 'soft', 'outline', 'ghost'],
-  KrnAutocompleteMode: ['list', 'both', 'inline', 'none'],
-  KrnChartNegativeValuePolicy: ['clamp', 'reject'],
-  KrnContainerSize: ['sm', 'md', 'lg', 'xl', 'full'],
-  KrnDataSortDirection: ['asc', 'desc'],
-  KrnDisplayTone: ['neutral', 'brand', 'info', 'success', 'warning', 'danger'],
-  KrnFeedbackTone: ['neutral', 'info', 'success', 'warning', 'danger'],
-  KrnInputMode: ['none', 'text', 'tel', 'url', 'email', 'numeric', 'decimal', 'search'],
-  KrnLayoutAlignment: ['start', 'center', 'end', 'stretch', 'baseline'],
-  KrnLayoutAxis: ['horizontal', 'vertical'],
-  KrnLayoutJustification: [
-    'start',
-    'center',
-    'end',
-    'space-between',
-    'space-around',
-    'space-evenly',
-  ],
-  KrnMenuAlignment: ['start', 'end'],
-  KrnNavigationOrientation: ['horizontal', 'vertical'],
-  KrnOptionsState: ['ready', 'loading', 'error'],
-  KrnOrientation: ['horizontal', 'vertical'],
-  KrnResponsiveBreakpoint: ['none', 'sm', 'md', 'lg', 'xl'],
-  KrnResponsiveDisplay: ['block', 'inline', 'contents', 'flex', 'grid'],
-  KrnSize: ['sm', 'md', 'lg'],
-  KrnSplitRatio: ['1:1', '1:2', '2:1', 'golden'],
-  KrnToastPosition: [
-    'top-start',
-    'top-center',
-    'top-end',
-    'bottom-start',
-    'bottom-center',
-    'bottom-end',
-  ],
-  KrnTone: ['neutral', 'brand', 'info', 'success', 'warning', 'danger'],
-});
-
-const PUBLIC_API_COPY_DEFAULTS: Readonly<Record<string, string>> = Object.freeze({
-  accept: 'image/png,image/jpeg',
-  code: 'const status = 1;',
-  closeShortcut: 'Escape',
-  description: 'Operational context for this component.',
-  detail: 'Updated a moment ago',
-  dirtyMessage: 'You have unsaved changes.',
-  emptyText: 'No options',
-  error: 'Unable to load data.',
-  errorMessage: 'Unable to continue. Check the entered values.',
-  errorText: 'Options could not be loaded',
-  eyebrow: 'WORKSPACE / 01',
-  filter: '',
-  filterPlaceholder: 'Filter records',
-  heading: 'Workspace overview',
-  hideText: 'Hide value',
-  hint: 'Use a clear, descriptive value.',
-  href: '#specimen',
-  icon: '●',
-  label: 'Interactive example',
-  loadingText: 'Loading options',
-  optionalText: 'Optional',
-  placeholder: 'Enter a value',
-  prompt: 'Confirm this operation?',
-  recoveryHref: '#specimen',
-  rel: 'noopener',
-  separator: '›',
-  showText: 'Show value',
-  sortKey: 'workspace',
-  title: 'Interactive example',
-  today: '2026-07-30',
-  value: 'Example value',
-});
-
-function humanizePublicName(value: string): string {
-  const spaced = value
-    .replace(/([a-z\d])([A-Z])/g, '$1 $2')
-    .replace(/[_-]+/g, ' ')
-    .trim();
-  return spaced.length > 0 ? spaced[0]!.toUpperCase() + spaced.slice(1) : value;
-}
-
-function parseQuotedDefault(value: string): string | undefined {
-  const trimmed = value.trim();
-  const match = /^(['"])([\s\S]*)\1$/.exec(trimmed);
-  return match?.[2];
-}
-
-function literalStringOptions(type: string): readonly string[] | undefined {
-  const parts = type.split('|').map((part) => part.trim());
-  if (parts.length < 2) return undefined;
-  const values: string[] = [];
-  for (const part of parts) {
-    if (part === 'null' || part === 'undefined') continue;
-    const value = parseQuotedDefault(part);
-    if (value === undefined) return undefined;
-    values.push(value);
-  }
-  return values.length > 1
-    ? Object.freeze(values.sort((left, right) => left.localeCompare(right)))
-    : undefined;
-}
-
-function apiDescription(api: KernApiRow): string {
-  const description = api.description.trim();
-  return description.length > 0
-    ? description
-    : `Changes the public ${humanizePublicName(api.name).toLocaleLowerCase()} input.`;
-}
-
-function safeStringDefault(api: KernApiRow, options?: readonly string[]): string {
-  const parsed = parseQuotedDefault(api.defaultValue);
-  if (parsed !== undefined) return parsed;
-  if (api.defaultValue.trim() === 'null' || api.defaultValue.trim() === 'undefined') return '';
-  if (
-    api.type.includes('KrnLayoutSpace') &&
-    /^-?(?:\d+(?:\.\d+)?|\.\d+)$/.test(api.defaultValue.trim())
-  ) {
-    return api.defaultValue.trim();
-  }
-  const named = PUBLIC_API_COPY_DEFAULTS[api.name];
-  if (named !== undefined) return named;
-  return options?.[0] ?? humanizePublicName(api.name);
-}
-
-function numericBounds(
-  api: KernApiRow,
-  value: number,
-): Readonly<{ min: number; max: number; step: number }> {
-  const name = api.name.toLocaleLowerCase();
-  if (name.includes('delay') || name.includes('duration')) {
-    return Object.freeze({ min: 0, max: Math.max(5_000, value), step: 50 });
-  }
-  if (name.includes('size') && !name.includes('page')) {
-    return Object.freeze({ min: 0, max: Math.max(10_000_000, value), step: 1 });
-  }
-  if (
-    name.includes('count') ||
-    name.includes('length') ||
-    name.includes('items') ||
-    name.includes('files') ||
-    name.includes('results') ||
-    name.includes('tags') ||
-    name.includes('visible')
-  ) {
-    return Object.freeze({ min: 0, max: Math.max(1_000, value), step: 1 });
-  }
-  if (name.includes('step')) {
-    return Object.freeze({ min: 0, max: Math.max(100, value), step: 1 });
-  }
-  if (name.includes('page') || name.includes('index')) {
-    return Object.freeze({ min: 0, max: Math.max(10_000, value), step: 1 });
-  }
-  return Object.freeze({
-    min: Math.min(-1_000, value),
-    max: Math.max(1_000, value),
-    step: Number.isInteger(value) ? 1 : 0.1,
-  });
-}
-
-function safeNumberDefault(api: KernApiRow): number {
-  const parsed = Number(api.defaultValue.trim());
-  if (Number.isFinite(parsed)) return parsed;
-  const name = api.name.toLocaleLowerCase();
-  if (name.includes('maxsize')) return 5_000_000;
-  if (name.includes('maxfiles')) return 5;
-  if (name.includes('maxtags')) return 8;
-  if (name.includes('max')) return 100;
-  if (name.includes('step')) return 1;
-  return 0;
-}
-
-function exclusionEvidence(
-  componentId: string,
-  code: KernPlaygroundApiExclusionCode,
-): KernPlaygroundApiExclusion['evidence'] {
-  switch (code) {
-    case 'accessibility-copy':
-    case 'dom-wiring':
-      return Object.freeze({
-        category: 'a11y-test',
-        pointer: `tests/a11y/accessibility.spec.ts#${componentId}`,
-      });
-    case 'callback':
-    case 'template':
-      return Object.freeze({
-        category: 'component-example',
-        pointer: `agent/components/${componentId}.json#/examples/0`,
-      });
-    case 'form-serialization':
-      return Object.freeze({
-        category: 'forms-integration',
-        pointer: `tests/e2e/enterprise-acceptance.spec.ts#${componentId}`,
-      });
-    case 'locale-environment':
-    case 'translation-object':
-      return Object.freeze({
-        category: 'locale-preview',
-        pointer: `preview/${componentId}?locale=ru-RU`,
-      });
-    case 'complex-data':
-    case 'polymorphic-value':
-      return Object.freeze({
-        category: 'specimen-fixture',
-        pointer: `preview/${componentId}?state=default`,
-      });
-  }
-}
-
-export function normalizeKernPlaygroundApiType(type: string): string {
-  const normalized = type.replace(/\s+/g, ' ').trim();
-  return normalized === 'string | number' ? 'number | string' : normalized;
-}
-
-function publicApiExclusion(
-  item: KernCatalogItem,
-  api: KernApiRow,
-): KernPlaygroundApiExclusion | undefined {
-  const type = normalizeKernPlaygroundApiType(api.type);
-  const normalizedType =
-    type === 'unknown' &&
-    (/(?:Label|Id|Ids)$/.test(api.name) || /^(?:aria|describedBy|for|targetId)/i.test(api.name))
-      ? 'string'
-      : type;
-  const base = {
-    componentId: item.id,
-    publicName: api.name,
-    kind: api.kind as 'input' | 'model',
-    type: normalizedType,
-  } as const;
-
-  if (/TemplateRef</.test(type)) {
-    return Object.freeze({
-      ...base,
-      code: 'template',
-      reason:
-        'Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.',
-      evidence: exclusionEvidence(item.id, 'template'),
-    });
-  }
-  if (/=>|Formatter|Handler|Matcher|Predicate|TrackBy|Identity/.test(type)) {
-    return Object.freeze({
-      ...base,
-      code: 'callback',
-      reason:
-        'Callback inputs require executable application code and are covered by the typed specimen fixture.',
-      evidence: exclusionEvidence(item.id, 'callback'),
-    });
-  }
-  if (/Partial<.*(?:Translations|Labels)>/.test(type)) {
-    return Object.freeze({
-      ...base,
-      code: 'translation-object',
-      reason:
-        'Structured translation overrides are exercised through locale providers, not lossy scalar controls.',
-      evidence: exclusionEvidence(item.id, 'translation-object'),
-    });
-  }
-  if (/ReadonlyArray<|ReadonlySet<|Readonly<|Record<|Array</.test(type)) {
-    return Object.freeze({
-      ...base,
-      code: 'complex-data',
-      reason:
-        'Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.',
-      evidence: exclusionEvidence(item.id, 'complex-data'),
-    });
-  }
-  if (
-    api.name !== 'columns' &&
-    type.includes(' | ') &&
-    /Array<|(?:string \| number|number \| string)|number \| "auto"/.test(type)
-  ) {
-    return Object.freeze({
-      ...base,
-      code: 'polymorphic-value',
-      reason:
-        'This polymorphic value cannot round-trip through one scalar control without changing its public type semantics.',
-      evidence: exclusionEvidence(item.id, 'polymorphic-value'),
-    });
-  }
-  if (api.name === 'locale') {
-    return Object.freeze({
-      ...base,
-      code: 'locale-environment',
-      reason:
-        'Locale is owned by the playground environment selector so every locale-sensitive component changes consistently.',
-      evidence: exclusionEvidence(item.id, 'locale-environment'),
-    });
-  }
-  const accessibilityCopy =
-    api.name.startsWith('aria') ||
-    api.name.includes('Aria') ||
-    /(?:LabelledBy|DescribedBy)$/.test(api.name);
-  if (
-    accessibilityCopy ||
-    /(?:Id|Ids)$/.test(api.name) ||
-    ['describedBy', 'for', 'initialFocus', 'targetId'].includes(api.name) ||
-    /InitialFocus$/.test(api.name)
-  ) {
-    return Object.freeze({
-      ...base,
-      code: accessibilityCopy ? 'accessibility-copy' : 'dom-wiring',
-      reason: accessibilityCopy
-        ? 'Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.'
-        : 'DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.',
-      evidence: exclusionEvidence(item.id, accessibilityCopy ? 'accessibility-copy' : 'dom-wiring'),
-    });
-  }
-  if (/Label$/.test(api.name)) {
-    return Object.freeze({
-      ...base,
-      code: 'accessibility-copy',
-      reason:
-        'This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.',
-      evidence: exclusionEvidence(item.id, 'accessibility-copy'),
-    });
-  }
-  if (api.name === 'name' && (item.category === 'Forms' || item.category === 'Actions')) {
-    return Object.freeze({
-      ...base,
-      code: 'form-serialization',
-      reason:
-        'Form submission field names do not alter the rendered component and are covered by forms integration tests.',
-      evidence: exclusionEvidence(item.id, 'form-serialization'),
-    });
-  }
-  return undefined;
-}
-
-function publicApiControl(
-  item: KernCatalogItem,
-  api: KernApiRow,
-  key: string,
-): KernPlaygroundControl | KernPlaygroundApiExclusion {
-  const excluded = publicApiExclusion(item, api);
-  if (excluded) return excluded;
-  const binding = api.kind === 'model' ? modelBinding(api.name) : inputBinding(api.name);
-  const label = humanizePublicName(api.name);
-  const description = apiDescription(api);
-  const type = api.type.replace(/\s+/g, ' ').trim();
-
-  if (item.id === 'split-layout' && api.name === 'ratio') {
-    return select(key, label, '1:1', description, ['1:1', '1:2', '2:1'], binding);
-  }
-
-  if (/^boolean(?: \| (?:null|undefined))*$/.test(type)) {
-    return boolean(key, label, api.defaultValue.trim() === 'true', description, binding);
-  }
-
-  if (/^number(?: \| undefined)*$/.test(type)) {
-    const defaultValue = safeNumberDefault(api);
-    const bounds = numericBounds(api, defaultValue);
-    return number(
-      key,
-      label,
-      defaultValue,
-      description,
-      bounds.min,
-      bounds.max,
-      bounds.step,
-      binding,
-    );
-  }
-
-  const options = literalStringOptions(type) ?? PUBLIC_API_SELECT_OPTIONS[type];
-  if (options) {
-    const defaultValue = safeStringDefault(api, options);
-    return select(
-      key,
-      label,
-      options.includes(defaultValue) ? defaultValue : options[0]!,
-      description,
-      options,
-      binding,
-    );
-  }
-
-  if (
-    /^string(?: \| (?:null|undefined))*$/.test(type) ||
-    type === 'KrnLayoutSpace' ||
-    type === 'KrnLayoutSpace | null' ||
-    type === 'KrnSplitRatio'
-  ) {
-    return text(key, label, safeStringDefault(api), description, binding);
-  }
-
-  if (type === '0 | 1') {
-    const defaultValue = api.defaultValue.trim() === '0' ? 0 : 1;
-    return Object.freeze({
-      key,
-      label,
-      kind: 'select',
-      defaultValue,
-      testValue: defaultValue === 0 ? 1 : 0,
-      description,
-      binding,
-      options: Object.freeze([option('0', 0), option('1', 1)]),
-    });
-  }
-
-  if (api.name === 'columns' || type === "number | 'auto'") {
-    return Object.freeze({
-      key,
-      label,
-      kind: 'select',
-      defaultValue: api.defaultValue.trim() === "'auto'" ? 'auto' : safeNumberDefault(api),
-      testValue: api.defaultValue.trim() === "'auto'" ? 1 : 'auto',
-      description,
-      binding,
-      options: Object.freeze([option('Auto', 'auto'), option('1', 1), option('2', 2)]),
-    });
-  }
-
-  if (type === 'unknown') {
-    if (/^(?:maxFiles|maxSize|maxTags)$/.test(api.name)) {
-      const defaultValue = safeNumberDefault(api);
-      const bounds = numericBounds(api, defaultValue);
-      return number(
-        key,
-        label,
-        defaultValue,
-        description,
-        bounds.min,
-        bounds.max,
-        bounds.step,
-        binding,
-      );
-    }
-    return text(key, label, safeStringDefault(api), description, binding);
-  }
-
-  return Object.freeze({
-    componentId: item.id,
-    publicName: api.name,
-    kind: api.kind as 'input' | 'model',
-    type: api.type,
-    code: 'complex-data',
-    reason:
-      'The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.',
-    evidence: exclusionEvidence(item.id, 'complex-data'),
-  });
-}
-
-const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> = {
-  // Layout
-  'app-shell': [
-    boolean(
-      'mobileNavigationOpen',
-      'Mobile navigation open',
-      false,
-      'Opens the shell navigation surface at mobile breakpoints.',
-      modelBinding('mobileNavigationOpen'),
-    ),
-    text('mainMaxWidth', 'Main max width', '48rem', 'Constrains the primary content measure.'),
-    text('sidebarWidth', 'Sidebar width', '10rem', 'Sets the shell sidebar width.'),
-  ],
-  header: [boolean('elevated', 'Elevated', true, 'Adds the elevated header treatment.')],
-  sidebar: [
-    boolean(
-      'collapsed',
-      'Collapsed',
-      false,
-      'Collapses the sidebar to its configured compact mode.',
-      modelBinding('collapsed'),
-    ),
-    text('width', 'Width', '15rem', 'Sets the expanded sidebar width.'),
-  ],
-  'navigation-rail': [
-    boolean(
-      'expanded',
-      'Expanded',
-      false,
-      'Expands the rail to show persistent labels.',
-      modelBinding('expanded'),
-    ),
-  ],
-  container: [
-    select('size', 'Size', 'sm', 'Changes the maximum container width.', [
-      'sm',
-      'md',
-      'lg',
-      'xl',
-      'full',
-    ]),
-  ],
-  stack: [
-    select('gap', 'Gap', '3', 'Changes the block-axis spacing between projected items.', [
-      '2',
-      '3',
-      '4',
-      '8',
-    ]),
-  ],
-  inline: [boolean('wrap', 'Wrap', true, 'Allows inline items to wrap onto another flex line.')],
-  cluster: [
-    select('gap', 'Gap', '2', 'Changes the spacing between clustered items.', ['1', '2', '4']),
-    select(
-      'justify',
-      'Justify',
-      'space-between',
-      'Distributes the cluster along its inline axis.',
-      ['start', 'center', 'end', 'space-between', 'space-around', 'space-evenly'],
-    ),
-  ],
-  grid: [
-    boolean('responsive', 'Responsive', true, 'Enables responsive column collapsing.'),
-    select('columns', 'Columns', 3, 'Sets a fixed or automatic column count.', [
-      'auto',
-      1,
-      2,
-      3,
-      4,
-    ]),
-    text('gap', 'Gap', '3', 'Sets the grid gutter.'),
-  ],
-  'split-layout': [
-    select('ratio', 'Ratio', '1:2', 'Changes the primary-to-secondary pane ratio.', [
-      '1:1',
-      '1:2',
-      '2:1',
-      'golden',
-    ]),
-    text('gap', 'Gap', '4', 'Sets the separation between panes.'),
-  ],
-  center: [
-    boolean('intrinsic', 'Intrinsic', true, 'Centers the child using its intrinsic inline size.'),
-    text('maxWidth', 'Maximum width', '28rem', 'Constrains the centered content measure.'),
-  ],
-  spacer: [
-    select('axis', 'Axis', 'horizontal', 'Chooses the axis that receives spacing.', [
-      'horizontal',
-      'vertical',
-    ]),
-    text('size', 'Size', '12', 'Sets the spacer length.'),
-  ],
-  divider: [
-    select(
-      'orientation',
-      'Orientation',
-      'horizontal',
-      'Changes the separator axis and accessibility semantics.',
-      ['horizontal', 'vertical'],
-    ),
-    text('label', 'Label', 'Access policy', 'Adds an accessible separator label.'),
-  ],
-  'aspect-ratio': [
-    select('fit', 'Object fit', 'cover', 'Changes how projected media fits the ratio box.', [
-      'none',
-      'fill',
-      'cover',
-      'contain',
-    ]),
-  ],
-  'scroll-area': [
-    select('axis', 'Scroll axis', 'vertical', 'Chooses the axes that can scroll.', [
-      'horizontal',
-      'vertical',
-      'both',
-    ]),
-    text('maxBlockSize', 'Maximum block size', '16rem', 'Constrains the scrolling viewport.'),
-  ],
-  'responsive-show-hide': [
-    select(
-      'display',
-      'Display',
-      'block',
-      'Chooses the display mode used while the responsive content is visible.',
-      ['block', 'inline', 'contents', 'flex', 'grid'],
-    ),
-    select(
-      'from',
-      'Visible from',
-      'md',
-      'Shows the desktop specimen from the selected breakpoint.',
-      ['none', 'sm', 'md', 'lg', 'xl'],
-    ),
-    select(
-      'until',
-      'Visible until',
-      'none',
-      'Optionally hides the desktop specimen at the selected breakpoint.',
-      ['none', 'sm', 'md', 'lg', 'xl'],
-    ),
-  ],
-  'resizable-panels': [
-    boolean('disabled', 'Disabled', false, 'Disables pointer and keyboard resizing.'),
-    number('step', 'Step', 5, 'Sets the keyboard resize increment.', 1, 25),
-  ],
-
-  // Actions
-  'button-group': [
-    select(
-      'orientation',
-      'Orientation',
-      'horizontal',
-      'Changes only the visual layout; native actions keep document-order keyboard navigation.',
-      ['horizontal', 'vertical'],
-    ),
-    boolean(
-      'connected',
-      'Connected',
-      false,
-      'Joins adjacent action borders without changing their semantics or keyboard order.',
-    ),
-  ],
-  'split-button': [
-    boolean('open', 'Open', false, 'Opens the secondary action menu.', modelBinding('open')),
-    select(
-      'menuAlign',
-      'Menu alignment',
-      'end',
-      'Aligns the connected menu to the logical start or end edge of the trigger.',
-      ['start', 'end'],
-    ),
-  ],
-  'toggle-group': [
-    select(
-      'orientation',
-      'Orientation',
-      'horizontal',
-      'Changes the visual layout and Arrow-key axis exposed by the toolbar.',
-      ['horizontal', 'vertical'],
-    ),
-    select('size', 'Size', 'sm', 'Changes the segmented control density.', ['sm', 'md', 'lg']),
-    boolean('connected', 'Connected', true, 'Joins toggles into one segmented surface.'),
-    boolean('multiple', 'Multiple', false, 'Allows more than one toggle to be selected.'),
-    boolean(
-      'disabled',
-      'Disabled',
-      false,
-      'Disables every native toggle button while preserving perceivable toolbar semantics.',
-    ),
-  ],
-  'copy-button': [
-    select(
-      'variant',
-      'Variant',
-      'outline',
-      'Changes visual emphasis without changing clipboard behavior.',
-      ['solid', 'soft', 'outline', 'ghost'],
-    ),
-    select(
-      'tone',
-      'Tone',
-      'neutral',
-      'Changes semantic action emphasis without becoming copy-result feedback.',
-      ['neutral', 'brand', 'info', 'success', 'warning', 'danger'],
-    ),
-    actionSize,
-    number(
-      'feedbackDuration',
-      'Feedback duration',
-      1_800,
-      'Keeps copied or error feedback visible for this many milliseconds.',
-      0,
-      60_000,
-      100,
-    ),
-    disabled,
-    text(
-      'value',
-      'Value',
-      'npm i @kern-ui/angular',
-      'Supplies the exact immutable string sent to the clipboard writer.',
-    ),
-    select(
-      'copyState',
-      'Operation state',
-      'live',
-      'Uses the live clipboard by default or a deterministic specimen writer for async states.',
-      ['live', 'idle', 'pending', 'copied', 'error'],
-      fixtureBinding(
-        'interaction',
-        'Selects a deterministic clipboard-writer outcome; it is not a component input.',
-      ),
-    ),
-  ],
-  link: [
-    boolean(
-      'externalDestination',
-      'External destination',
-      false,
-      'Switches the fixture from internal navigation to an explicit privacy-hardened external link.',
-      fixtureBinding(
-        'data',
-        'Changes native href, target, and rel attributes; it is not a KrnLink input.',
-      ),
-    ),
-  ],
-  'dropdown-button': [
-    boolean('open', 'Open', false, 'Opens the dropdown action menu.', modelBinding('open')),
-    select(
-      'menuAlign',
-      'Menu alignment',
-      'end',
-      'Aligns the connected menu to the logical start or end edge of the trigger.',
-      ['start', 'end'],
-    ),
-  ],
-
-  // Forms
-  'form-field': [
-    select(
-      'state',
-      'State',
-      'default',
-      'Drives a real projected FormControl through default, valid, pending, or invalid state.',
-      ['default', 'valid', 'pending', 'invalid'],
-      fixtureBinding(
-        'interaction',
-        'Updates the projected FormControl; state is derived rather than written to Form Field.',
-      ),
-    ),
-    text('label', 'Label', '', 'Changes the visible field label.'),
-    boolean(
-      'disabled',
-      'Disabled',
-      false,
-      'Disables the projected FormControl.',
-      fixtureBinding(
-        'interaction',
-        'Calls disable or enable on the projected FormControl; it is not a Form Field input.',
-      ),
-    ),
-    boolean(
-      'readonly',
-      'Read only',
-      false,
-      'Keeps the projected control focusable while preventing edits.',
-      fixtureBinding(
-        'interaction',
-        'Binds readonly on the projected control; it is not a Form Field input.',
-      ),
-    ),
-    boolean(
-      'required',
-      'Required',
-      true,
-      'Marks the projected control as required.',
-      fixtureBinding(
-        'interaction',
-        'Binds required on the projected control; it is not a Form Field input.',
-      ),
-    ),
-  ],
-  label: [required],
-  hint: [
-    text(
-      'content',
-      'Hint content',
-      'Use at least 12 characters.',
-      'Changes the projected hint content.',
-      fixtureBinding('content', 'Provides the projected text rendered by the hint specimen.'),
-    ),
-  ],
-  'validation-message': [
-    text(
-      'content',
-      'Message',
-      'Use 3–48 characters.',
-      'Changes the projected validation message.',
-      fixtureBinding(
-        'content',
-        'Provides the projected text rendered by the validation-message specimen.',
-      ),
-    ),
-  ],
-  'checkbox-group': [
-    disabled,
-    text('label', 'Label', 'Included events', 'Names the checkbox group.'),
-  ],
-  'radio-group': [
-    disabled,
-    text('label', 'Label', 'Default visibility', 'Names the radio group.'),
-    select('orientation', 'Orientation', 'horizontal', 'Changes the choice layout axis.', [
-      'horizontal',
-      'vertical',
-    ]),
-  ],
-  'color-picker': [invalid],
-  'file-upload': [
-    boolean('multiple', 'Multiple files', false, 'Allows more than one file to be selected.'),
-  ],
-  'drag-drop-upload': [
-    boolean('multiple', 'Multiple files', false, 'Allows more than one dropped file.'),
-  ],
-  'verification-code': [
-    number('length', 'Length', 6, 'Changes the number of verification cells.', 4, 12),
-  ],
-  'tags-input': [
-    disabled,
-    select(
-      'autocomplete',
-      'Autocomplete',
-      'off',
-      'Controls native browser autocomplete for the tag editor.',
-      ['off', 'on'],
-    ),
-    number(
-      'tabindex',
-      'Tab index',
-      0,
-      'Includes or removes the tag editor from sequential keyboard focus.',
-      -1,
-      0,
-    ),
-  ],
-
-  // Navigation
-  breadcrumbs: [
-    number('maxItems', 'Maximum items', 5, 'Controls when middle breadcrumbs collapse.', 2, 12),
-  ],
-  stepper: [
-    number(
-      'activeStep',
-      'Active step',
-      1,
-      'Changes the currently active step.',
-      0,
-      2,
-      1,
-      modelBinding('activeStep'),
-    ),
-  ],
-  menu: [boolean('open', 'Open', false, 'Opens the navigation menu.', modelBinding('open'))],
-  menubar: [
-    select(
-      'itemState',
-      'Item state',
-      'default',
-      'Changes the deterministic menubar item fixture.',
-      ['default', 'current', 'disabled'],
-      fixtureBinding('data', 'Selects current and disabled item records in the menubar fixture.'),
-    ),
-  ],
-  'context-menu': [
-    boolean(
-      'open',
-      'Open',
-      false,
-      'Opens the context-menu fixture.',
-      fixtureBinding(
-        'interaction',
-        'Invokes the documented context-menu trigger because open is interaction-owned.',
-      ),
-    ),
-  ],
-  'tree-navigation': [
-    select(
-      'selected',
-      'Selected item',
-      'automations',
-      'Changes the selected navigation node.',
-      ['overview', 'automations', 'archive'],
-      modelBinding('selectedId'),
-    ),
-  ],
-  'bottom-navigation': [
-    select(
-      'selected',
-      'Selected item',
-      'overview',
-      'Changes the active bottom-navigation destination.',
-      ['overview', 'activity', 'reports'],
-      modelBinding('value'),
-    ),
-  ],
-  'command-palette': [
-    boolean('open', 'Open', false, 'Opens the command palette.', modelBinding('open')),
-    text('query', 'Query', '', 'Changes the active command query.', modelBinding('query')),
-    text(
-      'placeholder',
-      'Placeholder',
-      'Search commands…',
-      'Uses locale-aware command search copy until explicitly changed.',
-    ),
-    text(
-      'closeShortcut',
-      'Close shortcut',
-      'Esc',
-      'Uses the locale-aware close shortcut until explicitly changed.',
-    ),
-  ],
-  'table-of-contents': [
-    select(
-      'active',
-      'Active section',
-      'specimen-overview',
-      'Changes the active table-of-contents entry.',
-      ['specimen-overview', 'specimen-api', 'specimen-a11y'],
-      modelBinding('activeId'),
-    ),
-  ],
-  'back-button': [text('label', 'Label', 'Back to components', 'Changes the back-button label.')],
-  'skip-link': [
-    text(
-      'label',
-      'Label',
-      'Skip specimen navigation',
-      'Changes the visible-on-focus skip-link label.',
-    ),
-  ],
-
-  // Feedback
-  banner: [boolean('dismissible', 'Dismissible', false, 'Shows the dismiss action.')],
-  toast: [
-    boolean(
-      'expanded',
-      'Expanded',
-      false,
-      'Expands the toast viewport stack.',
-      modelBinding('expanded'),
-    ),
-  ],
-  'empty-state': [
-    select('tone', 'Tone', 'neutral', 'Changes the state illustration tone.', [
-      'neutral',
-      'info',
-      'success',
-      'warning',
-      'danger',
-    ]),
-  ],
-  'error-state': [
-    select('tone', 'Tone', 'danger', 'Changes the state illustration tone.', [
-      'neutral',
-      'info',
-      'success',
-      'warning',
-      'danger',
-    ]),
-  ],
-  'success-state': [
-    select('tone', 'Tone', 'success', 'Changes the state illustration tone.', [
-      'neutral',
-      'info',
-      'success',
-      'warning',
-      'danger',
-    ]),
-  ],
-  'confirmation-pattern': [
-    boolean(
-      'confirming',
-      'Confirming',
-      false,
-      'Opens the confirmation surface.',
-      modelBinding('confirming'),
-    ),
-  ],
-
-  // Data display
-  avatar: [
-    boolean(
-      'imageFailed',
-      'Image fallback',
-      false,
-      'Shows the deterministic initials fallback.',
-      modelBinding('imageFailed'),
-    ),
-  ],
-  'avatar-group': [
-    text('overlap', 'Overlap', '0.625rem', 'Changes how far adjacent avatars overlap.'),
-  ],
-  stat: [
-    select('trend', 'Trend', 'up', 'Changes the trend indicator.', ['flat', 'up', 'down']),
-    text('detail', 'Detail', '+12.4% this quarter', 'Adds context for the statistic.'),
-    text('label', 'Label', 'Active workspaces', 'Names the statistic.'),
-    text('value', 'Value', '2,481', 'Sets the displayed statistic value.'),
-  ],
-  'description-list': [
-    select(
-      'dataState',
-      'Data state',
-      'ready',
-      'Changes the projected description-item fixture.',
-      ['ready', 'empty', 'long-text'],
-      fixtureBinding('data', 'Selects populated, empty, or long-text description-item records.'),
-    ),
-  ],
-  list: [
-    select('role', 'Role', 'list', 'Switches between static-list and listbox semantics.', [
-      'list',
-      'listbox',
-    ]),
-  ],
-  'list-item': [boolean('selected', 'Selected', false, 'Shows the selected list-item state.')],
-  accordion: [
-    boolean(
-      'expanded',
-      'Expanded item',
-      false,
-      'Expands the first disclosure in the accordion fixture.',
-      fixtureBinding('interaction', 'Controls the open model of the first projected disclosure.'),
-    ),
-  ],
-  disclosure: [
-    boolean('open', 'Open', false, 'Expands the disclosure content.', modelBinding('open')),
-  ],
-  timeline: [
-    select(
-      'dataState',
-      'Data state',
-      'ready',
-      'Changes the projected timeline-item fixture.',
-      ['ready', 'empty', 'long-text'],
-      fixtureBinding('data', 'Selects populated, empty, or long-text timeline items.'),
-    ),
-  ],
-  calendar: [
-    text(
-      'activeMonth',
-      'Active month',
-      '2026-07',
-      'Changes the visible ISO calendar month.',
-      modelBinding('activeMonth'),
-    ),
-    text(
-      'focusedDate',
-      'Focused date',
-      '',
-      'Changes the roving-focus ISO date.',
-      modelBinding('focusedDate'),
-    ),
-    text('value', 'Value', '', 'Changes the selected ISO date.', modelBinding('value')),
-  ],
-  'code-block': [
-    select('language', 'Language', 'typescript', 'Changes the displayed language label.', [
-      'typescript',
-      'html',
-      'css',
-      'json',
-    ]),
-    boolean(
-      'copied',
-      'Copied',
-      false,
-      'Changes the public copied acknowledgement state.',
-      modelBinding('copied'),
-    ),
-    text(
-      'code',
-      'Code',
-      'const status = 1;',
-      'Overrides the production-like runnable code fixture.',
-    ),
-  ],
-  'keyboard-shortcut': [
-    select(
-      'platform',
-      'Platform',
-      'macOS',
-      'Changes the projected shortcut-key fixture.',
-      ['macOS', 'Windows'],
-      fixtureBinding('content', 'Selects the documented key sequence rendered by the specimen.'),
-    ),
-  ],
-  rating: [
-    number('value', 'Value', 4, 'Changes the selected rating.', 0, 5, 1, modelBinding('value')),
-  ],
-  'responsive-media': [
-    text('aspectRatio', 'Aspect ratio', '16 / 9', 'Changes the responsive media ratio.'),
-  ],
-
-  // Patterns
-  'user-menu': [boolean('open', 'Open', false, 'Opens the user menu.', modelBinding('open'))],
-  'notification-center': [
-    select(
-      'dataState',
-      'Data state',
-      'ready',
-      'Changes the notification collection fixture.',
-      ['ready', 'empty', 'unread'],
-      fixtureBinding('data', 'Selects ready, empty, or unread notification records.'),
-    ),
-  ],
-  'global-search': [
-    text('query', 'Query', '', 'Changes the active search query.', modelBinding('query')),
-    number(
-      'activeIndex',
-      'Active result',
-      0,
-      'Changes the active result index.',
-      0,
-      20,
-      1,
-      modelBinding('activeIndex'),
-    ),
-    boolean('open', 'Open', false, 'Opens the search result surface.', modelBinding('open')),
-  ],
-  'filter-bar': [
-    select(
-      'activeFilter',
-      'Active filter',
-      'none',
-      'Changes the deterministic filter-value fixture.',
-      ['none', 'healthy', 'attention'],
-      fixtureBinding(
-        'interaction',
-        'Seeds the public values model with a deterministic filter selection.',
-      ),
-    ),
-  ],
-  'page-header': [text('heading', 'Heading', 'Automation health', 'Changes the page heading.')],
-  'settings-panel': [
-    boolean('open', 'Open', false, 'Opens the settings panel.', modelBinding('open')),
-  ],
-  'crud-toolbar': [
-    number('selectedCount', 'Selected count', 0, 'Changes the selected-record summary.', 0, 100),
-  ],
-  'bulk-actions': [
-    number('selectedCount', 'Selected count', 3, 'Changes the selected-record summary.', 0, 100),
-  ],
-  'master-detail-layout': [
-    boolean(
-      'detailOpen',
-      'Detail open',
-      false,
-      'Shows the detail pane on narrow layouts.',
-      modelBinding('detailOpen'),
-    ),
-  ],
-  'dashboard-widget': [
-    text('heading', 'Heading', 'Automation health', 'Changes the widget heading.'),
-  ],
-  'login-form': [loading],
-  'profile-form': [
-    boolean('saving', 'Saving', false, 'Shows the saving state.'),
-    text(
-      'dirtyMessage',
-      'Dirty message',
-      'Unsaved changes',
-      'Uses locale-aware unsaved-changes copy until explicitly changed.',
-    ),
-  ],
-  'multi-step-form': [
-    number(
-      'current',
-      'Current step',
-      0,
-      'Changes the current form step.',
-      0,
-      2,
-      1,
-      modelBinding('current'),
-    ),
-    number(
-      'furthestStep',
-      'Furthest step',
-      0,
-      'Changes the furthest completed or visited step.',
-      0,
-      2,
-      1,
-      modelBinding('furthestStep'),
-    ),
-  ],
-  'mobile-navigation': [
-    select(
-      'selected',
-      'Selected item',
-      'overview',
-      'Changes the selected projected navigation destination.',
-      ['overview', 'activity', 'settings'],
-      fixtureBinding(
-        'interaction',
-        'Selects the active projected navigation action in the mobile fixture.',
-      ),
-    ),
-  ],
-  'responsive-application-shell': [
-    boolean(
-      'navigationOpen',
-      'Navigation open',
-      false,
-      'Opens the responsive shell navigation.',
-      modelBinding('navigationOpen'),
-    ),
-  ],
-
-  button: [actionVariant, actionTone, actionSize, loading],
-  'icon-button': [
-    select('variant', 'Variant', 'ghost', 'Changes icon-action emphasis.', [
-      'solid',
-      'soft',
-      'outline',
-      'ghost',
-    ]),
-    select('tone', 'Tone', 'neutral', 'Changes the semantic action tone.', [
-      'neutral',
-      'brand',
-      'info',
-      'success',
-      'warning',
-      'danger',
-    ]),
-    actionSize,
-    loading,
-    boolean(
-      'disabled',
-      'Disabled',
-      false,
-      'Binds the native disabled attribute and prevents user interaction.',
-      fixtureBinding(
-        'interaction',
-        'Binds disabled directly to the native icon-button host; it is not a component input.',
-      ),
-    ),
-  ],
-  'floating-action-button': [
-    actionVariant,
-    actionTone,
-    select('size', 'Size', 'lg', 'Changes the action target and label size.', ['sm', 'md', 'lg']),
-    boolean('extended', 'Extended', true, 'Shows or hides the text label.'),
-    loading,
-    boolean(
-      'disabled',
-      'Disabled',
-      false,
-      'Binds the native disabled attribute and prevents user interaction.',
-      fixtureBinding(
-        'interaction',
-        'Binds disabled directly to the native floating-action host; it is not a component input.',
-      ),
-    ),
-  ],
-  'toggle-button': [
-    disabled,
-    boolean('selected', 'Selected', false, 'Selects the action.', modelBinding('pressed')),
-  ],
-  'text-input': [placeholder, formSize, disabled, readOnly, required, invalid],
-  textarea: [
-    text(
-      'placeholder',
-      'Placeholder',
-      'Explain what changed and why…',
-      'Sets the empty-value prompt.',
-    ),
-    formSize,
-    number('rows', 'Rows', 5, 'Sets the initial number of text rows.', 2, 12),
-    number('maxLength', 'Maximum length', 280, 'Limits accepted characters.', 20, 2_000, 10),
-    boolean('showCount', 'Show count', true, 'Shows the current character count.'),
-    boolean('autoResize', 'Auto resize', true, 'Grows the field as content is entered.'),
-    disabled,
-    readOnly,
-    required,
-    invalid,
-  ],
-  'password-input': [
-    text('placeholder', 'Placeholder', 'Enter password', 'Sets the empty-value prompt.'),
-    text(
-      'hideText',
-      'Hide text',
-      'Hide',
-      'Uses locale-aware password-toggle copy until explicitly changed.',
-    ),
-    text(
-      'showText',
-      'Show text',
-      'Show',
-      'Uses locale-aware password-toggle copy until explicitly changed.',
-    ),
-    disabled,
-    readOnly,
-    required,
-    invalid,
-  ],
-  'search-input': [
-    text('placeholder', 'Placeholder', 'Search 248 workspaces…', 'Sets the empty search prompt.'),
-    disabled,
-    readOnly,
-    invalid,
-  ],
-  'number-input': [
-    number('min', 'Minimum', 1, 'Sets the lowest accepted value.', -10_000, 10_000),
-    number('max', 'Maximum', 500, 'Sets the highest accepted value.', -10_000, 10_000),
-    number('step', 'Step', 5, 'Sets the keyboard and stepper increment.', 1, 100),
-    boolean('showSteppers', 'Show steppers', true, 'Shows increment and decrement actions.'),
-    disabled,
-    readOnly,
-    required,
-    invalid,
-  ],
-  checkbox: [
-    boolean(
-      'selected',
-      'Checked',
-      false,
-      'Shows the checked state.',
-      fixtureBinding('interaction', 'Seeds the Forms API value used by the checkbox specimen.'),
-    ),
-    boolean('indeterminate', 'Indeterminate', false, 'Shows a mixed selection state.'),
-    disabled,
-    readOnly,
-    required,
-    invalid,
-  ],
-  radio: [
-    boolean(
-      'selected',
-      'Selected',
-      false,
-      'Selects the annual billing option.',
-      fixtureBinding('interaction', 'Seeds the parent radio-group value used by the specimen.'),
-    ),
-    disabled,
-    readOnly,
-  ],
-  switch: [
-    boolean(
-      'selected',
-      'Checked',
-      false,
-      'Turns the setting on.',
-      fixtureBinding('interaction', 'Seeds the Forms API value used by the switch specimen.'),
-    ),
-    disabled,
-    readOnly,
-    required,
-    invalid,
-  ],
-  select: [
-    text('placeholder', 'Placeholder', 'Choose a plan', 'Sets the empty selection prompt.'),
-    select('size', 'Size', 'md', 'Changes the control height.', ['sm', 'md', 'lg']),
-    select(
-      'optionsState',
-      'Options state',
-      'ready',
-      'Shows ready, loading, or error option content.',
-      ['ready', 'loading', 'error'],
-    ),
-    text(
-      'emptyText',
-      'Empty text',
-      'No options',
-      'Uses locale-aware empty-options copy until explicitly changed.',
-    ),
-    text(
-      'errorText',
-      'Error text',
-      'Could not load options',
-      'Uses locale-aware option-load failure copy until explicitly changed.',
-    ),
-    text(
-      'loadingText',
-      'Loading text',
-      'Loading options…',
-      'Uses locale-aware loading copy until explicitly changed.',
-    ),
-    boolean('open', 'Open', false, 'Opens the listbox.', modelBinding('open')),
-    disabled,
-    readOnly,
-    required,
-    invalid,
-  ],
-  'native-select': [
-    text('placeholder', 'Placeholder', 'Choose a region', 'Sets the empty selection prompt.'),
-    select('size', 'Size', 'md', 'Changes the control height.', ['sm', 'md', 'lg']),
-    disabled,
-    readOnly,
-    required,
-    invalid,
-  ],
-  'multi-select': [
-    text('placeholder', 'Placeholder', 'Select owners', 'Sets the empty selection prompt.'),
-    select(
-      'optionsState',
-      'Options state',
-      'ready',
-      'Shows ready, loading, or error option content.',
-      ['ready', 'loading', 'error'],
-    ),
-    text(
-      'emptyText',
-      'Empty text',
-      'No options',
-      'Uses locale-aware empty-options copy until explicitly changed.',
-    ),
-    text(
-      'errorText',
-      'Error text',
-      'Could not load options',
-      'Uses locale-aware option-load failure copy until explicitly changed.',
-    ),
-    text(
-      'loadingText',
-      'Loading text',
-      'Loading options…',
-      'Uses locale-aware loading copy until explicitly changed.',
-    ),
-    boolean('open', 'Open', false, 'Opens the listbox.', modelBinding('open')),
-    disabled,
-    readOnly,
-    required,
-    invalid,
-  ],
-  combobox: [
-    text('placeholder', 'Placeholder', 'Filter plans…', 'Sets the empty input prompt.'),
-    select(
-      'optionsState',
-      'Options state',
-      'ready',
-      'Shows ready, loading, or error option content.',
-      ['ready', 'loading', 'error'],
-    ),
-    text(
-      'emptyText',
-      'Empty text',
-      'No options',
-      'Uses locale-aware empty-options copy until explicitly changed.',
-    ),
-    text(
-      'errorText',
-      'Error text',
-      'Could not load options',
-      'Uses locale-aware option-load failure copy until explicitly changed.',
-    ),
-    text(
-      'loadingText',
-      'Loading text',
-      'Loading options…',
-      'Uses locale-aware loading copy until explicitly changed.',
-    ),
-    boolean('open', 'Open', false, 'Opens the filtered listbox.', modelBinding('open')),
-    disabled,
-    readOnly,
-    required,
-    invalid,
-  ],
-  autocomplete: [
-    text('placeholder', 'Placeholder', 'Type a workspace alias…', 'Sets the empty input prompt.'),
-    select(
-      'optionsState',
-      'Options state',
-      'ready',
-      'Shows ready, loading, or error suggestions.',
-      ['ready', 'loading', 'error'],
-    ),
-    text(
-      'emptyText',
-      'Empty text',
-      'No options',
-      'Uses locale-aware empty-options copy until explicitly changed.',
-    ),
-    text(
-      'errorText',
-      'Error text',
-      'Could not load options',
-      'Uses locale-aware option-load failure copy until explicitly changed.',
-    ),
-    text(
-      'loadingText',
-      'Loading text',
-      'Loading options…',
-      'Uses locale-aware loading copy until explicitly changed.',
-    ),
-    boolean('open', 'Open', false, 'Opens the suggestions listbox.', modelBinding('open')),
-    disabled,
-    readOnly,
-    required,
-    invalid,
-  ],
-  slider: [
-    number('min', 'Minimum', 1, 'Sets the start of the range.', -1_000, 1_000),
-    number('max', 'Maximum', 100, 'Sets the end of the range.', -1_000, 1_000),
-    number('step', 'Step', 1, 'Sets the keyboard increment.', 1, 100),
-    boolean('showValue', 'Show value', true, 'Shows the current numeric value.'),
-    disabled,
-    readOnly,
-    invalid,
-  ],
-  'range-slider': [
-    number('min', 'Minimum', 0, 'Sets the start of the range.', -1_000, 1_000),
-    number('max', 'Maximum', 100, 'Sets the end of the range.', -1_000, 1_000),
-    number('step', 'Step', 5, 'Sets the keyboard increment.', 1, 100),
-    disabled,
-    readOnly,
-    invalid,
-  ],
-  'segmented-control': [disabled, readOnly, required, invalid],
-  'date-picker': [
-    text('min', 'Minimum date', '2026-01-01', 'Sets the first selectable ISO date.'),
-    text('max', 'Maximum date', '2027-12-31', 'Sets the last selectable ISO date.'),
-    number('weekStartsOn', 'Week starts on', 1, 'Uses 0 for Sunday through 6 for Saturday.', 0, 6),
-    disabled,
-    readOnly,
-    required,
-    invalid,
-  ],
-  'date-range-picker': [disabled, readOnly, required, invalid],
-  'time-picker': [
-    text('min', 'Minimum time', '08:00', 'Sets the first selectable time.'),
-    text('max', 'Maximum time', '20:00', 'Sets the last selectable time.'),
-    number('step', 'Step (seconds)', 900, 'Sets the list interval in seconds.', 60, 3_600, 60),
-    disabled,
-    readOnly,
-    required,
-    invalid,
-  ],
-  alert: [
-    select('tone', 'Tone', 'success', 'Changes urgency and announcement behavior.', [
-      'neutral',
-      'info',
-      'success',
-      'warning',
-      'danger',
-    ]),
-    select('appearance', 'Appearance', 'subtle', 'Changes the alert surface contrast.', [
-      'subtle',
-      'outline',
-      'contrast',
-    ]),
-    text('title', 'Title', 'Changes published', 'Sets the alert heading.'),
-    boolean('dismissible', 'Dismissible', true, 'Shows a close action.'),
-  ],
-  tooltip: [
-    text(
-      'text',
-      'Text',
-      'Copy public link',
-      'Sets the concise tooltip content.',
-      inputBinding('krnTooltip'),
-    ),
-    select(
-      'position',
-      'Position',
-      'above',
-      'Chooses the preferred placement around the trigger.',
-      ['above', 'below', 'before', 'after'],
-      inputBinding('krnTooltipPosition'),
-    ),
-    number(
-      'showDelay',
-      'Show delay',
-      400,
-      'Delays opening in milliseconds.',
-      0,
-      2_000,
-      50,
-      inputBinding('krnTooltipShowDelay'),
-    ),
-    number(
-      'hideDelay',
-      'Hide delay',
-      80,
-      'Delays closing in milliseconds.',
-      0,
-      1_000,
-      20,
-      inputBinding('krnTooltipHideDelay'),
-    ),
-  ],
-  popover: [boolean('open', 'Open', false, 'Opens the popover surface.', modelBinding('open'))],
-  'hover-card': [
-    number('openDelay', 'Open delay', 350, 'Sets the pointer/focus opening delay.', 0, 2_000, 50),
-    number('closeDelay', 'Close delay', 120, 'Sets the pointer/focus closing delay.', 0, 1_000, 20),
-  ],
-  dialog: [
-    text('title', 'Title', 'Edit workspace', 'Sets the dialog heading.'),
-    text(
-      'description',
-      'Description',
-      'Changes apply to every member.',
-      'Sets the dialog description.',
-    ),
-    select('size', 'Size', 'md', 'Sets the dialog width.', ['sm', 'md', 'lg']),
-    boolean('modal', 'Modal', true, 'Traps focus and makes the background inert.'),
-    boolean('open', 'Open', false, 'Opens the modal surface.', modelBinding('open')),
-    boolean('showClose', 'Show close', true, 'Shows the close icon action.'),
-    boolean('closeOnEscape', 'Close on Escape', true, 'Allows Escape to dismiss the dialog.'),
-    closeOnOutside,
-  ],
-  'alert-dialog': [
-    boolean('open', 'Open', false, 'Opens the destructive confirmation.', modelBinding('open')),
-    closeOnOutside,
-  ],
-  drawer: [
-    boolean('open', 'Open', false, 'Opens the edge-aligned drawer.', modelBinding('open')),
-    select('side', 'Side', 'right', 'Chooses the viewport edge.', [
-      'top',
-      'right',
-      'bottom',
-      'left',
-    ]),
-    select('size', 'Size', 'md', 'Sets the sheet width or height.', ['sm', 'md', 'lg']),
-    boolean('modal', 'Modal', true, 'Controls focus trapping and backdrop behavior.'),
-    closeOnOutside,
-  ],
-  'bottom-sheet': [
-    boolean('open', 'Open', false, 'Opens the mobile action sheet.', modelBinding('open')),
-    select('size', 'Size', 'md', 'Sets the sheet width.', ['sm', 'md', 'lg']),
-    boolean('modal', 'Modal', true, 'Controls focus trapping and backdrop behavior.'),
-    closeOnOutside,
-  ],
-  'loading-overlay': [
-    boolean('active', 'Active', true, 'Shows or hides the blocking loading layer.'),
-    text(
-      'label',
-      'Label',
-      'Importing customer records…',
-      'Names the loading operation for assistive technology.',
-    ),
-  ],
-  'progress-bar': [
-    range('value', 'Value', 68, 'Sets determinate completion.', 0, 100),
-    number('max', 'Maximum', 100, 'Sets the completion scale maximum.', 1, 1_000),
-    boolean('indeterminate', 'Indeterminate', false, 'Shows progress without a known value.'),
-    text('valueText', 'Value text', '', 'Overrides the computed accessible progress description.'),
-  ],
-  'circular-progress': [
-    range('value', 'Value', 68, 'Sets determinate completion.', 0, 100),
-    number('max', 'Maximum', 100, 'Sets the completion scale maximum.', 1, 1_000),
-    boolean('indeterminate', 'Indeterminate', false, 'Shows progress without a known value.'),
-    boolean('showValue', 'Show value', true, 'Shows the formatted percentage.'),
-  ],
-  spinner: [text('label', 'Label', 'Refreshing workspace data', 'Sets the accessible label.')],
-  skeleton: [
-    text('width', 'Width', '100%', 'Sets the placeholder inline size.'),
-    text('height', 'Height', '5rem', 'Sets the placeholder block size.'),
-    select('shape', 'Shape', 'rectangle', 'Chooses a text, rectangle, or circle silhouette.', [
-      'text',
-      'rectangle',
-      'circle',
-    ]),
-  ],
-  tabs: [
-    select(
-      'orientation',
-      'Orientation',
-      'horizontal',
-      'Changes visual layout and arrow-key behavior.',
-      ['horizontal', 'vertical'],
-    ),
-    select(
-      'selected',
-      'Selected tab',
-      'overview',
-      'Chooses the active tab panel.',
-      ['overview', 'activity', 'settings'],
-      modelBinding('value'),
-    ),
-  ],
-  'vertical-tabs': [
-    select(
-      'selected',
-      'Selected tab',
-      'overview',
-      'Chooses the active tab panel.',
-      ['overview', 'activity', 'settings'],
-      modelBinding('value'),
-    ),
-  ],
-  pagination: [
-    number('totalItems', 'Total items', 248, 'Sets the result count.', 0, 100_000),
-    number('pageSize', 'Page size', 20, 'Sets results per page.', 1, 1_000),
-    number('siblingCount', 'Sibling pages', 1, 'Sets pages shown beside the current page.', 0, 4),
-    number('page', 'Current page', 1, 'Controls the active page.', 1, 13, 1, modelBinding('page')),
-  ],
-  'json-view': [
-    number(
-      'defaultExpandDepth',
-      'Expanded depth',
-      2,
-      'Sets how many JSON hierarchy levels open initially.',
-      0,
-      8,
-    ),
-    text(
-      'highlightPattern',
-      'Highlight',
-      '',
-      'Highlights matching text; an empty value leaves the JSON unmarked.',
-    ),
-    boolean('sortKeys', 'Sort keys', false, 'Sorts object keys alphabetically.'),
-    boolean('wrap', 'Wrap lines', true, 'Wraps long keys and values inside the viewport.'),
-  ],
-  badge: [
-    displayTone,
-    select('variant', 'Variant', 'subtle', 'Changes badge contrast.', [
-      'solid',
-      'subtle',
-      'outline',
-    ]),
-    select('size', 'Size', 'md', 'Changes badge density.', ['sm', 'md', 'lg']),
-    boolean('status', 'Status marker', false, 'Shows a status dot.'),
-  ],
-  'status-badge': [
-    select('tone', 'Tone', 'success', 'Changes the semantic status color.', [
-      'neutral',
-      'brand',
-      'info',
-      'success',
-      'warning',
-      'danger',
-    ]),
-  ],
-  chip: [
-    boolean('interactive', 'Interactive', true, 'Renders the label as a toggle action.'),
-    boolean(
-      'selected',
-      'Selected',
-      true,
-      'Shows the selected treatment.',
-      modelBinding('selected'),
-    ),
-    boolean('removable', 'Removable', false, 'Shows a remove action.'),
-    disabled,
-  ],
-  tag: [
-    boolean('interactive', 'Interactive', false, 'Renders the label as a toggle action.'),
-    boolean(
-      'selected',
-      'Selected',
-      false,
-      'Shows the selected treatment.',
-      modelBinding('selected'),
-    ),
-    boolean('removable', 'Removable', true, 'Shows a remove action.'),
-    disabled,
-  ],
-  card: [
-    text('eyebrow', 'Eyebrow', 'WORKSPACE / 0248', 'Sets compact contextual metadata.'),
-    text('heading', 'Heading', 'Northstar', 'Sets the card heading.'),
-    boolean('interactive', 'Interactive', true, 'Adds the interactive surface treatment.'),
-  ],
-  tree: [
-    select(
-      'dataState',
-      'Data state',
-      'ready',
-      'Shows ready, loading, error, or large-tree data.',
-      ['ready', 'loading', 'error', 'stress'],
-      fixtureBinding('data', 'Selects the specimen node fixture; it is not a KrnTree input.'),
-    ),
-    text('selected', 'Selected', '', 'Changes the selected tree node.', modelBinding('selected')),
-  ],
-  'data-table': [
-    select(
-      'dataState',
-      'Data state',
-      'ready',
-      'Shows ready, empty, or large datasets.',
-      ['ready', 'empty', 'stress'],
-      fixtureBinding('data', 'Selects the table row fixture; it is not a KrnDataGrid input.'),
-    ),
-    boolean('resizable', 'Resizable', false, 'Allows pointer and keyboard column resizing.'),
-    boolean(
-      'pagination',
-      'Pagination',
-      false,
-      'Paginates the table rows.',
-      fixtureBinding('interaction', 'Composes the discriminated client mode for the specimen.'),
-    ),
-    boolean('compact', 'Compact', false, 'Uses the compact row treatment.'),
-    number('pageSize', 'Page size', 4, 'Sets rows per page.', 1, 100),
-    text('filter', 'Filter', '', 'Changes the active row filter.', modelBinding('filter')),
-    number('page', 'Page', 1, 'Changes the active page.', 1, 1_000, 1, modelBinding('page')),
-    select(
-      'sortDirection',
-      'Sort direction',
-      'asc',
-      'Changes the active sort direction.',
-      ['asc', 'desc'],
-      modelBinding('sortDirection'),
-    ),
-    text('sortKey', 'Sort key', '', 'Changes the active sort column.', modelBinding('sortKey')),
-    text(
-      'filterPlaceholder',
-      'Filter placeholder',
-      'Filter rows…',
-      'Uses locale-aware filter copy until explicitly changed.',
-    ),
-  ],
-  'data-grid': [
-    select(
-      'dataState',
-      'Data state',
-      'ready',
-      'Shows ready, loading, error, empty, or large datasets.',
-      ['ready', 'loading', 'error', 'empty', 'stress'],
-      fixtureBinding('data', 'Selects data/loading/error fixtures and is not a KrnDataGrid input.'),
-    ),
-    boolean('selectable', 'Selectable', true, 'Adds row selection controls.'),
-    boolean(
-      'expandable',
-      'Expandable',
-      true,
-      'Adds row expansion controls and turns virtualization off when enabled.',
-    ),
-    boolean(
-      'virtualize',
-      'Virtualize',
-      false,
-      'Virtualizes rows and turns row expansion off because both modes are incompatible.',
-      fixtureBinding('interaction', 'Composes virtual or client mode for the specimen.'),
-    ),
-    boolean('filterable', 'Filterable', true, 'Shows the quick filter.'),
-    boolean('resizable', 'Resizable', true, 'Allows pointer and keyboard column resizing.'),
-    boolean(
-      'pagination',
-      'Pagination',
-      true,
-      'Paginates non-virtual data.',
-      fixtureBinding('interaction', 'Composes the discriminated client mode for the specimen.'),
-    ),
-    boolean('compact', 'Compact', false, 'Uses the compact row treatment.'),
-    number('pageSize', 'Page size', 3, 'Sets rows per page.', 1, 100),
-    number(
-      'viewportHeight',
-      'Viewport height',
-      360,
-      'Sets the virtual viewport height.',
-      160,
-      720,
-      20,
-    ),
-    text('filter', 'Filter', '', 'Changes the active row filter.', modelBinding('filter')),
-    number('page', 'Page', 1, 'Changes the active page.', 1, 1_000, 1, modelBinding('page')),
-    select(
-      'sortDirection',
-      'Sort direction',
-      'asc',
-      'Changes the active sort direction.',
-      ['asc', 'desc'],
-      modelBinding('sortDirection'),
-    ),
-    text('sortKey', 'Sort key', '', 'Changes the active sort column.', modelBinding('sortKey')),
-    text(
-      'filterPlaceholder',
-      'Filter placeholder',
-      'Filter rows…',
-      'Uses locale-aware filter copy until explicitly changed.',
-    ),
-  ],
-  meter: [
-    range('value', 'Value', 68, 'Sets the current measured value.', 0, 100),
-    number('min', 'Minimum', 0, 'Sets the lower bound.', 0, 100),
-    number('max', 'Maximum', 100, 'Sets the upper bound.', 1, 1_000),
-    number('low', 'Low threshold', 40, 'Sets the low-range threshold.', 0, 100),
-    number('high', 'High threshold', 80, 'Sets the high-range threshold.', 0, 100),
-    number('optimum', 'Optimum', 20, 'Sets the preferred value.', 0, 100),
-    text('label', 'Label', 'Storage used', 'Names the meter for assistive technology.'),
-  ],
-  'line-chart': [chartTitle, chartDescription, chartSummaryLimit],
-  'bar-chart': [
-    text('title', 'Title', 'Runs by environment', 'Sets the visible chart title.'),
-    text('description', 'Description', 'Successful runs', 'Adds concise dataset context.'),
-    chartSummaryLimit,
-  ],
-  'donut-chart': [
-    text('title', 'Title', 'Workspace plan mix', 'Sets the visible chart title.'),
-    text(
-      'description',
-      'Description',
-      'Current active workspaces',
-      'Adds concise dataset context.',
-    ),
-    chartSummaryLimit,
-  ],
-};
-
-/**
- * The catalog uses purposeful, production-like fixtures rather than raw
- * component defaults. Keep those fixture defaults explicit so automatically
- * generated public-API controls do not replace useful examples with empty or
- * generic values.
- */
 const SPECIMEN_CONTROL_DEFAULTS: Readonly<
   Record<string, Readonly<Record<string, KernPlaygroundValue>>>
 > = {
@@ -2313,6 +85,7 @@ const SPECIMEN_CONTROL_DEFAULTS: Readonly<
     description: 'CSV, up to 10 MB.',
     label: 'Choose a CSV file',
     maxSize: 10_485_760,
+    presentation: 'dropzone',
   },
   'drag-drop-upload': {
     accept: '.svg,.png,.jpg,.jpeg',
@@ -2416,6 +189,161 @@ const PSEUDO_STATE_DATA_IDS = new Set<string>([
 
 const FORM_FOUNDATION_IDS = new Set<string>(['form-field', 'hint', 'label', 'validation-message']);
 
+const STATIC_SPECIMEN_IDS = new Set<string>([
+  'header',
+  'container',
+  'stack',
+  'inline',
+  'cluster',
+  'grid',
+  'split-layout',
+  'center',
+  'spacer',
+  'divider',
+  'aspect-ratio',
+  'responsive-show-hide',
+  'button-group',
+  'form-field',
+  'label',
+  'hint',
+  'validation-message',
+  'loading-overlay',
+  'progress-bar',
+  'circular-progress',
+  'spinner',
+  'skeleton',
+  'badge',
+  'status-badge',
+  'avatar',
+  'avatar-group',
+  'stat',
+  'description-list',
+  'list',
+  'timeline',
+  'keyboard-shortcut',
+  'meter',
+  'responsive-media',
+]);
+
+const SUPPORTING_COMPONENT_IDS: Readonly<Record<string, readonly string[]>> = Object.freeze({
+  'app-shell': ['header', 'sidebar'],
+  'button-group': ['button'],
+  'split-button': ['button', 'menu'],
+  'dropdown-button': ['button', 'menu'],
+  'toggle-group': ['toggle-button'],
+  'form-field': ['label', 'hint', 'validation-message', 'text-input'],
+  label: ['form-field', 'text-input'],
+  hint: ['form-field', 'text-input'],
+  'validation-message': ['form-field', 'text-input'],
+  'text-input': ['form-field'],
+  textarea: ['form-field'],
+  'password-input': ['form-field'],
+  'number-input': ['form-field'],
+  select: ['form-field'],
+  'native-select': ['form-field'],
+  'multi-select': ['form-field'],
+  combobox: ['form-field'],
+  autocomplete: ['form-field'],
+  'date-picker': ['form-field', 'calendar'],
+  'date-range-picker': ['form-field', 'calendar'],
+  'time-picker': ['form-field'],
+  'color-picker': ['form-field'],
+  'checkbox-group': ['checkbox'],
+  radio: ['radio-group'],
+  'radio-group': ['radio'],
+});
+
+const FEATURED_PRESET_PREFERENCES: Readonly<Record<string, readonly string[]>> = Object.freeze({
+  'form-field': ['default', 'invalid', 'disabled', 'readonly', 'long-text'],
+  'text-input': ['default', 'filled', 'focus-visible', 'invalid', 'disabled'],
+  textarea: ['default', 'filled', 'focus-visible', 'invalid', 'disabled'],
+  'password-input': ['default', 'filled', 'focus-visible', 'invalid', 'disabled'],
+  'search-input': ['default', 'filled', 'focus-visible', 'disabled', 'readonly'],
+  'number-input': ['default', 'filled', 'minimum', 'maximum', 'invalid'],
+  checkbox: ['default', 'selected', 'indeterminate', 'focus-visible', 'disabled'],
+  'checkbox-group': ['default', 'required', 'invalid', 'disabled', 'readonly'],
+  radio: ['default', 'selected', 'focus-visible', 'disabled', 'readonly'],
+  'radio-group': ['default', 'required', 'invalid', 'disabled', 'readonly'],
+  switch: ['default', 'selected', 'focus-visible', 'invalid', 'disabled'],
+  select: ['default', 'filled', 'open', 'async-loading', 'invalid'],
+  'native-select': ['default', 'filled', 'focus-visible', 'invalid', 'disabled'],
+  'multi-select': ['default', 'open', 'async-loading', 'error', 'invalid'],
+  combobox: ['default', 'filled', 'open', 'async-loading', 'invalid'],
+  autocomplete: ['default', 'filled', 'open', 'async-loading', 'invalid'],
+  'date-picker': ['default', 'filled', 'open', 'invalid', 'disabled'],
+  'date-range-picker': ['default', 'open', 'focus-visible', 'invalid', 'disabled'],
+  'time-picker': ['default', 'filled', 'open', 'invalid', 'disabled'],
+  'color-picker': ['default', 'filled', 'open', 'invalid', 'disabled'],
+  'file-upload': ['default', 'focus-visible', 'required', 'invalid', 'disabled'],
+  'drag-drop-upload': ['default', 'focus-visible', 'required', 'invalid', 'disabled'],
+  'verification-code': ['default', 'filled', 'focus-visible', 'invalid', 'disabled'],
+  'tags-input': ['default', 'filled', 'focus-visible', 'invalid', 'disabled'],
+});
+
+const DEFAULT_STORY_IDS: Readonly<Record<string, string>> = Object.freeze({
+  'text-input': 'filled',
+  textarea: 'filled',
+  'password-input': 'filled',
+  'search-input': 'filled',
+  'number-input': 'filled',
+  checkbox: 'selected',
+  radio: 'selected',
+  switch: 'selected',
+  select: 'filled',
+  'native-select': 'filled',
+  'multi-select': 'open',
+  combobox: 'filled',
+  autocomplete: 'filled',
+  'date-picker': 'open',
+  'date-range-picker': 'open',
+  'time-picker': 'open',
+  'color-picker': 'open',
+  'verification-code': 'filled',
+});
+
+const ESSENTIAL_CONTROL_PREFERENCES: Readonly<Record<string, readonly string[]>> = Object.freeze({
+  'text-input': ['value', 'placeholder', 'size', 'invalid', 'disabled', 'readOnly'],
+  textarea: ['value', 'placeholder', 'rows', 'showCount', 'autoResize', 'invalid'],
+  'password-input': ['value', 'placeholder', 'required', 'invalid', 'disabled', 'readOnly'],
+  'search-input': ['value', 'placeholder', 'invalid', 'disabled', 'readOnly', 'required'],
+  'number-input': ['value', 'min', 'max', 'step', 'showSteppers', 'invalid'],
+  checkbox: ['selected', 'indeterminate', 'description', 'disabled', 'readOnly', 'invalid'],
+  'checkbox-group': ['label', 'orientation', 'disabled', 'required', 'invalid', 'readonly'],
+  radio: ['selected', 'value', 'description', 'disabled', 'readOnly', 'checked'],
+  'radio-group': ['value', 'label', 'orientation', 'disabled', 'required', 'invalid'],
+  switch: ['selected', 'description', 'disabled', 'readOnly', 'required', 'invalid'],
+  select: ['value', 'placeholder', 'open', 'optionsState', 'invalid', 'disabled'],
+  'native-select': ['value', 'placeholder', 'size', 'invalid', 'disabled', 'required'],
+  'multi-select': ['open', 'placeholder', 'maxVisible', 'optionsState', 'invalid', 'disabled'],
+  combobox: ['value', 'placeholder', 'open', 'allowCustomValue', 'invalid', 'disabled'],
+  autocomplete: ['value', 'placeholder', 'open', 'allowCustomValue', 'invalid', 'disabled'],
+  'date-picker': ['value', 'open', 'min', 'max', 'invalid', 'disabled'],
+  'date-range-picker': ['open', 'min', 'max', 'invalid', 'disabled', 'required'],
+  'time-picker': ['value', 'open', 'min', 'max', 'invalid', 'disabled'],
+  'color-picker': ['value', 'open', 'invalid', 'disabled', 'readonly', 'tabindex'],
+  'file-upload': ['presentation', 'multiple', 'accept', 'label', 'invalid', 'disabled'],
+  'drag-drop-upload': ['multiple', 'accept', 'label', 'description', 'invalid', 'disabled'],
+});
+
+const SIGNATURE_FILLED_ARGS: Readonly<Record<string, KernPlaygroundValues>> = Object.freeze({
+  'text-input': Object.freeze({ value: 'Acme Europe' }),
+  textarea: Object.freeze({ value: 'Renewal approved pending legal review.' }),
+  'password-input': Object.freeze({ value: 'northstar-secure' }),
+  'search-input': Object.freeze({ value: 'Northstar' }),
+  'number-input': Object.freeze({ value: 250 }),
+  checkbox: Object.freeze({ selected: true }),
+  radio: Object.freeze({ selected: true }),
+  switch: Object.freeze({ selected: true }),
+  select: Object.freeze({ value: 'team' }),
+  'native-select': Object.freeze({ value: 'team' }),
+  combobox: Object.freeze({ value: 'team' }),
+  autocomplete: Object.freeze({ value: 'Northstar' }),
+  'date-picker': Object.freeze({ value: '2026-10-15' }),
+  'time-picker': Object.freeze({ value: '18:30' }),
+  'color-picker': Object.freeze({ value: '#4666da' }),
+  'verification-code': Object.freeze({ value: '482731' }),
+});
+
 const createPreset = (
   preset: Omit<KernPlaygroundStatePreset, 'args'> & {
     readonly args?: KernPlaygroundValues;
@@ -2504,9 +432,33 @@ export function normalizeKernPlaygroundStateId(value: string): string {
 }
 
 function acceptanceArgsFor(
+  componentId: string,
   stateId: string,
   controls: readonly KernPlaygroundControl[],
 ): KernPlaygroundValues {
+  if (stateId === 'filled') {
+    const signature = SIGNATURE_FILLED_ARGS[componentId];
+    if (signature) {
+      const controlKeys = new Set(controls.map(({ key }) => key));
+      return Object.freeze(
+        Object.fromEntries(Object.entries(signature).filter(([key]) => controlKeys.has(key))),
+      );
+    }
+  }
+
+  if (stateId === 'minimum' || stateId === 'maximum') {
+    const valueControl = controls.find(
+      (candidate) => candidate.key === 'value' && candidate.kind === 'number',
+    );
+    const boundaryControl = controls.find(
+      (candidate) =>
+        candidate.key === (stateId === 'minimum' ? 'min' : 'max') && candidate.kind === 'number',
+    );
+    if (valueControl && boundaryControl && typeof boundaryControl.defaultValue === 'number') {
+      return Object.freeze({ value: boundaryControl.defaultValue });
+    }
+  }
+
   const booleanState: Readonly<Record<string, readonly [string, boolean]>> = {
     disabled: ['disabled', true],
     enabled: ['disabled', false],
@@ -2889,7 +841,7 @@ function acceptancePresetFor(
     id,
     label: stateLabel,
     scenario: useStressScenario ? 'stress' : 'default',
-    args: acceptanceArgsFor(id, controls),
+    args: acceptanceArgsFor(item.id, id, controls),
     fixtureEffect: fixtureEffectFor(item, stateLabel),
   });
 }
@@ -2921,6 +873,92 @@ function presetsFor(
     ...acceptancePresets,
     ...[...unique.values()].filter(({ id }) => !acceptanceIds.has(id)),
   ]);
+}
+
+const FEATURED_PRESET_FALLBACK = [
+  'default',
+  'filled',
+  'selected',
+  'open',
+  'invalid',
+  'loading',
+  'disabled',
+  'focus-visible',
+  'hover',
+  'empty',
+  'long-text',
+  'stress',
+] as const;
+
+function featuredPresetIdsFor(
+  item: KernCatalogItem,
+  presets: readonly KernPlaygroundStatePreset[],
+  defaultStoryId: string,
+): readonly string[] {
+  const available = new Set(presets.map(({ id }) => id));
+  const featured: string[] = [];
+  const add = (id: string): void => {
+    if (featured.length < 5 && available.has(id) && !featured.includes(id)) featured.push(id);
+  };
+
+  add(defaultStoryId);
+  for (const id of FEATURED_PRESET_PREFERENCES[item.id] ?? FEATURED_PRESET_FALLBACK) add(id);
+  for (const id of FEATURED_PRESET_FALLBACK) add(id);
+
+  const minimum = Math.min(3, presets.length);
+  for (const preset of presets) {
+    if (featured.length >= minimum) break;
+    if (!preset.environment) add(preset.id);
+  }
+  for (const preset of presets) {
+    if (featured.length >= minimum) break;
+    add(preset.id);
+  }
+
+  return Object.freeze(featured);
+}
+
+function defaultStoryIdFor(
+  item: KernCatalogItem,
+  presets: readonly KernPlaygroundStatePreset[],
+): string {
+  const preferred = DEFAULT_STORY_IDS[item.id] ?? 'default';
+  return presets.some(({ id }) => id === preferred) ? preferred : 'default';
+}
+
+const ESSENTIAL_CONTROL_FALLBACK = [
+  'value',
+  'label',
+  'variant',
+  'tone',
+  'size',
+  'open',
+  'selected',
+  'orientation',
+  'loading',
+  'invalid',
+  'disabled',
+  'readOnly',
+  'required',
+] as const;
+
+function essentialControlKeysFor(
+  item: KernCatalogItem,
+  controls: readonly KernPlaygroundControl[],
+): readonly string[] {
+  const available = new Set(controls.map(({ key }) => key));
+  const essential: string[] = [];
+  const add = (key: string): void => {
+    if (essential.length < 6 && available.has(key) && !essential.includes(key)) {
+      essential.push(key);
+    }
+  };
+
+  for (const key of ESSENTIAL_CONTROL_PREFERENCES[item.id] ?? []) add(key);
+  for (const key of ESSENTIAL_CONTROL_FALLBACK) add(key);
+  for (const { key } of controls) add(key);
+
+  return Object.freeze(essential);
 }
 
 function scenariosFor(
@@ -3025,8 +1063,14 @@ export const KERN_PLAYGROUND_DEFINITIONS: readonly KernPlaygroundDefinition[] = 
   KERN_CATALOG.map((item) => {
     const controls = controlsFor(item);
     const presets = presetsFor(item, controls);
+    const defaultStoryId = defaultStoryIdFor(item, presets);
     return Object.freeze({
       id: item.id,
+      defaultStoryId,
+      featuredPresetIds: featuredPresetIdsFor(item, presets, defaultStoryId),
+      essentialControlKeys: essentialControlKeysFor(item, controls),
+      interactive: !STATIC_SPECIMEN_IDS.has(item.id),
+      supportingComponentIds: Object.freeze([...(SUPPORTING_COMPONENT_IDS[item.id] ?? [])]),
       scenarios: scenariosFor(presets),
       states: Object.freeze(presets.map(({ id }) => id)),
       presets,

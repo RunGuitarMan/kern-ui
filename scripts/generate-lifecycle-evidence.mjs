@@ -8,13 +8,17 @@ const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const lifecyclePath = resolve(workspaceRoot, 'projects/kern/api/lifecycle.json');
 const inventoryPath = resolve(workspaceRoot, 'projects/kern/api/component-inventory.json');
 const manualEvidencePath = resolve(workspaceRoot, 'docs/accessibility/manual-evidence.json');
+const componentHarnessesPath = resolve(
+  workspaceRoot,
+  'projects/kern/testing/component-harnesses.json',
+);
 const outputPath = resolve(workspaceRoot, 'projects/kern/api/lifecycle-evidence.json');
 
 const performanceSuites = {
   'addon-charts:charts': ['perf-charts', 'Chart keyboard marks stay bounded'],
   'addon-grid:data-grid': ['perf-grid', 'virtual Data Grid keeps a 10k-row source'],
-  'kit:feedback': ['perf-dialog', 'Dialog repeated open/close cycles'],
-  'kit:forms': ['perf-forms', 'large typed-form primitives update'],
+  'feedback:feedback': ['perf-dialog', 'Dialog repeated open/close cycles'],
+  'forms:forms': ['perf-forms', 'large typed-form primitives update'],
 };
 
 const commonArtifacts = {
@@ -33,10 +37,9 @@ const commonArtifacts = {
   ],
   'catalog-visual': ['tests/visual/visual.spec.ts', 'default specimen matches its visual baseline'],
   'ssr-server': ['tests/support/serve-workspace.mjs', 'browser tests exercise server rendering'],
-  'agent-aot-verifier': ['tools/verify-kern-agent-dx.mjs', 'Packed-package AOT emitted'],
-  'responsive-suite': [
+  'responsive-recipes': [
     'tests/responsive/responsive.spec.ts',
-    'Responsive, RTL, and text zoom contracts',
+    'every recipe has a 320px high-contrast RTL specimen without page overflow',
   ],
   'lifecycle-policy': ['docs/LIFECYCLE.md', 'Current pre-1.0 promotion queue'],
   'perf-tree': ['tests/performance/runtime.spec.ts', 'Tree mounts 500 stable nodes'],
@@ -130,15 +133,23 @@ function componentUnitSuite(component, suites) {
 }
 
 async function generate() {
-  const [lifecycle, inventory, manualEvidence, unitSuites] = await Promise.all([
+  const [lifecycle, inventory, manualEvidence, componentHarnesses, unitSuites] = await Promise.all([
     readJson(lifecyclePath),
     readJson(inventoryPath),
     readJson(manualEvidencePath),
+    readJson(componentHarnessesPath),
     componentUnitSuites(),
   ]);
+  if (componentHarnesses.libraryVersion !== inventory.library.version) {
+    throw new Error(
+      `Component harness registry version ${componentHarnesses.libraryVersion} does not match ` +
+        `library ${inventory.library.version}.`,
+    );
+  }
   const lifecycleRecords = lifecycleById(lifecycle);
   const inventoryRecords = catalogInventory(inventory);
   const artifacts = new Map();
+  const usedHarnessComponents = new Set();
 
   async function artifact(id, path, anchor = '') {
     const existing = artifacts.get(id);
@@ -273,11 +284,24 @@ async function generate() {
           break;
         }
         case 'consumer-harness': {
-          const exampleArtifact = await artifact(
-            `agent-example-${id}`,
-            `projects/kern/agent/examples/${id}.ts`,
+          const harness = componentHarnesses.components?.[id];
+          if (!harness) {
+            throw new Error(
+              `No component-scoped consumer harness evidence is registered for ${id}.`,
+            );
+          }
+          const sourceArtifact = await artifact(
+            `harness-source-${id}`,
+            harness.source,
+            `class ${harness.symbol}`,
           );
-          artifactIds = [exampleArtifact, 'agent-aot-verifier'];
+          const specArtifact = await artifact(
+            `harness-test-${id}`,
+            harness.spec,
+            harness.specAnchor,
+          );
+          usedHarnessComponents.add(id);
+          artifactIds = [sourceArtifact, specArtifact];
           break;
         }
         case 'manual-at': {
@@ -292,7 +316,7 @@ async function generate() {
           break;
         }
         case 'responsive':
-          artifactIds = ['responsive-suite'];
+          artifactIds = ['responsive-recipes'];
           break;
         case 'adaptation-guidance': {
           const guidance = await artifact(
@@ -333,6 +357,15 @@ async function generate() {
       symbol: inventoryRecord.symbol,
       evidence,
     });
+  }
+
+  const registeredHarnessComponents = Object.keys(componentHarnesses.components ?? {}).sort();
+  const requiredHarnessComponents = [...usedHarnessComponents].sort();
+  if (JSON.stringify(registeredHarnessComponents) !== JSON.stringify(requiredHarnessComponents)) {
+    throw new Error(
+      'Component harness registry must exactly match lifecycle consumer-harness requirements: ' +
+        `expected ${requiredHarnessComponents.join(', ')}; found ${registeredHarnessComponents.join(', ')}.`,
+    );
   }
 
   return {

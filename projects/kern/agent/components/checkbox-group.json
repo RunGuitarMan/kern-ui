@@ -9,14 +9,14 @@
   "symbol": "KrnCheckboxGroup",
   "canonicalSymbol": "KrnCheckboxGroup",
   "canonicalId": "checkbox-group",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Checkbox Group. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Checkbox Group. Labels a set of independent checkbox choices and coordinates their shared form state.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -62,7 +62,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -172,7 +172,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Space-separated element ids that provide the accessible description.",
+      "description": "Defines the component's described by behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -208,15 +208,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
-    ],
+    "keyboard": ["Tab follows native checkbox order; Space toggles the focused checkbox"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The real form control retains its visible name, described-by relationships, and Angular state.",
+      "Required, readonly, disabled, and invalid states remain programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -235,7 +230,7 @@
       "title": "Typed notification channels",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed notification channels\n *\n * Bind a stable array of selected string values.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCheckbox, KrnCheckboxGroup } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-checkbox-group-agent-example',\n  standalone: true,\n  imports: [KrnCheckboxGroup, ReactiveFormsModule, KrnCheckbox],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-checkbox-group label=\"Notification channels\" [formControl]=\"control\">\n      <krn-checkbox value=\"email\">Email</krn-checkbox>\n      <krn-checkbox value=\"slack\">Slack</krn-checkbox>\n    </krn-checkbox-group>\n  `,\n})\nexport class KernCheckboxGroupAgentExample {\n  readonly control = new FormControl<readonly string[]>(['email'], { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernCheckboxGroupAgentExample);\n",
+      "code": "/**\n * Typed notification channels\n *\n * Bind a stable array of selected string values.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCheckbox, KrnCheckboxGroup } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-checkbox-group-agent-example',\n  standalone: true,\n  imports: [KrnCheckboxGroup, ReactiveFormsModule, KrnCheckbox],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-checkbox-group label=\"Notification channels\" [formControl]=\"control\">\n      <krn-checkbox value=\"email\">Email</krn-checkbox>\n      <krn-checkbox value=\"slack\">Slack</krn-checkbox>\n    </krn-checkbox-group>\n  `,\n})\nexport class KernCheckboxGroupAgentExample {\n  readonly control = new FormControl<readonly string[]>(['email'], { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernCheckboxGroupAgentExample);\n",
       "verification": "compiled",
       "source": "examples/checkbox-group.ts"
     }
@@ -262,8 +257,8 @@
     "valueChange"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Checkbox Group for this specific contract: Labels a set of independent checkbox choices and coordinates their shared form state.",
+    "avoidWhen": "Do not choose Checkbox Group for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -321,7 +316,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -347,7 +342,7 @@
         "kind": "select",
         "defaultValue": "vertical",
         "testValue": "horizontal",
-        "description": "Logical axis exposed by the component; behavior follows its documented keyboard contract.",
+        "description": "Defines the logical axis used by layout and keyboard navigation.",
         "binding": {
           "kind": "input",
           "publicName": "orientation",
@@ -370,7 +365,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component readonly contract.",
+        "description": "Keeps the value perceivable while preventing user edits.",
         "binding": {
           "kind": "input",
           "publicName": "readonly",

@@ -2,18 +2,18 @@
 
 - ID: `tooltip`
 - Selector: `[krnTooltip]`
-- Import: `import { KrnTooltip } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTooltip } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnTooltip`
 - Lifecycle: **stable**
 - Category: Feedback
 
-Tooltip. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Tooltip. Shows short supplemental text on hover or keyboard focus without adding a tab stop.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Tooltip for this specific contract: Shows short supplemental text on hover or keyboard focus without adding a tab stop.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Tooltip for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTooltip } from '@kern-ui/angular/kit';
+import { KrnTooltip } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-tooltip-agent-example',
@@ -52,12 +52,12 @@ void bootstrapApplication(KernTooltipAgentExample);
 
 ## API
 
-| Name                  | Kind  | Type                                        | Required | Default   | Description                                                        |
-| --------------------- | ----- | ------------------------------------------- | -------- | --------- | ------------------------------------------------------------------ |
-| `krnTooltip`          | input | `string`                                    | no       | `''`      | Human-readable copy for the text state or control.                 |
-| `krnTooltipShowDelay` | input | `number`                                    | no       | `400`     | Controls whether the component applies the show delay behavior.    |
-| `krnTooltipHideDelay` | input | `number`                                    | no       | `80`      | Controls whether the component applies the hide delay behavior.    |
-| `krnTooltipPosition`  | input | `"above" \| "after" \| "before" \| "below"` | no       | `'above'` | Logical placement of the component relative to its owning surface. |
+| Name                  | Kind  | Type                                        | Required | Default   | Description                                                     |
+| --------------------- | ----- | ------------------------------------------- | -------- | --------- | --------------------------------------------------------------- |
+| `krnTooltip`          | input | `string`                                    | no       | `''`      | Human-readable copy for the text state or control.              |
+| `krnTooltipShowDelay` | input | `number`                                    | no       | `400`     | Controls whether the component applies the show delay behavior. |
+| `krnTooltipHideDelay` | input | `number`                                    | no       | `80`      | Controls whether the component applies the hide delay behavior. |
+| `krnTooltipPosition`  | input | `"above" \| "after" \| "before" \| "below"` | no       | `'above'` | Defines the component's position behavior or presentation.      |
 
 ## Deprecated selectors
 
@@ -73,11 +73,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Escape closes modal layers
-- Focus returns to the trigger
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Focus shows the tooltip without adding a tab stop; Escape dismisses visible content
+- The trigger retains its native role and accessible name.
+- Tooltip text is referenced as a description and is available on both hover and focus.
 
 Manual assistive-technology validation remains required in the consuming application.
 

@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAlert } from '@kern-ui/angular/kit';
+import { KrnAlert } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-alert-agent-example',

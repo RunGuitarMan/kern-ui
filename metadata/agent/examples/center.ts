@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCenter } from '@kern-ui/angular/kit';
+import { KrnCenter } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-center-agent-example',

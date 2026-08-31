@@ -1,7 +1,7 @@
 # Lifecycle governance
 
 `projects/kern/api/lifecycle.json` is the machine-readable source of truth for component and public
-symbol maturity. It explicitly covers all 131 catalog entries and all 477 named exports from the
+symbol maturity. It explicitly covers all 132 catalog entries and all 502 named exports from the
 committed secondary-entrypoint API baselines. There is no implicit “new exports are stable”
 default.
 
@@ -76,7 +76,7 @@ context, and compatibility review.
 
 ## Current pre-1.0 promotion queue
 
-The 19 beta catalog entries are deliberate groups, not an unreviewed backlog:
+The 20 beta catalog entries are deliberate groups, not an unreviewed backlog:
 
 - Select/Combobox/Autocomplete/Multi Select and date/time controls require their controlled,
   async, Forms, locale, SSR, and public-harness contracts plus real AT evidence to remain stable;
@@ -98,7 +98,7 @@ keeping the API experimental is safer than presenting uncertainty as stability.
 ## Deprecations
 
 `projects/kern/api/deprecations.json` is authoritative for active and removed deprecations.
-[DEPRECATIONS.md](DEPRECATIONS.md) contains consumer migration examples. During the unreleased
-`0.1.0` phase, removing accidental compatibility APIs is preferable to shipping deprecation debt.
-After publication, do not shorten a registered removal window without an urgent security or
-correctness reason documented in release notes.
+[DEPRECATIONS.md](DEPRECATIONS.md) contains consumer migration examples. APIs removed before the
+first public `0.1.2` release remain historical migration context rather than shipped deprecations.
+For every published line, do not shorten a registered removal window without an urgent security
+or correctness reason documented in release notes.

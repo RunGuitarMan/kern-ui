@@ -9,7 +9,7 @@ import {
   KrnSelect,
   KrnTagsInput,
   type KrnSelectOption,
-} from '@kern-ui/angular/kit';
+} from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-selection-recipe',

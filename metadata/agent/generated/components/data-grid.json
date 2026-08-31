@@ -101,7 +101,7 @@
       "type": "(row: T, index: number) => KrnDataRowKey",
       "required": true,
       "defaultValue": "required",
-      "description": "Returns a stable unique key for every source row occurrence.",
+      "description": "Defines the component's row identity behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -111,7 +111,7 @@
       "type": "KrnDataGridMode",
       "required": false,
       "defaultValue": "{ kind: 'client', pagination: true }",
-      "description": "Discriminated operating mode that selects the component data and interaction contract.",
+      "description": "Defines the component's mode behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -141,7 +141,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Prevents duplicate actions and exposes accessible busy state.",
+      "description": "Prevents duplicate actions and exposes an accessible busy state.",
       "descriptionSource": "inferred"
     },
     {
@@ -151,7 +151,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Current failure message or error state exposed by asynchronous content.",
+      "description": "Defines the component's error behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -161,7 +161,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Accessible copy that explains the empty state.",
+      "description": "Human-readable copy for the empty state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -171,7 +171,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "true",
-      "description": "Enables the grid-owned text filtering interface.",
+      "description": "Defines the component's filterable behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -181,7 +181,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Short hint displayed in the grid filter input before a query is entered.",
+      "description": "Defines the component's filter placeholder behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -191,7 +191,7 @@
       "type": "KrnDataFilterPredicate<T> | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Determines whether a row matches the current filter query.",
+      "description": "Consumer function used by the component to resolve filter predicate.",
       "descriptionSource": "inferred"
     },
     {
@@ -201,7 +201,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Enables row selection and the corresponding selected-key contract.",
+      "description": "Defines the component's selectable behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -261,7 +261,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "true",
-      "description": "Enables pointer and keyboard resizing for supported columns or panels.",
+      "description": "Defines the component's resizable behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -271,7 +271,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Uses the reduced-density presentation intended for constrained data views.",
+      "description": "Defines the component's compact behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -301,7 +301,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Enables the grid-owned control for changing visible columns.",
+      "description": "Defines the component's column chooser behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -351,7 +351,7 @@
       "type": "ReadonlySet<string>",
       "required": false,
       "defaultValue": "new Set<string>()",
-      "description": "Stable column keys excluded from the current grid presentation.",
+      "description": "Controlled hidden column keys state with a matching Angular model-change output.",
       "descriptionSource": "inferred"
     },
     {
@@ -361,7 +361,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable column key that owns the current sort operation.",
+      "description": "Controlled sort key state with a matching Angular model-change output.",
       "descriptionSource": "inferred"
     },
     {
@@ -371,7 +371,7 @@
       "type": "KrnDataSortDirection",
       "required": false,
       "defaultValue": "'asc'",
-      "description": "Current ascending, descending, or unsorted direction.",
+      "description": "Controlled sort direction state with a matching Angular model-change output.",
       "descriptionSource": "inferred"
     },
     {
@@ -743,7 +743,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component columnChooser contract.",
+        "description": "Defines the component's column chooser behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "columnChooser",
@@ -756,7 +756,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component error contract.",
+        "description": "Defines the component's error behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "error",

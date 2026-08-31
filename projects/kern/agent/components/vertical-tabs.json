@@ -9,14 +9,14 @@
   "symbol": "KrnVerticalTabs",
   "canonicalSymbol": "KrnTabs",
   "canonicalId": "tabs",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": ["KrnTabs"],
     "selectors": ["krn-tabs"],
     "componentIds": ["tabs"]
   },
-  "summary": "Vertical Tabs. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Vertical Tabs. Presents the Tabs interaction model on a vertical axis.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -111,11 +111,13 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "keyboard": [
+      "Arrow Up and Arrow Down move focus between tabs",
+      "Home and End move to the first and last tab; Enter or Space selects when activation is manual"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Destinations retain native link semantics and expose current location where applicable.",
+      "Composite navigation uses one documented focus model without changing reading order."
     ],
     "manualValidationRequired": true
   },
@@ -135,7 +137,7 @@
       "title": "Controlled settings tabs",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled settings tabs\n *\n * Use vertical orientation for a stable settings subsection.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnVerticalTabs, type KrnTabItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-vertical-tabs-agent-example',\n  standalone: true,\n  imports: [KrnVerticalTabs],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-vertical-tabs ariaLabel=\"Settings sections\" [items]=\"items\" [(value)]=\"selectedTab\">\n      Selected settings section: {{ selectedTab }}\n    </krn-vertical-tabs>\n  `,\n})\nexport class KernVerticalTabsAgentExample {\n  readonly items: readonly KrnTabItem[] = [\n    { id: 'profile', label: 'Profile' },\n    { id: 'security', label: 'Security' },\n  ];\n\n  selectedTab: string | null = 'profile';\n}\n\nvoid bootstrapApplication(KernVerticalTabsAgentExample);\n",
+      "code": "/**\n * Controlled settings tabs\n *\n * Use vertical orientation for a stable settings subsection.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnVerticalTabs, type KrnTabItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-vertical-tabs-agent-example',\n  standalone: true,\n  imports: [KrnVerticalTabs],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-vertical-tabs ariaLabel=\"Settings sections\" [items]=\"items\" [(value)]=\"selectedTab\">\n      Selected settings section: {{ selectedTab }}\n    </krn-vertical-tabs>\n  `,\n})\nexport class KernVerticalTabsAgentExample {\n  readonly items: readonly KrnTabItem[] = [\n    { id: 'profile', label: 'Profile' },\n    { id: 'security', label: 'Security' },\n  ];\n\n  selectedTab: string | null = 'profile';\n}\n\nvoid bootstrapApplication(KernVerticalTabsAgentExample);\n",
       "verification": "compiled",
       "source": "examples/vertical-tabs.ts"
     }
@@ -154,8 +156,8 @@
     "ariaLabel"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Vertical Tabs for this specific contract: Presents the Tabs interaction model on a vertical axis.",
+    "avoidWhen": "Do not choose Vertical Tabs for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -211,7 +213,7 @@
         "kind": "select",
         "defaultValue": "vertical",
         "testValue": "horizontal",
-        "description": "Logical axis exposed by the component; behavior follows its documented keyboard contract.",
+        "description": "Defines the logical axis used by layout and keyboard navigation.",
         "binding": {
           "kind": "input",
           "publicName": "orientation",

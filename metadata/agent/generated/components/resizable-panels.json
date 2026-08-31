@@ -9,14 +9,14 @@
   "symbol": "KrnResizablePanels",
   "canonicalSymbol": "KrnResizablePanels",
   "canonicalId": "resizable-panels",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Resizable Panels. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Resizable Panels. Lets users resize adjacent panels by pointer or keyboard while enforcing normalized size limits.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -151,7 +151,7 @@
       "title": "Controlled resizable workspace",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled resizable workspace\n *\n * Compose panels and a keyboard-operable resize handle with owned sizes.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnResizablePanel, KrnResizablePanels, KrnResizeHandle } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-resizable-panels-agent-example',\n  standalone: true,\n  imports: [KrnResizablePanels, KrnResizablePanel, KrnResizeHandle],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-resizable-panels [(sizes)]=\"panelSizes\" orientation=\"horizontal\">\n      <krn-resizable-panel id=\"customer-list\" ariaLabel=\"Customer list\">\n        Customer list\n      </krn-resizable-panel>\n      <krn-resize-handle ariaLabel=\"Resize customer list and details\" />\n      <krn-resizable-panel id=\"customer-detail\" ariaLabel=\"Customer details\">\n        Customer details\n      </krn-resizable-panel>\n    </krn-resizable-panels>\n  `,\n})\nexport class KernResizablePanelsAgentExample {\n  panelSizes: readonly number[] = [38, 62];\n}\n\nvoid bootstrapApplication(KernResizablePanelsAgentExample);\n",
+      "code": "/**\n * Controlled resizable workspace\n *\n * Compose panels and a keyboard-operable resize handle with owned sizes.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnResizablePanel, KrnResizablePanels, KrnResizeHandle } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-resizable-panels-agent-example',\n  standalone: true,\n  imports: [KrnResizablePanels, KrnResizablePanel, KrnResizeHandle],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-resizable-panels [(sizes)]=\"panelSizes\" orientation=\"horizontal\">\n      <krn-resizable-panel id=\"customer-list\" ariaLabel=\"Customer list\">\n        Customer list\n      </krn-resizable-panel>\n      <krn-resize-handle ariaLabel=\"Resize customer list and details\" />\n      <krn-resizable-panel id=\"customer-detail\" ariaLabel=\"Customer details\">\n        Customer details\n      </krn-resizable-panel>\n    </krn-resizable-panels>\n  `,\n})\nexport class KernResizablePanelsAgentExample {\n  panelSizes: readonly number[] = [38, 62];\n}\n\nvoid bootstrapApplication(KernResizablePanelsAgentExample);\n",
       "verification": "compiled",
       "source": "examples/resizable-panels.ts"
     }
@@ -230,7 +230,7 @@
         "kind": "select",
         "defaultValue": "horizontal",
         "testValue": "vertical",
-        "description": "Logical axis exposed by the component; behavior follows its documented keyboard contract.",
+        "description": "Sets the panel flow axis: horizontal follows inline, vertical follows block.",
         "binding": {
           "kind": "input",
           "publicName": "orientation",

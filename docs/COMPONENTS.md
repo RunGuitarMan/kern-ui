@@ -1,7 +1,7 @@
 # Component and state coverage
 
 The typed catalog in `projects/showcase/src/lib/catalog.ts` is the documentation manifest. It
-contains 131 entries; every entry has a route, exact generated input/model/output metadata,
+contains 132 entries; every entry has a route, exact generated input/model/output metadata,
 keyboard and accessibility notes, do/don't guidance, and a declared state matrix. The
 machine-readable lifecycle source of truth is `projects/kern/api/lifecycle.json`; CI requires the
 catalog to match it exactly.
@@ -13,9 +13,9 @@ catalog to match it exactly.
 | Forms        |      30 | Typed text/choice controls, selection, dates, uploads, OTP    |
 | Navigation   |      14 | Tabs, menus, pagination, stepper, tree, command palette       |
 | Feedback     |      19 | Alerts, toast, overlays, progress, skeleton, state patterns   |
-| Data display |      26 | Dense data, grid/table, calendar, charts, media               |
+| Data display |      27 | Dense data, grid/table, calendar, charts, media               |
 | Patterns     |      15 | Search, settings, CRUD, master-detail, forms, app shells      |
-| **Total**    | **131** |                                                               |
+| **Total**    | **132** |                                                               |
 
 The generated API contract in
 `projects/showcase/src/lib/generated-component-contract.ts` is derived from runtime source and
@@ -23,9 +23,9 @@ checked against every catalog selector. Do not edit it by hand. Summary, behavio
 usage guidance remain deliberate human-authored documentation.
 
 Catalog entries are documentation records, not implementation identities. The versioned
-`projects/kern/api/component-inventory.json` collapses the current 131 catalog records into 126
+`projects/kern/api/component-inventory.json` collapses the current 132 catalog records into 127
 canonical catalog review units and also records nine public supporting components/directives plus
-one internal surface. That yields 135 public review units. A review unit is identified by its
+three internal surfaces. That yields 136 public review units. A review unit is identified by its
 decorated class and owns all of that class's public symbol aliases, selector aliases, and catalog
 variants. For example, a variant route or compatibility selector is tested during its canonical
 class review; it is not counted as another implementation pass.
@@ -51,7 +51,7 @@ from `metadata/agent/examples`: one explicit standalone application for every ca
 Those same sources are mirrored into the npm package, installed into an isolated consumer, and
 strict-AOT compiled against the packed artifact. The shared specimen secondary entrypoint powers
 Docs component pages and deterministic preview routes, and its coverage gate requires a focused
-render branch for all 131 entries.
+render branch for all 132 entries.
 
 For the live Code tab, Docs materializes every serializable public playground value as an Angular
 property binding on that verified scaffold. Documentation-only fixture effects and environment
@@ -81,7 +81,7 @@ Lifecycle status communicates compatibility and ownership, not visual completene
 | Status         | Current entries | Meaning                                                         |
 | -------------- | --------------: | --------------------------------------------------------------- |
 | `stable`       |              96 | Supported contract; compatibility policy applies                |
-| `beta`         |              19 | Production evaluation is welcome; contract may still be refined |
+| `beta`         |              20 | Production evaluation is welcome; contract may still be refined |
 | `experimental` |               1 | Early API; incompatible pre-1.0 changes may occur               |
 | `recipe`       |              15 | Opinionated composition to adapt, not a sealed primitive        |
 | `deprecated`   |               0 | Supported temporarily with a documented replacement             |

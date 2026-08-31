@@ -9,8 +9,8 @@
   "symbol": "KrnCopyButton",
   "canonicalSymbol": "KrnCopyButton",
   "canonicalId": "copy-button",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "actions",
+  "importPath": "@kern-ui/angular/actions",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -121,7 +121,7 @@
       "type": "KrnSize",
       "required": false,
       "defaultValue": "this.options.size",
-      "description": "Named semantic size resolved through KERN density and sizing tokens.",
+      "description": "Named semantic size resolved through Kern density and sizing tokens.",
       "descriptionSource": "inferred"
     },
     {
@@ -232,7 +232,7 @@
       "title": "Copy immutable record id",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Copy immutable record id\n *\n * Copy an explicit domain identifier, localize its accessible context, and consume confirmed outcomes.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCopyButton, provideKrnCopyButtonOptions } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-copy-button-agent-example',\n  standalone: true,\n  imports: [KrnCopyButton],\n  providers: [\n    provideKrnCopyButtonOptions({\n      size: 'sm',\n      feedbackDuration: 2400,\n    }),\n  ],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-copy-button\n      [value]=\"customerId\"\n      (copied)=\"lastResult = 'Copied ' + $event\"\n      (copyError)=\"lastResult = 'Customer id copy failed'\"\n    >\n      Copy customer id {{ customerId }}\n    </krn-copy-button>\n    <output>{{ lastResult }}</output>\n  `,\n})\nexport class KernCopyButtonAgentExample {\n  readonly customerId = 'CUS-2048';\n\n  lastResult = '';\n}\n\nvoid bootstrapApplication(KernCopyButtonAgentExample);\n",
+      "code": "/**\n * Copy immutable record id\n *\n * Copy an explicit domain identifier, localize its accessible context, and consume confirmed outcomes.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCopyButton, provideKrnCopyButtonOptions } from '@kern-ui/angular/actions';\n\n@Component({\n  selector: 'app-kern-copy-button-agent-example',\n  standalone: true,\n  imports: [KrnCopyButton],\n  providers: [\n    provideKrnCopyButtonOptions({\n      size: 'sm',\n      feedbackDuration: 2400,\n    }),\n  ],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-copy-button\n      [value]=\"customerId\"\n      (copied)=\"lastResult = 'Copied ' + $event\"\n      (copyError)=\"lastResult = 'Customer id copy failed'\"\n    >\n      Copy customer id {{ customerId }}\n    </krn-copy-button>\n    <output>{{ lastResult }}</output>\n  `,\n})\nexport class KernCopyButtonAgentExample {\n  readonly customerId = 'CUS-2048';\n\n  lastResult = '';\n}\n\nvoid bootstrapApplication(KernCopyButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/copy-button.ts"
     }

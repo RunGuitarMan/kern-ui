@@ -2,18 +2,18 @@
 
 - ID: `spacer`
 - Selector: `krn-spacer`
-- Import: `import { KrnSpacer } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSpacer } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnSpacer`
 - Lifecycle: **stable**
 - Category: Layout
 
-Spacer. A composable spatial primitive that keeps product layouts predictable across containers.
+Spacer. Reserves decorative horizontal or vertical space and stays hidden from assistive technology.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Spacer for this specific contract: Reserves decorative horizontal or vertical space and stays hidden from assistive technology.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Spacer for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSpacer } from '@kern-ui/angular/kit';
+import { KrnSpacer } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-spacer-agent-example',
@@ -66,10 +66,8 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Is always aria-hidden because it communicates spacing, not content.
 
 Manual assistive-technology validation remains required in the consuming application.
 

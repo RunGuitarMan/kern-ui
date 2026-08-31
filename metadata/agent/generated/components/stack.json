@@ -9,14 +9,14 @@
   "symbol": "KrnStack",
   "canonicalSymbol": "KrnStack",
   "canonicalId": "stack",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Stack. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Stack. Arranges children vertically with a consistent gap, alignment, and block-axis distribution.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -96,11 +96,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Projected content retains its document order and native semantics as layout changes.",
+      "Logical sizing and placement work in both LTR and RTL without duplicating content."
     ],
     "manualValidationRequired": true
   },
@@ -119,7 +118,7 @@
       "title": "Vertical form stack",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Vertical form stack\n *\n * Apply consistent vertical rhythm to related content.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnStack } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-stack-agent-example',\n  standalone: true,\n  imports: [KrnStack],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-stack gap=\"4\">\n      <h2>Billing profile</h2>\n      <p>Invoices are sent to the finance owner.</p>\n      <button type=\"button\">Edit profile</button>\n    </krn-stack>\n  `,\n})\nexport class KernStackAgentExample {}\n\nvoid bootstrapApplication(KernStackAgentExample);\n",
+      "code": "/**\n * Vertical form stack\n *\n * Apply consistent vertical rhythm to related content.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnStack } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-stack-agent-example',\n  standalone: true,\n  imports: [KrnStack],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-stack gap=\"4\">\n      <h2>Billing profile</h2>\n      <p>Invoices are sent to the finance owner.</p>\n      <button type=\"button\">Edit profile</button>\n    </krn-stack>\n  `,\n})\nexport class KernStackAgentExample {}\n\nvoid bootstrapApplication(KernStackAgentExample);\n",
       "verification": "compiled",
       "source": "examples/stack.ts"
     }
@@ -127,8 +126,8 @@
   "related": ["app-shell", "header", "sidebar", "navigation-rail"],
   "keywords": ["stack", "Stack", "Layout", "krn-stack", "KrnStack", "gap", "align", "justify"],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Stack for this specific contract: Arranges children vertically with a consistent gap, alignment, and block-axis distribution.",
+    "avoidWhen": "Do not choose Stack for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -189,7 +188,7 @@
         "kind": "select",
         "defaultValue": "stretch",
         "testValue": "start",
-        "description": "Configures the component align contract.",
+        "description": "Cross-axis alignment of projected children.",
         "binding": {
           "kind": "input",
           "publicName": "align",
@@ -224,7 +223,7 @@
         "kind": "select",
         "defaultValue": "start",
         "testValue": "center",
-        "description": "Configures the component justify contract.",
+        "description": "Distribution of projected children along the block axis.",
         "binding": {
           "kind": "input",
           "publicName": "justify",

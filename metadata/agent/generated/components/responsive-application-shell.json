@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Responsive Application Shell. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.",
+  "summary": "Responsive Application Shell. Switches application navigation and content structure across wide and narrow viewports.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -66,7 +66,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "this.ids.next('main-content')",
-      "description": "Stable identifier value used by the main contract.",
+      "description": "Stable identifier used by the main contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -127,11 +127,12 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": [
+      "Keyboard behavior is provided by the native elements and Kern primitives in the recipe"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.",
+      "Loading, empty, error, and success states remain visible and programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -169,8 +170,8 @@
     "closeNavigationLabel"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Responsive Application Shell for this specific contract: Switches application navigation and content structure across wide and narrow viewports.",
+    "avoidWhen": "Do not choose Responsive Application Shell for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

@@ -9,14 +9,14 @@
   "symbol": "KrnTreeNavigation",
   "canonicalSymbol": "KrnTreeNavigation",
   "canonicalId": "tree-navigation",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Tree Navigation. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Tree Navigation. Navigates hierarchical destinations with expansion, selection, and one managed tab stop.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -85,7 +85,7 @@
       "type": "string | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Stable id of the currently selected item.",
+      "description": "Controlled selected id state with a matching Angular model-change output.",
       "descriptionSource": "inferred"
     },
     {
@@ -95,7 +95,7 @@
       "type": "ReadonlyArray<string>",
       "required": false,
       "defaultValue": "[]",
-      "description": "Stable ids of the currently expanded hierarchical items.",
+      "description": "Controlled expanded ids state with a matching Angular model-change output.",
       "descriptionSource": "inferred"
     },
     {
@@ -115,7 +115,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "'1rem'",
-      "description": "Logical inline indentation applied for each hierarchical depth level.",
+      "description": "Defines the component's indent behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -189,7 +189,7 @@
       "title": "Controlled product navigation tree",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled product navigation tree\n *\n * Own selected and expanded ids for a typed nested navigation model.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTreeNavigation, type KrnTreeNavigationItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-tree-navigation-agent-example',\n  standalone: true,\n  imports: [KrnTreeNavigation],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tree-navigation\n      ariaLabel=\"Product navigation\"\n      [items]=\"items\"\n      [(selectedId)]=\"selectedId\"\n      [(expandedIds)]=\"expandedIds\"\n    />\n  `,\n})\nexport class KernTreeNavigationAgentExample {\n  readonly items: readonly KrnTreeNavigationItem[] = [\n    {\n      id: 'customers',\n      label: 'Customers',\n      children: [\n        { id: 'active-customers', label: 'Active' },\n        { id: 'risk-customers', label: 'At risk' },\n      ],\n    },\n  ];\n\n  selectedId: string | null = 'active-customers';\n\n  expandedIds: readonly string[] = ['customers'];\n}\n\nvoid bootstrapApplication(KernTreeNavigationAgentExample);\n",
+      "code": "/**\n * Controlled product navigation tree\n *\n * Own selected and expanded ids for a typed nested navigation model.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTreeNavigation, type KrnTreeNavigationItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-tree-navigation-agent-example',\n  standalone: true,\n  imports: [KrnTreeNavigation],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tree-navigation\n      ariaLabel=\"Product navigation\"\n      [items]=\"items\"\n      [(selectedId)]=\"selectedId\"\n      [(expandedIds)]=\"expandedIds\"\n    />\n  `,\n})\nexport class KernTreeNavigationAgentExample {\n  readonly items: readonly KrnTreeNavigationItem[] = [\n    {\n      id: 'customers',\n      label: 'Customers',\n      children: [\n        { id: 'active-customers', label: 'Active' },\n        { id: 'risk-customers', label: 'At risk' },\n      ],\n    },\n  ];\n\n  selectedId: string | null = 'active-customers';\n\n  expandedIds: readonly string[] = ['customers'];\n}\n\nvoid bootstrapApplication(KernTreeNavigationAgentExample);\n",
       "verification": "compiled",
       "source": "examples/tree-navigation.ts"
     }
@@ -272,7 +272,7 @@
         "kind": "text",
         "defaultValue": "1rem",
         "testValue": "20rem",
-        "description": "Configures the component indent contract.",
+        "description": "Defines the component's indent behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "indent",
@@ -285,7 +285,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component showGuides contract.",
+        "description": "Controls whether the component applies the show guides behavior.",
         "binding": {
           "kind": "input",
           "publicName": "showGuides",

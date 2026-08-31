@@ -9,14 +9,14 @@
   "symbol": "KrnNavigationRail",
   "canonicalSymbol": "KrnNavigationRail",
   "canonicalId": "navigation-rail",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Navigation Rail. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Navigation Rail. Provides compact primary navigation that expands from a narrow rail to a labelled panel.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -115,7 +115,7 @@
       "type": "\"auto\" | \"end\" | \"start\"",
       "required": false,
       "defaultValue": "'auto'",
-      "description": "Logical side on which the anchored or modal surface is placed.",
+      "description": "Defines the component's side behavior or presentation.",
       "descriptionSource": "inferred"
     }
   ],
@@ -150,11 +150,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Renders a navigation landmark with a stable accessible name and description relationship.",
+      "Expansion changes available labels and width without changing destination order."
     ],
     "manualValidationRequired": true
   },
@@ -173,7 +172,7 @@
       "title": "Expandable navigation rail",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Expandable navigation rail\n *\n * Expose compact navigation while preserving controlled expansion.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnNavigationRail } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-navigation-rail-agent-example',\n  standalone: true,\n  imports: [KrnNavigationRail],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-navigation-rail [(expanded)]=\"expanded\" ariaLabel=\"Primary navigation\">\n      <strong krnRailHeader>AC</strong>\n      <nav aria-label=\"Primary\">Home · Tasks · Reports</nav>\n      <button krnRailFooter type=\"button\">Help</button>\n    </krn-navigation-rail>\n  `,\n})\nexport class KernNavigationRailAgentExample {\n  expanded = false;\n}\n\nvoid bootstrapApplication(KernNavigationRailAgentExample);\n",
+      "code": "/**\n * Expandable navigation rail\n *\n * Expose compact navigation while preserving controlled expansion.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnNavigationRail } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-navigation-rail-agent-example',\n  standalone: true,\n  imports: [KrnNavigationRail],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-navigation-rail [(expanded)]=\"expanded\" ariaLabel=\"Primary navigation\">\n      <strong krnRailHeader>AC</strong>\n      <nav aria-label=\"Primary\">Home · Tasks · Reports</nav>\n      <button krnRailFooter type=\"button\">Help</button>\n    </krn-navigation-rail>\n  `,\n})\nexport class KernNavigationRailAgentExample {\n  expanded = false;\n}\n\nvoid bootstrapApplication(KernNavigationRailAgentExample);\n",
       "verification": "compiled",
       "source": "examples/navigation-rail.ts"
     }
@@ -194,8 +193,8 @@
     "side"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Navigation Rail for this specific contract: Provides compact primary navigation that expands from a narrow rail to a labelled panel.",
+    "avoidWhen": "Do not choose Navigation Rail for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -237,7 +236,7 @@
         "kind": "text",
         "defaultValue": "14rem",
         "testValue": "20rem",
-        "description": "Configures the component expandedWidth contract.",
+        "description": "Controls whether the component applies the expanded width behavior.",
         "binding": {
           "kind": "input",
           "publicName": "expandedWidth",
@@ -250,7 +249,7 @@
         "kind": "select",
         "defaultValue": "auto",
         "testValue": "end",
-        "description": "Configures the component side contract.",
+        "description": "Defines the component's side behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "side",
@@ -277,7 +276,7 @@
         "kind": "text",
         "defaultValue": "var(--krn-shell-rail-width, 3.5rem)",
         "testValue": "20rem",
-        "description": "Configures the component width contract.",
+        "description": "Explicit inline size of the rendered surface.",
         "binding": {
           "kind": "input",
           "publicName": "width",

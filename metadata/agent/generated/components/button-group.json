@@ -9,8 +9,8 @@
   "symbol": "KrnButtonGroup",
   "canonicalSymbol": "KrnButtonGroup",
   "canonicalId": "button-group",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "actions",
+  "importPath": "@kern-ui/angular/actions",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -114,7 +114,7 @@
       "title": "Grouped review actions",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Grouped review actions\n *\n * Present independent native actions as one labeled visual group.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnButton, KrnButtonGroup } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-button-group-agent-example',\n  standalone: true,\n  imports: [KrnButtonGroup, KrnButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <div krnButtonGroup aria-label=\"Review actions\">\n      <button krnButton type=\"button\" variant=\"outline\">Request changes</button>\n      <button krnButton type=\"button\">Approve</button>\n    </div>\n  `,\n})\nexport class KernButtonGroupAgentExample {}\n\nvoid bootstrapApplication(KernButtonGroupAgentExample);\n",
+      "code": "/**\n * Grouped review actions\n *\n * Present independent native actions as one labeled visual group.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnButton, KrnButtonGroup } from '@kern-ui/angular/actions';\n\n@Component({\n  selector: 'app-kern-button-group-agent-example',\n  standalone: true,\n  imports: [KrnButtonGroup, KrnButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <div krnButtonGroup aria-label=\"Review actions\">\n      <button krnButton type=\"button\" variant=\"outline\">Request changes</button>\n      <button krnButton type=\"button\">Approve</button>\n    </div>\n  `,\n})\nexport class KernButtonGroupAgentExample {}\n\nvoid bootstrapApplication(KernButtonGroupAgentExample);\n",
       "verification": "compiled",
       "source": "examples/button-group.ts"
     }

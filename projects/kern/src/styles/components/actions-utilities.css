@@ -1,0 +1,151 @@
+.krn-copy-labels {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--krn-space-2, 0.5rem);
+  min-inline-size: 0;
+}
+
+.krn-copy-button {
+  min-inline-size: 0;
+}
+
+.krn-copy-label {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.krn-copy-indicator {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 1em;
+  inline-size: 1em;
+  justify-content: center;
+  visibility: hidden;
+}
+
+.krn-copy-indicator:is([data-state='copied'], [data-state='error']) {
+  visibility: visible;
+}
+
+.krn-copy-status {
+  block-size: 1px;
+  clip-path: inset(50%);
+  inline-size: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.krn-link {
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  box-sizing: border-box;
+  color: var(--krn-color-link, #08775b);
+  cursor: pointer;
+  font: inherit;
+  overflow-wrap: anywhere;
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in oklch, currentColor 40%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  touch-action: manipulation;
+  transition:
+    color var(--krn-motion-duration-interaction) var(--krn-ease-standard, ease),
+    text-decoration-color var(--krn-motion-duration-interaction) var(--krn-ease-standard, ease);
+}
+
+.krn-link[hidden] {
+  display: none;
+}
+
+.krn-link:any-link:hover,
+.krn-link:any-link:active {
+  text-decoration-color: currentColor;
+}
+
+.krn-link:focus-visible {
+  border-radius: var(--krn-radius-sm, 0.25rem);
+  box-shadow: var(--krn-focus-ring, 0 0 0 3px rgb(17 117 86 / 28%));
+  outline: 2px solid transparent;
+}
+
+.krn-link:not([href]) {
+  color: inherit;
+  cursor: default;
+  text-decoration-color: transparent;
+}
+
+@keyframes krn-action-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes krn-action-menu-in {
+  from {
+    opacity: 0;
+    scale: 0.98;
+    translate: 0 -0.25rem;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+    translate: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-krn-motion='full']) .krn-action {
+    transition: none;
+  }
+
+  html:not([data-krn-motion='full']) .krn-action-menu {
+    animation: none;
+  }
+
+  html:not([data-krn-motion='full']) .krn-link {
+    transition: none;
+  }
+}
+
+@media (pointer: coarse) {
+  .krn-action {
+    min-block-size: var(--krn-touch-target-min, 2.75rem);
+  }
+
+  .krn-icon-action {
+    min-inline-size: var(--krn-touch-target-min, 2.75rem);
+  }
+}
+
+@media (forced-colors: active) {
+  .krn-action {
+    border-color: ButtonText;
+    forced-color-adjust: none;
+  }
+
+  .krn-action:disabled,
+  .krn-action[aria-disabled='true'] {
+    border-color: GrayText;
+    color: GrayText;
+  }
+
+  .krn-action:focus-visible,
+  .krn-link:focus-visible {
+    outline: 2px solid Highlight;
+  }
+
+  .krn-toggle-action[data-pressed='true'] {
+    border-color: Highlight;
+    box-shadow: inset 0 0 0 1px Highlight;
+  }
+
+  .krn-action-menu
+    :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']):focus-visible {
+    box-shadow: none;
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}

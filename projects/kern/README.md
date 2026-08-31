@@ -59,7 +59,13 @@ Use the narrow entrypoint that owns the capability:
 | `@kern-ui/angular/cdk`          | Platform, IDs, content, and overlay infrastructure      |
 | `@kern-ui/angular/i18n`         | Lightweight UI-copy bridge tokens for leaf components   |
 | `@kern-ui/angular/core`         | Tokens, icons, configuration, theming, and locale packs |
-| `@kern-ui/angular/kit`          | Layout, actions, forms, navigation, feedback, display   |
+| `@kern-ui/angular/actions`      | Actions and scoped action defaults                      |
+| `@kern-ui/angular/forms`        | Form fields, inputs, selection, date/time controls      |
+| `@kern-ui/angular/navigation`   | Menus, tabs, navigation, command surfaces               |
+| `@kern-ui/angular/feedback`     | Alerts, overlays, toast, progress and loading surfaces  |
+| `@kern-ui/angular/layout`       | Layout primitives and application shell structures      |
+| `@kern-ui/angular/data-display` | Lightweight data and content display components         |
+| `@kern-ui/angular/kit`          | Compatibility facade for the six component families     |
 | `@kern-ui/angular/addon-grid`   | Virtualized enterprise data grid                        |
 | `@kern-ui/angular/addon-charts` | Accessible chart components                             |
 | `@kern-ui/angular/patterns`     | Opinionated product compositions                        |
@@ -67,8 +73,8 @@ Use the narrow entrypoint that owns the capability:
 | `@kern-ui/angular/testing/*`    | Family-scoped Angular CDK component harnesses           |
 
 `@kern-ui/angular` remains a supported compatibility aggregator and preserves the same runtime
-identities as direct imports. Deep source imports and undeclared family paths such as
-`@kern-ui/angular/forms` are unsupported.
+identities as direct imports. Deep source imports and undeclared subpaths are unsupported. `/kit`
+remains supported for compatibility, but new code should import each symbol from its narrow owner.
 
 ## Lifecycle
 
@@ -137,7 +143,7 @@ import {
   provideKrnIconButtonOptions,
   provideKrnToggleButtonOptions,
   provideKrnToggleGroupOptions,
-} from '@kern-ui/angular/kit';
+} from '@kern-ui/angular/actions';
 
 @Component({
   providers: [

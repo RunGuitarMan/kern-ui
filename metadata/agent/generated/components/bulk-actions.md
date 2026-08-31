@@ -7,13 +7,13 @@
 - Lifecycle: **recipe**
 - Category: Patterns
 
-Bulk Actions. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.
+Bulk Actions. Replaces collection actions with operations that apply to the current selection.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Bulk Actions for this specific contract: Replaces collection actions with operations that apply to the current selection.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Bulk Actions for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -51,11 +51,11 @@ void bootstrapApplication(KernBulkActionsAgentExample);
 
 ## API
 
-| Name            | Kind  | Type                                       | Required | Default     | Description                                                       |
-| --------------- | ----- | ------------------------------------------ | -------- | ----------- | ----------------------------------------------------------------- |
-| `ariaLabel`     | input | `string \| undefined`                      | no       | `undefined` | Accessible name used when visible content is not sufficient.      |
-| `selectedCount` | input | `number`                                   | no       | `0`         | Number of selected records summarized by the surrounding pattern. |
-| `selectedLabel` | input | `((count: number) => string) \| undefined` | no       | `undefined` | Human-readable copy for the selected state or control.            |
+| Name            | Kind  | Type                                       | Required | Default     | Description                                                      |
+| --------------- | ----- | ------------------------------------------ | -------- | ----------- | ---------------------------------------------------------------- |
+| `ariaLabel`     | input | `string \| undefined`                      | no       | `undefined` | Accessible name used when visible content is not sufficient.     |
+| `selectedCount` | input | `number`                                   | no       | `0`         | Defines the component's selected count behavior or presentation. |
+| `selectedLabel` | input | `((count: number) => string) \| undefined` | no       | `undefined` | Human-readable copy for the selected state or control.           |
 
 ## Deprecated selectors
 
@@ -72,10 +72,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Keyboard behavior is provided by the native elements and Kern primitives in the recipe
+- The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.
+- Loading, empty, error, and success states remain visible and programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 

@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnToggleButton } from '@kern-ui/angular/kit';
+import { KrnToggleButton } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-toggle-button-agent-example',

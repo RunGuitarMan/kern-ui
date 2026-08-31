@@ -48,7 +48,7 @@ test.describe('Docs smoke contracts', () => {
       page.getByRole('heading', { level: 1, name: /One rhythm\. Any product\./ }),
     ).toBeVisible();
     await expect(page.getByRole('complementary', { name: 'Documentation' })).toContainText(
-      '132 documented entries',
+      '113 components · 14 patterns',
     );
     assertNoRuntimeErrors();
   });

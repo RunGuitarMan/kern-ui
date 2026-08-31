@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
-import { dirname, relative, resolve, sep } from 'node:path';
+import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 
@@ -22,6 +23,10 @@ const paths = {
   testingPublicApi: resolve(workspaceRoot, 'projects/kern/testing/src/public-api.ts'),
   catalog: resolve(workspaceRoot, 'projects/showcase/src/lib/catalog.ts'),
   catalogIndex: resolve(workspaceRoot, 'projects/showcase/catalog-index/src/lib/catalog-index.ts'),
+  generatedComponentContract: resolve(
+    workspaceRoot,
+    'projects/showcase/src/lib/generated-component-contract.ts',
+  ),
   playground: resolve(workspaceRoot, 'projects/showcase/specimen/src/lib/playground.ts'),
   schema: resolve(workspaceRoot, 'metadata/agent/schema/component-manifest.schema.json'),
   overrides: resolve(workspaceRoot, 'metadata/agent/curated/component-overrides.json'),
@@ -372,6 +377,9 @@ function rootExportMap(checker, program, runtimeConfig, symbols) {
     package: packageName,
     generatedFrom: runtimeConfig.rootPublicApi,
     entrypoints: runtimeConfig.entrypoints.map((entrypoint) => `${packageName}/${entrypoint.name}`),
+    compatibilityEntrypoints: (runtimeConfig.compatibilityEntrypoints ?? []).map(
+      (entrypoint) => `${packageName}/${entrypoint.name}`,
+    ),
     exports: Object.fromEntries(rootNames.map((name) => [name, ownership.get(name)])),
   };
 }
@@ -737,7 +745,18 @@ function apiForClass(checker, declaration, stack = new Set()) {
 
   const uniqueRows = new Map();
   for (const row of rows) {
-    uniqueRows.set(`${row.kind}:${row.name}`, row);
+    const key = `${row.kind}:${row.name}`;
+    const inherited = uniqueRows.get(key);
+    uniqueRows.set(
+      key,
+      inherited?.descriptionSource === 'source' && row.descriptionSource === 'inferred'
+        ? {
+            ...row,
+            description: inherited.description,
+            descriptionSource: inherited.descriptionSource,
+          }
+        : row,
+    );
   }
   return [...uniqueRows.values()];
 }
@@ -946,41 +965,75 @@ function executeCatalog(sourceText, indexSourceText, runtimeComponents) {
   }));
 }
 
-function executePlayground(sourceText, catalog) {
+function executeGeneratedComponentContract(sourceText) {
   const compiled = ts.transpileModule(sourceText, {
     compilerOptions: {
       module: ts.ModuleKind.CommonJS,
       target: ts.ScriptTarget.ES2022,
       esModuleInterop: true,
     },
-    fileName: paths.playground,
+    fileName: paths.generatedComponentContract,
   }).outputText;
   const module = { exports: {} };
-  const sandbox = {
-    module,
-    exports: module.exports,
-    require: (specifier) => {
-      if (specifier === '@kern-ui/showcase') return { KERN_CATALOG: catalog };
-      throw new Error(`Playground evaluation rejected unexpected import ${specifier}`);
-    },
-    console,
+  vm.runInNewContext(
+    compiled,
+    { module, exports: module.exports, console, Object },
+    { filename: paths.generatedComponentContract, timeout: 2_000 },
+  );
+  const runtimeComponents = module.exports.KERN_RUNTIME_COMPONENTS;
+  if (!runtimeComponents || typeof runtimeComponents !== 'object') {
+    throw new Error('Generated component contract did not export KERN_RUNTIME_COMPONENTS.');
+  }
+  return runtimeComponents;
+}
+
+function executePlayground(sourceText, catalog) {
+  const modules = new Map();
+  const load = (fileName, source = readFileSync(fileName, 'utf8')) => {
+    if (modules.has(fileName)) return modules.get(fileName).exports;
+    const module = { exports: {} };
+    modules.set(fileName, module);
+    const compiled = ts.transpileModule(source, {
+      compilerOptions: {
+        module: ts.ModuleKind.CommonJS,
+        target: ts.ScriptTarget.ES2022,
+        esModuleInterop: true,
+      },
+      fileName,
+    }).outputText;
+    const sandbox = {
+      module,
+      exports: module.exports,
+      require: (specifier) => {
+        if (specifier === '@kern-ui/showcase') return { KERN_CATALOG: catalog };
+        if (specifier.startsWith('.')) {
+          const unresolved = resolve(dirname(fileName), specifier);
+          const candidates = [`${unresolved}.ts`, join(unresolved, 'index.ts'), unresolved];
+          const resolved = candidates.find(
+            (candidate) => existsSync(candidate) && statSync(candidate).isFile(),
+          );
+          if (resolved) return load(resolved);
+        }
+        throw new Error(`Playground evaluation rejected unexpected import ${specifier}`);
+      },
+      console,
+    };
+    vm.runInNewContext(compiled, sandbox, { filename: fileName, timeout: 2_000 });
+    return module.exports;
   };
-  vm.runInNewContext(compiled, sandbox, {
-    filename: paths.playground,
-    timeout: 2_000,
-  });
-  const definitions = module.exports.KERN_PLAYGROUND_DEFINITIONS;
+  const playground = load(paths.playground, sourceText);
+  const definitions = playground.KERN_PLAYGROUND_DEFINITIONS;
   if (!Array.isArray(definitions)) {
     throw new Error('Playground evaluation did not export KERN_PLAYGROUND_DEFINITIONS.');
   }
-  const normalizeStateId = module.exports.normalizeKernPlaygroundStateId;
+  const normalizeStateId = playground.normalizeKernPlaygroundStateId;
   if (typeof normalizeStateId !== 'function') {
     throw new Error('Playground evaluation did not export normalizeKernPlaygroundStateId.');
   }
   return {
     definitions: JSON.parse(JSON.stringify(definitions)),
-    exclusions: JSON.parse(JSON.stringify(module.exports.KERN_PLAYGROUND_API_EXCLUSIONS ?? [])),
-    coverage: JSON.parse(JSON.stringify(module.exports.KERN_PLAYGROUND_API_COVERAGE ?? {})),
+    exclusions: JSON.parse(JSON.stringify(playground.KERN_PLAYGROUND_API_EXCLUSIONS ?? [])),
+    coverage: JSON.parse(JSON.stringify(playground.KERN_PLAYGROUND_API_COVERAGE ?? {})),
     normalizeStateId,
   };
 }
@@ -1255,6 +1308,19 @@ function publicComponentContract({
   playground,
 }) {
   const symbol = catalogSymbolName(item, symbolRecord);
+  const catalogApiByMember = new Map(
+    item.api.map((member) => [`${member.kind}:${member.name}`, member]),
+  );
+  const api = decorated.api.map((member) => {
+    const catalogMember = catalogApiByMember.get(`${member.kind}:${member.name}`);
+    return catalogMember?.description
+      ? {
+          ...member,
+          description: catalogMember.description,
+          descriptionSource: catalogMember.descriptionSource ?? member.descriptionSource,
+        }
+      : member;
+  });
   const aliasSymbols = unique(
     symbolRecord._exportNames.filter((candidate) => candidate !== symbol),
   ).sort(compareStrings);
@@ -1292,7 +1358,7 @@ function publicComponentContract({
     summary: item.summary,
     acceptanceStates: item.states,
     lifecycle: lifecycle(item.status, item, override, lifecycleRecord),
-    api: decorated.api,
+    api,
     slots: slotsContract(decorated.slots, override, item.id),
     forms: formsContract(decorated),
     a11y: {
@@ -1767,6 +1833,7 @@ async function main() {
     runtimeConfig,
     catalogSource,
     catalogIndexSource,
+    generatedComponentContractSource,
     playgroundSource,
     schema,
     baseOverrides,
@@ -1781,6 +1848,7 @@ async function main() {
     readJson(paths.runtimeEntrypoints),
     readFile(paths.catalog, 'utf8'),
     readFile(paths.catalogIndex, 'utf8'),
+    readFile(paths.generatedComponentContract, 'utf8'),
     readFile(paths.playground, 'utf8'),
     readJson(paths.schema),
     readJson(paths.overrides),
@@ -1840,17 +1908,7 @@ async function main() {
     });
     selectorDeprecationsByComponent.set(implementation.symbol, records);
   }
-  const runtimeComponents = Object.fromEntries(
-    [...bySelector].map(([selector, component]) => [
-      selector,
-      {
-        className: component.className,
-        kind: component.kind,
-        source: component.source,
-        api: component.api,
-      },
-    ]),
-  );
+  const runtimeComponents = executeGeneratedComponentContract(generatedComponentContractSource);
   const catalog = executeCatalog(catalogSource, catalogIndexSource, runtimeComponents);
   const {
     definitions: playgroundDefinitions,
@@ -2128,6 +2186,9 @@ async function main() {
       },
       playground: playgroundQueryContract(),
       entrypoints: entrypoints.map((entrypoint) => entrypoint.importPath),
+      compatibilityEntrypoints: (runtimeConfig.compatibilityEntrypoints ?? []).map(
+        (entrypoint) => `${packageName}/${entrypoint.name}`,
+      ),
       sourceDigest: sourceDigest([
         catalogSource,
         catalogIndexSource,

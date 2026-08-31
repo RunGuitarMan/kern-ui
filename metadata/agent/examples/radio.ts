@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnRadio } from '@kern-ui/angular/kit';
+import { KrnRadio } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-radio-agent-example',

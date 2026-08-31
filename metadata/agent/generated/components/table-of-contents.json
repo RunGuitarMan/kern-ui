@@ -9,14 +9,14 @@
   "symbol": "KrnTableOfContents",
   "canonicalSymbol": "KrnTableOfContents",
   "canonicalId": "table-of-contents",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Table of Contents. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Table of Contents. Lists page headings and tracks the section currently active in the reading viewport.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -68,7 +68,7 @@
       "type": "string | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Stable id of the item currently participating in roving focus.",
+      "description": "Controlled active id state with a matching Angular model-change output.",
       "descriptionSource": "inferred"
     },
     {
@@ -78,7 +78,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "true",
-      "description": "Enables automatic observation of headings used by the table of contents.",
+      "description": "Defines the component's observe behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -124,11 +124,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "keyboard": ["Tab visits heading links in document order; Enter follows the focused link"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Destinations retain native link semantics and expose current location where applicable.",
+      "Composite navigation uses one documented focus model without changing reading order."
     ],
     "manualValidationRequired": true
   },
@@ -147,7 +146,7 @@
       "title": "Controlled document contents",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled document contents\n *\n * Track the active heading against stable document ids.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTableOfContents, type KrnTocItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-table-of-contents-agent-example',\n  standalone: true,\n  imports: [KrnTableOfContents],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-table-of-contents\n      title=\"Onboarding guide\"\n      [items]=\"items\"\n      [observe]=\"false\"\n      [(activeId)]=\"activeId\"\n    />\n  `,\n})\nexport class KernTableOfContentsAgentExample {\n  readonly items: readonly KrnTocItem[] = [\n    { id: 'company', label: 'Company', level: 2 },\n    { id: 'owners', label: 'Owners', level: 2 },\n    { id: 'permissions', label: 'Permissions', level: 3 },\n  ];\n\n  activeId: string | null = 'company';\n}\n\nvoid bootstrapApplication(KernTableOfContentsAgentExample);\n",
+      "code": "/**\n * Controlled document contents\n *\n * Track the active heading against stable document ids.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTableOfContents, type KrnTocItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-table-of-contents-agent-example',\n  standalone: true,\n  imports: [KrnTableOfContents],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-table-of-contents\n      title=\"Onboarding guide\"\n      [items]=\"items\"\n      [observe]=\"false\"\n      [(activeId)]=\"activeId\"\n    />\n  `,\n})\nexport class KernTableOfContentsAgentExample {\n  readonly items: readonly KrnTocItem[] = [\n    { id: 'company', label: 'Company', level: 2 },\n    { id: 'owners', label: 'Owners', level: 2 },\n    { id: 'permissions', label: 'Permissions', level: 3 },\n  ];\n\n  activeId: string | null = 'company';\n}\n\nvoid bootstrapApplication(KernTableOfContentsAgentExample);\n",
       "verification": "compiled",
       "source": "examples/table-of-contents.ts"
     }
@@ -167,8 +166,8 @@
     "itemActivated"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Table of Contents for this specific contract: Lists page headings and tracks the section currently active in the reading viewport.",
+    "avoidWhen": "Do not choose Table of Contents for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -224,7 +223,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component observe contract.",
+        "description": "Defines the component's observe behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "observe",
@@ -237,7 +236,7 @@
         "kind": "text",
         "defaultValue": "On this page",
         "testValue": "On this page · alternate",
-        "description": "Configures the component title contract.",
+        "description": "Visible title that also names the component surface or data view.",
         "binding": {
           "kind": "input",
           "publicName": "title",

@@ -7,13 +7,13 @@
 - Lifecycle: **recipe**
 - Category: Patterns
 
-Page Header. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.
+Page Header. Composes page context, heading, description, index, and actions into one heading region.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Page Header for this specific contract: Composes page context, heading, description, index, and actions into one heading region.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Page Header for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -52,12 +52,12 @@ void bootstrapApplication(KernPageHeaderAgentExample);
 
 ## API
 
-| Name          | Kind  | Type     | Required | Default    | Description                                                            |
-| ------------- | ----- | -------- | -------- | ---------- | ---------------------------------------------------------------------- |
-| `index`       | input | `string` | no       | `'01'`     | Zero-based position of the represented item in its ordered collection. |
-| `eyebrow`     | input | `string` | no       | `''`       | Human-readable copy for the eyebrow state or control.                  |
-| `heading`     | input | `string` | yes      | `required` | Human-readable copy for the heading state or control.                  |
-| `description` | input | `string` | no       | `''`       | Visible supporting description for the component content.              |
+| Name          | Kind  | Type     | Required | Default    | Description                                               |
+| ------------- | ----- | -------- | -------- | ---------- | --------------------------------------------------------- |
+| `index`       | input | `string` | no       | `'01'`     | Defines the component's index behavior or presentation.   |
+| `eyebrow`     | input | `string` | no       | `''`       | Human-readable copy for the eyebrow state or control.     |
+| `heading`     | input | `string` | yes      | `required` | Human-readable copy for the heading state or control.     |
+| `description` | input | `string` | no       | `''`       | Visible supporting description for the component content. |
 
 ## Deprecated selectors
 
@@ -74,10 +74,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Keyboard behavior is provided by the native elements and Kern primitives in the recipe
+- The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.
+- Loading, empty, error, and success states remain visible and programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -117,12 +116,12 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default                                                         | Test value                                                                  | Binding                        | Description                                    |
-| ------------- | ------- | --------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------ | ---------------------------------------------- |
-| `heading`     | text    | `"Automation health"`                                           | `"Automation health · alternate"`                                           | input `heading` (property)     | Changes the page heading.                      |
-| `description` | text    | `"Monitor runs, failures, and throughput across environments."` | `"Monitor runs, failures, and throughput across environments. · alternate"` | input `description` (property) | Configures the component description contract. |
-| `eyebrow`     | text    | `"Workspace / Northstar"`                                       | `"Workspace / Northstar · alternate"`                                       | input `eyebrow` (property)     | Configures the component eyebrow contract.     |
-| `index`       | text    | `"07"`                                                          | `"07 · alternate"`                                                          | input `index` (property)       | Configures the component index contract.       |
+| Argument      | Control | Default                                                         | Test value                                                                  | Binding                        | Description                                               |
+| ------------- | ------- | --------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------ | --------------------------------------------------------- |
+| `heading`     | text    | `"Automation health"`                                           | `"Automation health · alternate"`                                           | input `heading` (property)     | Changes the page heading.                                 |
+| `description` | text    | `"Monitor runs, failures, and throughput across environments."` | `"Monitor runs, failures, and throughput across environments. · alternate"` | input `description` (property) | Visible supporting description for the component content. |
+| `eyebrow`     | text    | `"Workspace / Northstar"`                                       | `"Workspace / Northstar · alternate"`                                       | input `eyebrow` (property)     | Human-readable copy for the eyebrow state or control.     |
+| `index`       | text    | `"07"`                                                          | `"07 · alternate"`                                                          | input `index` (property)       | Defines the component's index behavior or presentation.   |
 
 Exact API exclusions:
 

@@ -1,4 +1,13 @@
 import type { Routes } from '@angular/router';
+import { KERN_CATALOG_ALIASES } from '@kern-ui/showcase/catalog-index';
+
+export const componentAliasRoutes: Routes = Object.entries(KERN_CATALOG_ALIASES).map(
+  ([alias, canonical]) => ({
+    path: `components/${alias}`,
+    redirectTo: `/components/${canonical}`,
+    pathMatch: 'full',
+  }),
+);
 
 export const routes: Routes = [
   {
@@ -11,6 +20,7 @@ export const routes: Routes = [
     title: 'Foundations · Kern',
     loadComponent: () => import('./pages/foundations').then((module) => module.FoundationsPage),
   },
+  ...componentAliasRoutes,
   {
     path: 'components/:id',
     loadComponent: () => import('./pages/component-page').then((module) => module.ComponentPage),

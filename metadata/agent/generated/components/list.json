@@ -9,14 +9,14 @@
   "symbol": "KrnList",
   "canonicalSymbol": "KrnList",
   "canonicalId": "list",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "List. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "List. Provides semantic structure and spacing for a related sequence of items.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -53,7 +53,7 @@
       "type": "\"list\" | \"listbox\"",
       "required": false,
       "defaultValue": "'list'",
-      "description": "ARIA role used when the consumer must refine the component’s semantic purpose.",
+      "description": "Defines the component's role behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -86,11 +86,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -109,7 +108,7 @@
       "title": "Selected customer list",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Selected customer list\n *\n * Compose semantic list items and expose current selection.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnList, KrnListItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-list-agent-example',\n  standalone: true,\n  imports: [KrnList, KrnListItem],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-list role=\"listbox\" ariaLabel=\"Customers\">\n      <krn-list-item heading=\"Acme Europe\" [selected]=\"true\"> Enterprise · Healthy </krn-list-item>\n      <krn-list-item heading=\"Globex\">Commercial · Review needed</krn-list-item>\n    </krn-list>\n  `,\n})\nexport class KernListAgentExample {}\n\nvoid bootstrapApplication(KernListAgentExample);\n",
+      "code": "/**\n * Selected customer list\n *\n * Compose semantic list items and expose current selection.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnList, KrnListItem } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-list-agent-example',\n  standalone: true,\n  imports: [KrnList, KrnListItem],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-list role=\"listbox\" ariaLabel=\"Customers\">\n      <krn-list-item heading=\"Acme Europe\" [selected]=\"true\"> Enterprise · Healthy </krn-list-item>\n      <krn-list-item heading=\"Globex\">Commercial · Review needed</krn-list-item>\n    </krn-list>\n  `,\n})\nexport class KernListAgentExample {}\n\nvoid bootstrapApplication(KernListAgentExample);\n",
       "verification": "compiled",
       "source": "examples/list.ts"
     }
@@ -117,8 +116,8 @@
   "related": ["badge", "status-badge", "chip", "tag"],
   "keywords": ["list", "List", "Data display", "krn-list", "KrnList", "role", "ariaLabel"],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use List for this specific contract: Provides semantic structure and spacing for a related sequence of items.",
+    "avoidWhen": "Do not choose List for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

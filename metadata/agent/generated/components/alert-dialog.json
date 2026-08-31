@@ -9,14 +9,14 @@
   "symbol": "KrnAlertDialog",
   "canonicalSymbol": "KrnAlertDialog",
   "canonicalId": "alert-dialog",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Alert Dialog. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Alert Dialog. Requests a decision before a consequential action and keeps focus within the modal surface.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -187,7 +187,7 @@
       "type": "TemplateRef<unknown> | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Template used to render the component body with its typed context.",
+      "description": "Template or projected content used to render content.",
       "descriptionSource": "inferred"
     },
     {
@@ -197,7 +197,7 @@
       "type": "TemplateRef<unknown> | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Template used to render product-owned actions in the designated slot.",
+      "description": "Template or projected content used to render actions.",
       "descriptionSource": "inferred"
     },
     {
@@ -246,11 +246,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
+    "keyboard": ["Tab stays within the alert dialog; Escape closes only when explicitly allowed"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The surface exposes alertdialog semantics with a visible decision and consequence.",
+      "Initial focus, modal containment, and restoration follow the destructive decision flow."
     ],
     "manualValidationRequired": true
   },
@@ -269,7 +268,7 @@
       "title": "Controlled destructive confirmation",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled destructive confirmation\n *\n * Require an explicit decision for a destructive action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAlertDialog } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-alert-dialog-agent-example',\n  standalone: true,\n  imports: [KrnAlertDialog],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button type=\"button\" (click)=\"open = true\">Open Archive customer</button>\n    <krn-alert-dialog\n      [(open)]=\"open\"\n      title=\"Archive customer\"\n      description=\"Archived customers are removed from active reporting.\"\n      [closeOnOutside]=\"false\"\n    >\n      <p>Archived customers are removed from active reporting.</p>\n      <button krnDialogAction type=\"button\" (click)=\"open = false\">Done</button>\n    </krn-alert-dialog>\n  `,\n})\nexport class KernAlertDialogAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernAlertDialogAgentExample);\n",
+      "code": "/**\n * Controlled destructive confirmation\n *\n * Require an explicit decision for a destructive action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAlertDialog } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-alert-dialog-agent-example',\n  standalone: true,\n  imports: [KrnAlertDialog],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button type=\"button\" (click)=\"open = true\">Open Archive customer</button>\n    <krn-alert-dialog\n      [(open)]=\"open\"\n      title=\"Archive customer\"\n      description=\"Archived customers are removed from active reporting.\"\n      [closeOnOutside]=\"false\"\n    >\n      <p>Archived customers are removed from active reporting.</p>\n      <button krnDialogAction type=\"button\" (click)=\"open = false\">Done</button>\n    </krn-alert-dialog>\n  `,\n})\nexport class KernAlertDialogAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernAlertDialogAgentExample);\n",
       "verification": "compiled",
       "source": "examples/alert-dialog.ts"
     }
@@ -302,8 +301,8 @@
     "afterExited"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Alert Dialog for this specific contract: Requests a decision before a consequential action and keeps focus within the modal surface.",
+    "avoidWhen": "Do not choose Alert Dialog for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -373,7 +372,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component closeOnEscape contract.",
+        "description": "Allows Escape to dismiss the topmost owned overlay.",
         "binding": {
           "kind": "input",
           "publicName": "closeOnEscape",
@@ -386,7 +385,7 @@
         "kind": "text",
         "defaultValue": "This action cannot be undone.",
         "testValue": "This action cannot be undone. · alternate",
-        "description": "Configures the component description contract.",
+        "description": "Visible supporting description for the component content.",
         "binding": {
           "kind": "input",
           "publicName": "description",
@@ -399,7 +398,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component eyebrow contract.",
+        "description": "Human-readable copy for the eyebrow state or control.",
         "binding": {
           "kind": "input",
           "publicName": "eyebrow",
@@ -412,7 +411,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component modal contract.",
+        "description": "Blocks background interaction and traps focus while the alert dialog is open.",
         "binding": {
           "kind": "input",
           "publicName": "modal",
@@ -425,7 +424,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component showClose contract.",
+        "description": "Controls whether the component applies the show close behavior.",
         "binding": {
           "kind": "input",
           "publicName": "showClose",
@@ -438,7 +437,7 @@
         "kind": "text",
         "defaultValue": "Delete Northstar?",
         "testValue": "Delete Northstar? · alternate",
-        "description": "Configures the component title contract.",
+        "description": "Visible title that also names the component surface or data view.",
         "binding": {
           "kind": "input",
           "publicName": "title",

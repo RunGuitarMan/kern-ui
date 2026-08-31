@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 1,
+  "libraryVersion": "0.1.2",
+  "generatedBy": "tools/verify-kern-consumers.mjs --write-measurements",
+  "styleBudget": {
+    "maximumCssBytes": 105000,
+    "maximumCssGzipBytes": 18000
+  },
+  "cases": [
+    {
+      "name": "button",
+      "bytes": 106644,
+      "gzipBytes": 35630,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 161000,
+      "maximumGzipBytes": 52000
+    },
+    {
+      "name": "text-input",
+      "bytes": 149798,
+      "gzipBytes": 47723,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 151000,
+      "maximumGzipBytes": 48500
+    },
+    {
+      "name": "form",
+      "bytes": 171702,
+      "gzipBytes": 53561,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 174000,
+      "maximumGzipBytes": 54500
+    },
+    {
+      "name": "select",
+      "bytes": 267292,
+      "gzipBytes": 77306,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 268000,
+      "maximumGzipBytes": 78000
+    },
+    {
+      "name": "grid",
+      "bytes": 304981,
+      "gzipBytes": 85207,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 310000,
+      "maximumGzipBytes": 87000
+    },
+    {
+      "name": "charts",
+      "bytes": 205123,
+      "gzipBytes": 60108,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 206000,
+      "maximumGzipBytes": 61000
+    },
+    {
+      "name": "button-kit",
+      "bytes": 106644,
+      "gzipBytes": 35630,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 161000,
+      "maximumGzipBytes": 52000
+    },
+    {
+      "name": "button-i18n",
+      "bytes": 108661,
+      "gzipBytes": 36342,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 161000,
+      "maximumGzipBytes": 52000
+    },
+    {
+      "name": "icon-button-i18n",
+      "bytes": 108541,
+      "gzipBytes": 36291,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 161000,
+      "maximumGzipBytes": 52000
+    },
+    {
+      "name": "floating-action-button",
+      "bytes": 108779,
+      "gzipBytes": 36390,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 161000,
+      "maximumGzipBytes": 52000
+    },
+    {
+      "name": "toggle-button",
+      "bytes": 113425,
+      "gzipBytes": 37898,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 163000,
+      "maximumGzipBytes": 53000
+    },
+    {
+      "name": "toggle-group",
+      "bytes": 118175,
+      "gzipBytes": 39357,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 168000,
+      "maximumGzipBytes": 54000
+    },
+    {
+      "name": "link",
+      "bytes": 95475,
+      "gzipBytes": 31717,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 160000,
+      "maximumGzipBytes": 51500
+    },
+    {
+      "name": "button-group",
+      "bytes": 109112,
+      "gzipBytes": 35999,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 164000,
+      "maximumGzipBytes": 52000
+    },
+    {
+      "name": "copy-button",
+      "bytes": 120861,
+      "gzipBytes": 40177,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 168000,
+      "maximumGzipBytes": 53500
+    },
+    {
+      "name": "dropdown-button",
+      "bytes": 227478,
+      "gzipBytes": 68691,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 250000,
+      "maximumGzipBytes": 75000
+    },
+    {
+      "name": "split-button",
+      "bytes": 228530,
+      "gzipBytes": 68935,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 250000,
+      "maximumGzipBytes": 75000
+    },
+    {
+      "name": "form-kit",
+      "bytes": 171702,
+      "gzipBytes": 53561,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 174000,
+      "maximumGzipBytes": 54500
+    },
+    {
+      "name": "select-kit",
+      "bytes": 267292,
+      "gzipBytes": 77308,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 268000,
+      "maximumGzipBytes": 78000
+    },
+    {
+      "name": "grid-addon",
+      "bytes": 304981,
+      "gzipBytes": 85179,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 310000,
+      "maximumGzipBytes": 87000
+    },
+    {
+      "name": "charts-addon",
+      "bytes": 205123,
+      "gzipBytes": 60108,
+      "files": 1,
+      "cssBytes": 98276,
+      "cssGzipBytes": 14806,
+      "cssFiles": 1,
+      "maximumJsBytes": 206000,
+      "maximumGzipBytes": 61000
+    }
+  ]
+}

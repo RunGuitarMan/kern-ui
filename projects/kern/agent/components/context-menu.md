@@ -2,18 +2,18 @@
 
 - ID: `context-menu`
 - Selector: `krn-context-menu`
-- Import: `import { KrnContextMenu } from '@kern-ui/angular/kit';`
+- Import: `import { KrnContextMenu } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnContextMenu`
 - Lifecycle: **stable**
 - Category: Navigation
 
-Context Menu. A keyboard-first wayfinding primitive that preserves orientation and current location.
+Context Menu. Opens commands for a specific target at the pointer or keyboard invocation point.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Context Menu for this specific contract: Opens commands for a specific target at the pointer or keyboard invocation point.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Context Menu for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnContextMenu, type KrnContextMenuItem } from '@kern-ui/angular/kit';
+import { KrnContextMenu, type KrnContextMenuItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-context-menu-agent-example',
@@ -79,12 +79,10 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys move within composites
-- Home / End jump
-- Enter activates
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Shift+F10 or the Context Menu key opens commands for the focused target
+- Arrow keys move through commands; Escape closes and restores target focus
+- Destinations retain native link semantics and expose current location where applicable.
+- Composite navigation uses one documented focus model without changing reading order.
 
 Manual assistive-technology validation remains required in the consuming application.
 

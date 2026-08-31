@@ -2,18 +2,18 @@
 
 - ID: `status-badge`
 - Selector: `krn-status-badge`
-- Import: `import { KrnStatusBadge } from '@kern-ui/angular/kit';`
+- Import: `import { KrnStatusBadge } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnBadge`
 - Lifecycle: **stable**
 - Category: Data display
 
-Status Badge. A dense, readable data primitive with semantic structure and resilient overflow.
+Status Badge. Displays a named domain status with coordinated text and non-color-only styling.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Status Badge for this specific contract: Displays a named domain status with coordinated text and non-color-only styling.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Status Badge for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnStatusBadge } from '@kern-ui/angular/kit';
+import { KrnStatusBadge } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-status-badge-agent-example',
@@ -65,11 +65,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys navigate interactive data
-- Enter expands or selects
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Visible labels and semantic structure preserve the meaning and relationships in the data.
+- Interactive descendants retain native names and a predictable focus order.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -104,10 +102,10 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument | Control | Default     | Test value  | Binding                   | Description                               |
-| -------- | ------- | ----------- | ----------- | ------------------------- | ----------------------------------------- |
-| `tone`   | select  | `"success"` | `"neutral"` | input `tone` (property)   | Changes the semantic status color.        |
-| `status` | boolean | `true`      | `false`     | input `status` (property) | Configures the component status contract. |
+| Argument | Control | Default     | Test value  | Binding                   | Description                                                                |
+| -------- | ------- | ----------- | ----------- | ------------------------- | -------------------------------------------------------------------------- |
+| `tone`   | select  | `"success"` | `"neutral"` | input `tone` (property)   | Changes the semantic status color.                                         |
+| `status` | boolean | `true`      | `false`     | input `status` (property) | Uses the shared, subtle status recipe and renders a semantic color marker. |
 
 Exact API exclusions:
 

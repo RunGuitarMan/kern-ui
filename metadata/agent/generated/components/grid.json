@@ -9,14 +9,14 @@
   "symbol": "KrnGrid",
   "canonicalSymbol": "KrnGrid",
   "canonicalId": "grid",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Grid. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Grid. Creates fixed or auto-fitting columns and collapses them responsively in narrow containers.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -116,11 +116,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Projected content retains its document order and native semantics as layout changes.",
+      "Logical sizing and placement work in both LTR and RTL without duplicating content."
     ],
     "manualValidationRequired": true
   },
@@ -139,7 +138,7 @@
       "title": "Responsive summary grid",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Responsive summary grid\n *\n * Lay out metric cards with a minimum usable column width.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnGrid } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-grid-agent-example',\n  standalone: true,\n  imports: [KrnGrid],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-grid columns=\"auto\" minColumnWidth=\"14rem\" gap=\"4\">\n      <article>Revenue: €1.8M</article>\n      <article>Renewals: 42</article>\n      <article>Risk accounts: 3</article>\n    </krn-grid>\n  `,\n})\nexport class KernGridAgentExample {}\n\nvoid bootstrapApplication(KernGridAgentExample);\n",
+      "code": "/**\n * Responsive summary grid\n *\n * Lay out metric cards with a minimum usable column width.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnGrid } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-grid-agent-example',\n  standalone: true,\n  imports: [KrnGrid],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-grid columns=\"auto\" minColumnWidth=\"14rem\" gap=\"4\">\n      <article>Revenue: €1.8M</article>\n      <article>Renewals: 42</article>\n      <article>Risk accounts: 3</article>\n    </krn-grid>\n  `,\n})\nexport class KernGridAgentExample {}\n\nvoid bootstrapApplication(KernGridAgentExample);\n",
       "verification": "compiled",
       "source": "examples/grid.ts"
     }
@@ -158,8 +157,8 @@
     "responsive"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Grid for this specific contract: Creates fixed or auto-fitting columns and collapses them responsively in narrow containers.",
+    "avoidWhen": "Do not choose Grid for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -250,7 +249,7 @@
         "kind": "select",
         "defaultValue": "stretch",
         "testValue": "start",
-        "description": "Configures the component align contract.",
+        "description": "Block-axis alignment of items within their grid areas.",
         "binding": {
           "kind": "input",
           "publicName": "align",
@@ -285,7 +284,7 @@
         "kind": "text",
         "defaultValue": "16rem",
         "testValue": "20rem",
-        "description": "Configures the component minColumnWidth contract.",
+        "description": "Minimum fluid column width used when columns is `auto`.",
         "binding": {
           "kind": "input",
           "publicName": "minColumnWidth",

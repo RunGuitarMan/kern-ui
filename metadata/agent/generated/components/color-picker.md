@@ -2,12 +2,12 @@
 
 - ID: `color-picker`
 - Selector: `krn-color-picker`
-- Import: `import { KrnColorPicker } from '@kern-ui/angular/kit';`
+- Import: `import { KrnColorPicker } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnColorPicker`
 - Lifecycle: **beta**
 - Category: Forms
 
-Color Picker. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Color Picker. Selects one color through an accessible palette and controlled value.
 
 ## Use
 
@@ -28,7 +28,7 @@ Avoid: Use a fixed Select or Radio Group when the product accepts only a small s
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnColorPicker } from '@kern-ui/angular/kit';
+import { KrnColorPicker } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-color-picker-agent-example',
@@ -50,7 +50,7 @@ void bootstrapApplication(KernColorPickerAgentExample);
 
 | Name              | Kind   | Type                                  | Required | Default     | Description                                                                                      |
 | ----------------- | ------ | ------------------------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`                              | no       | `''`        | Stable identifier value used by the id contract.                                                 |
+| `id`              | input  | `string`                              | no       | `''`        | Stable identifier used by the id contract.                                                       |
 | `labels`          | input  | `Partial<KrnColorPickerTranslations>` | no       | `{}`        | Localized copy overrides for the component-owned interface text.                                 |
 | `pickerLabel`     | input  | `string \| undefined`                 | no       | `undefined` | Human-readable copy for the picker state or control.                                             |
 | `textLabel`       | input  | `string \| undefined`                 | no       | `undefined` | Human-readable copy for the text state or control.                                               |
@@ -130,15 +130,15 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument   | Control | Default | Test value          | Binding                     | Description                                                               |
-| ---------- | ------- | ------- | ------------------- | --------------------------- | ------------------------------------------------------------------------- |
-| `invalid`  | boolean | `false` | `true`              | input `invalid` (property)  | Exposes the invalid visual and ARIA state.                                |
-| `disabled` | boolean | `false` | `true`              | input `disabled` (property) | Prevents interaction and participates in the component disabled contract. |
-| `id`       | text    | `""`    | `"Alternate value"` | input `id` (property)       | Configures the component id contract.                                     |
-| `open`     | boolean | `false` | `true`              | model `open`                | Controlled disclosure or overlay state.                                   |
-| `readonly` | boolean | `false` | `true`              | input `readonly` (property) | Configures the component readonly contract.                               |
-| `tabindex` | number  | `0`     | `1`                 | input `tabindex` (property) | Configures the component tabindex contract.                               |
-| `value`    | text    | `""`    | `"Alternate value"` | input `value` (property)    | Controlled component value.                                               |
+| Argument   | Control | Default | Test value          | Binding                     | Description                                                                |
+| ---------- | ------- | ------- | ------------------- | --------------------------- | -------------------------------------------------------------------------- |
+| `invalid`  | boolean | `false` | `true`              | input `invalid` (property)  | Exposes the invalid visual and ARIA state.                                 |
+| `disabled` | boolean | `false` | `true`              | input `disabled` (property) | Prevents user interaction and participates in the disabled-state contract. |
+| `id`       | text    | `""`    | `"Alternate value"` | input `id` (property)       | Stable identifier used by the id contract.                                 |
+| `open`     | boolean | `false` | `true`              | model `open`                | Controls whether the disclosure or overlay surface is visible.             |
+| `readonly` | boolean | `false` | `true`              | input `readonly` (property) | Keeps the value perceivable while preventing user edits.                   |
+| `tabindex` | number  | `0`     | `1`                 | input `tabindex` (property) | Native sequential-focus order forwarded to the owned interactive element.  |
+| `value`    | text    | `""`    | `"Alternate value"` | input `value` (property)    | Controlled component value.                                                |
 
 Exact API exclusions:
 
@@ -164,7 +164,7 @@ Presets:
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
-- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `filled` — filled; scenario `default`; `value="#4666da"`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — readonly; scenario `default`; fixture effect `status/neutral` — readonly: The fixture exposes the readonly status without claiming a public component input..
 - `invalid` — Invalid; scenario `default`; `invalid=true`.

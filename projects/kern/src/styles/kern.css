@@ -1,10 +1,5 @@
 @import '@angular/cdk/overlay-prebuilt.css';
-@import './tokens.css';
-@import './themes.css';
-@import './density.css';
-@import './preferences.css';
-@import './base.css';
-@import './utilities.css';
+@import './foundation.css';
 @import './components/actions.css';
 @import './components/forms.css';
 @import './components/projection.css';

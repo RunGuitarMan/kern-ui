@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { KrnDataGrid, type KrnDataColumn, type KrnDataRowKey } from '@kern-ui/angular/addon-grid';
-import { KrnFormField, KrnLabel, KrnTextInput } from '@kern-ui/angular/kit';
+import { KrnFormField, KrnLabel, KrnTextInput } from '@kern-ui/angular/forms';
 import { KrnCrudToolbar, KrnMasterDetailLayout } from '@kern-ui/angular/patterns';
 
 interface Customer {

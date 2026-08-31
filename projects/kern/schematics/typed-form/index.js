@@ -6,7 +6,8 @@ function typescript(context) {
   const valueName = `${context.className}FormValue`;
   return `import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { KrnButton, KrnFormField, KrnTextInput } from '@kern-ui/angular/kit';
+import { KrnButton } from '@kern-ui/angular/actions';
+import { KrnFormField, KrnTextInput } from '@kern-ui/angular/forms';
 
 export interface ${valueName} {
   readonly name: string;

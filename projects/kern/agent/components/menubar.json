@@ -9,14 +9,14 @@
   "symbol": "KrnMenubar",
   "canonicalSymbol": "KrnMenubar",
   "canonicalId": "menubar",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Menubar. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Menubar. Provides persistent top-level commands with roving focus and nested menu navigation.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -94,11 +94,13 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "keyboard": [
+      "Arrow keys move across top-level items and through open submenus",
+      "Enter or Space opens or activates; Escape closes the active submenu"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Destinations retain native link semantics and expose current location where applicable.",
+      "Composite navigation uses one documented focus model without changing reading order."
     ],
     "manualValidationRequired": true
   },
@@ -117,7 +119,7 @@
       "title": "Typed application menubar",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed application menubar\n *\n * Expose a compact keyboard-oriented application menu.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMenubar, type KrnNavigationItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-menubar-agent-example',\n  standalone: true,\n  imports: [KrnMenubar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-menubar ariaLabel=\"Application menu\" [items]=\"items\" /> `,\n})\nexport class KernMenubarAgentExample {\n  readonly items: readonly KrnNavigationItem[] = [\n    { id: 'customers', label: 'Customers', href: '/customers' },\n    { id: 'reports', label: 'Reports', href: '/reports' },\n  ];\n}\n\nvoid bootstrapApplication(KernMenubarAgentExample);\n",
+      "code": "/**\n * Typed application menubar\n *\n * Expose a compact keyboard-oriented application menu.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMenubar, type KrnNavigationItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-menubar-agent-example',\n  standalone: true,\n  imports: [KrnMenubar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-menubar ariaLabel=\"Application menu\" [items]=\"items\" /> `,\n})\nexport class KernMenubarAgentExample {\n  readonly items: readonly KrnNavigationItem[] = [\n    { id: 'customers', label: 'Customers', href: '/customers' },\n    { id: 'reports', label: 'Reports', href: '/reports' },\n  ];\n}\n\nvoid bootstrapApplication(KernMenubarAgentExample);\n",
       "verification": "compiled",
       "source": "examples/menubar.ts"
     }
@@ -134,8 +136,8 @@
     "itemSelected"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Menubar for this specific contract: Provides persistent top-level commands with roving focus and nested menu navigation.",
+    "avoidWhen": "Do not choose Menubar for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

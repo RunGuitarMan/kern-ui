@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnConfirmationPattern } from '@kern-ui/angular/kit';
+import { KrnConfirmationPattern } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-confirmation-pattern-agent-example',

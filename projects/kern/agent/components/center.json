@@ -9,14 +9,14 @@
   "symbol": "KrnCenter",
   "canonicalSymbol": "KrnCenter",
   "canonicalId": "center",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Center. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Center. Centers child content inside a width-constrained surface. For new work, use Container with intrinsic centering.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -96,11 +96,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Projected content retains its document order and native semantics as layout changes.",
+      "Logical sizing and placement work in both LTR and RTL without duplicating content."
     ],
     "manualValidationRequired": true
   },
@@ -119,7 +118,7 @@
       "title": "Centered empty-state copy",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Centered empty-state copy\n *\n * Constrain and center a short content block.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCenter } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-center-agent-example',\n  standalone: true,\n  imports: [KrnCenter],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-center maxWidth=\"32rem\" [intrinsic]=\"true\">\n      <h2>No incidents</h2>\n      <p>All monitored services are currently healthy.</p>\n    </krn-center>\n  `,\n})\nexport class KernCenterAgentExample {}\n\nvoid bootstrapApplication(KernCenterAgentExample);\n",
+      "code": "/**\n * Centered empty-state copy\n *\n * Constrain and center a short content block.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCenter } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-center-agent-example',\n  standalone: true,\n  imports: [KrnCenter],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-center maxWidth=\"32rem\" [intrinsic]=\"true\">\n      <h2>No incidents</h2>\n      <p>All monitored services are currently healthy.</p>\n    </krn-center>\n  `,\n})\nexport class KernCenterAgentExample {}\n\nvoid bootstrapApplication(KernCenterAgentExample);\n",
       "verification": "compiled",
       "source": "examples/center.ts"
     }
@@ -136,8 +135,8 @@
     "intrinsic"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Center for this specific contract: Centers child content inside a width-constrained surface. For new work, use Container with intrinsic centering.",
+    "avoidWhen": "Do not choose Center for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -193,7 +192,7 @@
         "kind": "text",
         "defaultValue": "4",
         "testValue": "20rem",
-        "description": "Configures the component gutters contract.",
+        "description": "Logical inline padding kept inside the maximum width.",
         "binding": {
           "kind": "input",
           "publicName": "gutters",

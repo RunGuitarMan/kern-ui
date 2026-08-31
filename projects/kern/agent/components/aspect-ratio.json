@@ -9,14 +9,14 @@
   "symbol": "KrnAspectRatio",
   "canonicalSymbol": "KrnAspectRatio",
   "canonicalId": "aspect-ratio",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Aspect Ratio. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Aspect Ratio. Maintains a chosen width-to-height ratio while controlling how media fits its box.",
   "acceptanceStates": ["default", "dark", "high contrast", "compact", "RTL", "mobile"],
   "lifecycle": {
     "status": "stable",
@@ -77,11 +77,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Projected content retains its document order and native semantics as layout changes.",
+      "Logical sizing and placement work in both LTR and RTL without duplicating content."
     ],
     "manualValidationRequired": true
   },
@@ -100,7 +99,7 @@
       "title": "Stable media preview",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Stable media preview\n *\n * Reserve a 16:9 region before preview content is available.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAspectRatio } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-aspect-ratio-agent-example',\n  standalone: true,\n  imports: [KrnAspectRatio],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-aspect-ratio ratio=\"16 / 9\" fit=\"cover\">\n      <div role=\"img\" aria-label=\"Quarterly report preview\">Q3 report preview</div>\n    </krn-aspect-ratio>\n  `,\n})\nexport class KernAspectRatioAgentExample {}\n\nvoid bootstrapApplication(KernAspectRatioAgentExample);\n",
+      "code": "/**\n * Stable media preview\n *\n * Reserve a 16:9 region before preview content is available.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAspectRatio } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-aspect-ratio-agent-example',\n  standalone: true,\n  imports: [KrnAspectRatio],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-aspect-ratio ratio=\"16 / 9\" fit=\"cover\">\n      <div role=\"img\" aria-label=\"Quarterly report preview\">Q3 report preview</div>\n    </krn-aspect-ratio>\n  `,\n})\nexport class KernAspectRatioAgentExample {}\n\nvoid bootstrapApplication(KernAspectRatioAgentExample);\n",
       "verification": "compiled",
       "source": "examples/aspect-ratio.ts"
     }
@@ -116,8 +115,8 @@
     "fit"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Aspect Ratio for this specific contract: Maintains a chosen width-to-height ratio while controlling how media fits its box.",
+    "avoidWhen": "Do not choose Aspect Ratio for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

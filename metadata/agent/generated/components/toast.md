@@ -2,18 +2,18 @@
 
 - ID: `toast`
 - Selector: `krn-toast`
-- Import: `import { KrnToast } from '@kern-ui/angular/kit';`
+- Import: `import { KrnToast } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnToastViewport`
 - Lifecycle: **stable**
 - Category: Feedback
 
-Toast. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Toast. Queues transient status messages and controls their position, visible count, and expansion.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Toast for this specific contract: Queues transient status messages and controls their position, visible count, and expansion.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Toast for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnToast, KrnToastService } from '@kern-ui/angular/kit';
+import { KrnToast, KrnToastService } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-toast-agent-example',
@@ -54,14 +54,14 @@ void bootstrapApplication(KernToastAgentExample);
 
 ## API
 
-| Name          | Kind  | Type                            | Required | Default        | Description                                                        |
-| ------------- | ----- | ------------------------------- | -------- | -------------- | ------------------------------------------------------------------ |
-| `position`    | input | `KrnToastPosition`              | no       | `'bottom-end'` | Logical placement of the component relative to its owning surface. |
-| `maxVisible`  | input | `number`                        | no       | `3`            | Upper or lower bound applied to the visible value.                 |
-| `maxExpanded` | input | `number`                        | no       | `8`            | Upper or lower bound applied to the expanded value.                |
-| `labels`      | input | `Partial<KrnToastTranslations>` | no       | `{}`           | Localized copy overrides for the component-owned interface text.   |
-| `ariaLabel`   | input | `string \| undefined`           | no       | `undefined`    | Accessible name used when visible content is not sufficient.       |
-| `expanded`    | model | `boolean`                       | no       | `false`        | Controlled expanded state for a disclosure or hierarchical item.   |
+| Name          | Kind  | Type                            | Required | Default        | Description                                                      |
+| ------------- | ----- | ------------------------------- | -------- | -------------- | ---------------------------------------------------------------- |
+| `position`    | input | `KrnToastPosition`              | no       | `'bottom-end'` | Defines the component's position behavior or presentation.       |
+| `maxVisible`  | input | `number`                        | no       | `3`            | Upper or lower bound applied to the visible value.               |
+| `maxExpanded` | input | `number`                        | no       | `8`            | Upper or lower bound applied to the expanded value.              |
+| `labels`      | input | `Partial<KrnToastTranslations>` | no       | `{}`           | Localized copy overrides for the component-owned interface text. |
+| `ariaLabel`   | input | `string \| undefined`           | no       | `undefined`    | Accessible name used when visible content is not sufficient.     |
+| `expanded`    | model | `boolean`                       | no       | `false`        | Controlled expanded state for a disclosure or hierarchical item. |
 
 ## Deprecated selectors
 
@@ -77,11 +77,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Escape closes modal layers
-- Focus returns to the trigger
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Visible copy and semantic role communicate feedback independently of color or motion.
+- Announcements use only the urgency required by the message.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -118,12 +116,12 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default        | Test value    | Binding                        | Description                                    |
-| ------------- | ------- | -------------- | ------------- | ------------------------------ | ---------------------------------------------- |
-| `expanded`    | boolean | `false`        | `true`        | model `expanded`               | Expands the toast viewport stack.              |
-| `maxExpanded` | number  | `8`            | `9`           | input `maxExpanded` (property) | Configures the component maxExpanded contract. |
-| `maxVisible`  | number  | `3`            | `4`           | input `maxVisible` (property)  | Configures the component maxVisible contract.  |
-| `position`    | select  | `"bottom-end"` | `"top-start"` | input `position` (property)    | Configures the component position contract.    |
+| Argument      | Control | Default        | Test value    | Binding                        | Description                                                |
+| ------------- | ------- | -------------- | ------------- | ------------------------------ | ---------------------------------------------------------- |
+| `expanded`    | boolean | `false`        | `true`        | model `expanded`               | Expands the toast viewport stack.                          |
+| `maxExpanded` | number  | `8`            | `9`           | input `maxExpanded` (property) | Upper or lower bound applied to the expanded value.        |
+| `maxVisible`  | number  | `3`            | `4`           | input `maxVisible` (property)  | Upper or lower bound applied to the visible value.         |
+| `position`    | select  | `"bottom-end"` | `"top-start"` | input `position` (property)    | Defines the component's position behavior or presentation. |
 
 Exact API exclusions:
 

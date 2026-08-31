@@ -81,6 +81,7 @@ interface KrnTooltipPosition {
   readonly y: number;
 }
 
+/** @deprecated Use `KrnChart` with `type="line"`. */
 @Component({
   selector: 'krn-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -581,6 +582,7 @@ export class KrnLineChart {
   readonly activeIndex = model<number | null>(null);
 }
 
+/** @deprecated Use `KrnChart` with `type="bar"`. */
 @Component({
   selector: 'krn-bar-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -612,6 +614,7 @@ export class KrnBarChart {
   readonly activeIndex = model<number | null>(null);
 }
 
+/** @deprecated Use `KrnChart` with `type="donut"`. */
 @Component({
   selector: 'krn-donut-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,

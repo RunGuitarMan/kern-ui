@@ -9,8 +9,8 @@
   "symbol": "KrnLabel",
   "canonicalSymbol": "KrnLabel",
   "canonicalId": "label",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -54,7 +54,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Id of the labelable control associated with this label.",
+      "description": "Defines the component's for behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -113,7 +113,7 @@
       "title": "Visible required field label",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Visible required field label\n *\n * Associate visible copy with its native control.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnLabel } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-label-agent-example',\n  standalone: true,\n  imports: [KrnLabel],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-label for=\"department\" [required]=\"true\">Department</krn-label>\n    <input id=\"department\" name=\"department\" required />\n  `,\n})\nexport class KernLabelAgentExample {}\n\nvoid bootstrapApplication(KernLabelAgentExample);\n",
+      "code": "/**\n * Visible required field label\n *\n * Associate visible copy with its native control.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnLabel } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-label-agent-example',\n  standalone: true,\n  imports: [KrnLabel],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-label for=\"department\" [required]=\"true\">Department</krn-label>\n    <input id=\"department\" name=\"department\" required />\n  `,\n})\nexport class KernLabelAgentExample {}\n\nvoid bootstrapApplication(KernLabelAgentExample);\n",
       "verification": "compiled",
       "source": "examples/label.ts"
     }

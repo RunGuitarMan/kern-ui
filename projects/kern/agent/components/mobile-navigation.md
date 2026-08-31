@@ -7,13 +7,13 @@
 - Lifecycle: **recipe**
 - Category: Patterns
 
-Mobile Navigation. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.
+Mobile Navigation. Composes primary destinations into a compact navigation surface for narrow screens.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Mobile Navigation for this specific contract: Composes primary destinations into a compact navigation surface for narrow screens.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Mobile Navigation for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -67,10 +67,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Keyboard behavior is provided by the native elements and Kern primitives in the recipe
+- The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.
+- Loading, empty, error, and success states remain visible and programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 

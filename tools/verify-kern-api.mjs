@@ -167,6 +167,7 @@ async function main() {
   if (
     !runtimeConfig ||
     !Array.isArray(runtimeConfig.entrypoints) ||
+    !Array.isArray(runtimeConfig.compatibilityEntrypoints) ||
     !runtimeConfig.entrypoints.every(
       (entrypoint) => entrypoint && typeof entrypoint.subpath === 'string',
     )
@@ -177,8 +178,12 @@ async function main() {
   const runtimeSubpaths = [
     '.',
     ...runtimeConfig.entrypoints.map((entrypoint) => entrypoint.subpath),
+    ...runtimeConfig.compatibilityEntrypoints.map((entrypoint) => entrypoint.subpath),
   ];
   const runtimeSubpathSet = new Set(runtimeSubpaths);
+  const ownerSubpathSet = new Set(
+    runtimeConfig.entrypoints.map((entrypoint) => entrypoint.subpath),
+  );
   if (runtimeSubpathSet.size !== runtimeSubpaths.length) {
     throw new Error('Runtime API verification subpaths must be unique.');
   }
@@ -222,8 +227,8 @@ async function main() {
 
     const summary = analyzeDeclarations(declarationPath);
     summaries.push({ subpath, ...summary });
-    if (subpath !== '.' && summary.exportedCount === 0) {
-      fail(`Runtime entrypoint "${subpath}" contains no locally exported declarations.`);
+    if (ownerSubpathSet.has(subpath) && summary.exportedCount === 0) {
+      fail(`Owner runtime entrypoint "${subpath}" contains no locally exported declarations.`);
     }
     for (const [name, references] of summary.forgotten) {
       fail(`${subpath} :: ${name} references non-exported local types: ${references.join(', ')}`);
@@ -238,7 +243,7 @@ async function main() {
     console.log(
       `Kern public API verified: ${summaries.length} runtime entrypoints, ` +
         `${total} locally exported declarations ` +
-        `(root compatibility aggregator: ${summaries.find((summary) => summary.subpath === '.')?.exportedCount ?? 0}).`,
+        `(${ownerSubpathSet.size} owners; root and ${runtimeConfig.compatibilityEntrypoints.length} compatibility aggregator).`,
     );
   }
 }

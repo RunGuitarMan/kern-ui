@@ -2,18 +2,18 @@
 
 - ID: `validation-message`
 - Selector: `krn-validation-message`
-- Import: `import { KrnValidationMessage } from '@kern-ui/angular/kit';`
+- Import: `import { KrnValidationMessage } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnValidationMessage`
 - Lifecycle: **stable**
 - Category: Forms
 
-Validation Message. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Validation Message. Displays validation feedback and exposes its message to the associated form control.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Validation Message for this specific contract: Displays validation feedback and exposes its message to the associated form control.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Validation Message for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnValidationMessage } from '@kern-ui/angular/kit';
+import { KrnValidationMessage } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-validation-message-agent-example',
@@ -47,9 +47,9 @@ void bootstrapApplication(KernValidationMessageAgentExample);
 
 ## API
 
-| Name | Kind  | Type     | Required | Default | Description                                          |
-| ---- | ----- | -------- | -------- | ------- | ---------------------------------------------------- |
-| `id` | input | `string` | no       | `''`    | Stable identifier value used by the custom contract. |
+| Name | Kind  | Type     | Required | Default | Description                                    |
+| ---- | ----- | -------- | -------- | ------- | ---------------------------------------------- |
+| `id` | input | `string` | no       | `''`    | Stable identifier used by the custom contract. |
 
 ## Deprecated selectors
 
@@ -65,12 +65,8 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Validation Message is not focusable and adds no keyboard interaction
+- The message is visibly associated with the invalid control and announced with appropriate urgency.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -105,10 +101,10 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument  | Control | Default                  | Test value                           | Binding               | Description                               |
-| --------- | ------- | ------------------------ | ------------------------------------ | --------------------- | ----------------------------------------- |
-| `content` | text    | `"Use 3–48 characters."` | `"Use 3–48 characters. · alternate"` | fixture content       | Changes the projected validation message. |
-| `id`      | text    | `""`                     | `"Alternate value"`                  | input `id` (property) | Configures the component id contract.     |
+| Argument  | Control | Default                  | Test value                           | Binding               | Description                                    |
+| --------- | ------- | ------------------------ | ------------------------------------ | --------------------- | ---------------------------------------------- |
+| `content` | text    | `"Use 3–48 characters."` | `"Use 3–48 characters. · alternate"` | fixture content       | Changes the projected validation message.      |
+| `id`      | text    | `""`                     | `"Alternate value"`                  | input `id` (property) | Stable identifier used by the custom contract. |
 
 Exact API exclusions:
 

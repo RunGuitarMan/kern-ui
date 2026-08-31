@@ -9,14 +9,14 @@
   "symbol": "KrnAccordion",
   "canonicalSymbol": "KrnAccordion",
   "canonicalId": "accordion",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Accordion. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Accordion. Coordinates expansion across a set of labelled disclosure sections.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -80,11 +80,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["Enter or Space toggles a header; arrow keys move among accordion headers"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -103,7 +102,7 @@
       "title": "Account policy accordion",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Account policy accordion\n *\n * Group independently controlled disclosures under one accessible label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAccordion, KrnDisclosure } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-accordion-agent-example',\n  standalone: true,\n  imports: [KrnAccordion, KrnDisclosure],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-accordion ariaLabel=\"Account policies\">\n      <krn-disclosure heading=\"Data residency\" [(open)]=\"dataResidencyOpen\">\n        Customer data is stored in the EU Central region.\n      </krn-disclosure>\n      <krn-disclosure heading=\"Retention\"\n        >Audit records are retained for seven years.</krn-disclosure\n      >\n    </krn-accordion>\n  `,\n})\nexport class KernAccordionAgentExample {\n  dataResidencyOpen = true;\n}\n\nvoid bootstrapApplication(KernAccordionAgentExample);\n",
+      "code": "/**\n * Account policy accordion\n *\n * Group independently controlled disclosures under one accessible label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAccordion, KrnDisclosure } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-accordion-agent-example',\n  standalone: true,\n  imports: [KrnAccordion, KrnDisclosure],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-accordion ariaLabel=\"Account policies\">\n      <krn-disclosure heading=\"Data residency\" [(open)]=\"dataResidencyOpen\">\n        Customer data is stored in the EU Central region.\n      </krn-disclosure>\n      <krn-disclosure heading=\"Retention\"\n        >Audit records are retained for seven years.</krn-disclosure\n      >\n    </krn-accordion>\n  `,\n})\nexport class KernAccordionAgentExample {\n  dataResidencyOpen = true;\n}\n\nvoid bootstrapApplication(KernAccordionAgentExample);\n",
       "verification": "compiled",
       "source": "examples/accordion.ts"
     }
@@ -118,8 +117,8 @@
     "ariaLabel"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Accordion for this specific contract: Coordinates expansion across a set of labelled disclosure sections.",
+    "avoidWhen": "Do not choose Accordion for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

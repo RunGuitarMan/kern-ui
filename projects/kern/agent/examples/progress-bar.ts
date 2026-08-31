@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnProgressBar } from '@kern-ui/angular/kit';
+import { KrnProgressBar } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-progress-bar-agent-example',

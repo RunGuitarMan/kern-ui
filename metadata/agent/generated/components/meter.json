@@ -9,14 +9,14 @@
   "symbol": "KrnMeter",
   "canonicalSymbol": "KrnMeter",
   "canonicalId": "meter",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Meter. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Meter. Shows a scalar measurement within known bounds and interprets low, high, and optimum ranges.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -106,7 +106,7 @@
       "type": "number",
       "required": false,
       "defaultValue": "25",
-      "description": "Threshold below which a meter value is considered low.",
+      "description": "Defines the component's low behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -116,7 +116,7 @@
       "type": "number",
       "required": false,
       "defaultValue": "75",
-      "description": "Threshold above which a meter value is considered high.",
+      "description": "Defines the component's high behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -126,7 +126,7 @@
       "type": "number",
       "required": false,
       "defaultValue": "100",
-      "description": "Meter value considered optimal for interpreting low and high ranges.",
+      "description": "Defines the component's optimum behavior or presentation.",
       "descriptionSource": "inferred"
     }
   ],
@@ -142,11 +142,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -165,7 +164,7 @@
       "title": "Account health meter",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Account health meter\n *\n * Communicate a bounded value with visible label and thresholds.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMeter } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-meter-agent-example',\n  standalone: true,\n  imports: [KrnMeter],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-meter label=\"Account health\" [value]=\"82\" [min]=\"0\" [max]=\"100\" [low]=\"40\" [high]=\"75\" />\n  `,\n})\nexport class KernMeterAgentExample {}\n\nvoid bootstrapApplication(KernMeterAgentExample);\n",
+      "code": "/**\n * Account health meter\n *\n * Communicate a bounded value with visible label and thresholds.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMeter } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-meter-agent-example',\n  standalone: true,\n  imports: [KrnMeter],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-meter label=\"Account health\" [value]=\"82\" [min]=\"0\" [max]=\"100\" [low]=\"40\" [high]=\"75\" />\n  `,\n})\nexport class KernMeterAgentExample {}\n\nvoid bootstrapApplication(KernMeterAgentExample);\n",
       "verification": "compiled",
       "source": "examples/meter.ts"
     }
@@ -187,8 +186,8 @@
     "optimum"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Meter for this specific contract: Shows a scalar measurement within known bounds and interprets low, high, and optimum ranges.",
+    "avoidWhen": "Do not choose Meter for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Do not omit required inputs: `label`, `value`.",

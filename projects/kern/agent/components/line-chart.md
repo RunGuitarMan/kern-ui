@@ -7,7 +7,7 @@
 - Lifecycle: **beta**
 - Category: Data display
 
-Line Chart. A dense, readable data primitive with semantic structure and resilient overflow.
+Line Chart. Plots change across an ordered axis and exposes each datum through keyboard navigation.
 
 ## Use
 
@@ -61,11 +61,11 @@ void bootstrapApplication(KernLineChartAgentExample);
 | `eyebrow`             | input | `string`                               | no       | `''`                                                     | Human-readable copy for the eyebrow state or control.                                     |
 | `description`         | input | `string`                               | no       | `''`                                                     | Visible supporting description for the component content.                                 |
 | `data`                | input | `ReadonlyArray<KrnChartDatum>`         | yes      | `required`                                               | Immutable data supplied by the consumer.                                                  |
-| `palette`             | input | `ReadonlyArray<string>`                | no       | `['var(--krn-chart-1, #4f6feb)']`                        | Ordered semantic color values available to the color control.                             |
+| `palette`             | input | `ReadonlyArray<string>`                | no       | `['var(--krn-chart-1, #4f6feb)']`                        | Defines the component's palette behavior or presentation.                                 |
 | `locale`              | input | `Array<string> \| string \| undefined` | no       | `undefined`                                              | Locale identifier used for collation, formatting, and component-owned copy.               |
 | `labels`              | input | `Partial<KrnChartLabels>`              | no       | `{}`                                                     | Localized copy overrides for the component-owned interface text.                          |
 | `valueFormatter`      | input | `KrnChartValueFormatter \| null`       | no       | `null`                                                   | Formats a domain value for visible and accessible presentation.                           |
-| `percentFormatter`    | input | `KrnChartValueFormatter \| null`       | no       | `null`                                                   | Formats a normalized value for visible and accessible percentage copy.                    |
+| `percentFormatter`    | input | `KrnChartValueFormatter \| null`       | no       | `null`                                                   | Consumer function used by the component to resolve percent formatter.                     |
 | `datumIdentity`       | input | `KrnChartDatumIdentity`                | no       | `(datum, index) => datum.id ?? (datum.label \|\| index)` | Returns a stable unique key used to preserve DOM and active state across data reordering. |
 | `negativeValuePolicy` | input | `KrnChartNegativeValuePolicy`          | no       | `'clamp'`                                                | Clamps negative values to zero by default or rejects them with a validation error.        |
 | `summaryItemLimit`    | input | `number`                               | no       | `12`                                                     | Limits the accessible text summary while the full data table remains available.           |
@@ -130,14 +130,14 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument              | Control | Default                         | Test value                                  | Binding                                | Description                                                              |
-| --------------------- | ------- | ------------------------------- | ------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------ |
-| `title`               | text    | `"Weekly active users"`         | `"Weekly active users · alternate"`         | input `title` (property)               | Sets the visible chart title.                                            |
-| `description`         | text    | `"Unique members, last 6 days"` | `"Unique members, last 6 days · alternate"` | input `description` (property)         | Adds concise context for the dataset.                                    |
-| `summaryItemLimit`    | number  | `12`                            | `13`                                        | input `summaryItemLimit` (property)    | Limits items in the accessible data summary.                             |
-| `eyebrow`             | text    | `"THROUGHPUT"`                  | `"THROUGHPUT · alternate"`                  | input `eyebrow` (property)             | Configures the component eyebrow contract.                               |
-| `negativeValuePolicy` | select  | `"clamp"`                       | `"reject"`                                  | input `negativeValuePolicy` (property) | Configures the component negativeValuePolicy contract.                   |
-| `tableVisible`        | boolean | `false`                         | `true`                                      | model `tableVisible`                   | Controlled tableVisible state with a matching tableVisibleChange output. |
+| Argument              | Control | Default                         | Test value                                  | Binding                                | Description                                                                        |
+| --------------------- | ------- | ------------------------------- | ------------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------- |
+| `title`               | text    | `"Weekly active users"`         | `"Weekly active users · alternate"`         | input `title` (property)               | Sets the visible chart title.                                                      |
+| `description`         | text    | `"Unique members, last 6 days"` | `"Unique members, last 6 days · alternate"` | input `description` (property)         | Adds concise context for the dataset.                                              |
+| `summaryItemLimit`    | number  | `12`                            | `13`                                        | input `summaryItemLimit` (property)    | Limits items in the accessible data summary.                                       |
+| `eyebrow`             | text    | `"THROUGHPUT"`                  | `"THROUGHPUT · alternate"`                  | input `eyebrow` (property)             | Human-readable copy for the eyebrow state or control.                              |
+| `negativeValuePolicy` | select  | `"clamp"`                       | `"reject"`                                  | input `negativeValuePolicy` (property) | Clamps negative values to zero by default or rejects them with a validation error. |
+| `tableVisible`        | boolean | `false`                         | `true`                                      | model `tableVisible`                   | Controls source-data disclosure and reflects user toggles.                         |
 
 Exact API exclusions:
 

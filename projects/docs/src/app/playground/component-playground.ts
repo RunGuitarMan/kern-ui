@@ -8,13 +8,18 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import type { KernCatalogItem } from '@kern-ui/showcase';
 import {
   KernComponentSpecimen,
   findKernPlaygroundDefinition,
+  localizeKernPlaygroundFixtureEffect,
+  localizeKernPlaygroundPresetLabel,
+  localizeKernPlaygroundStringArgument,
   type KernPlaygroundControl,
+  type KernPlaygroundStatePreset,
   type KernPlaygroundValue,
   type KernPlaygroundValues,
   type KernSpecimenScenario,
@@ -204,6 +209,40 @@ function materializePublicBindings(
   );
 }
 
+export function describeKernPlaygroundStory(
+  locale: string,
+  componentName: string,
+  preset: KernPlaygroundStatePreset,
+  changedControlLabels: readonly string[] = [],
+): string {
+  const label = localizeKernPlaygroundPresetLabel(locale, preset);
+  if (preset.fixtureEffect) {
+    return localizeKernPlaygroundFixtureEffect(locale, preset.fixtureEffect).description;
+  }
+  if (locale === 'ru-RU') {
+    if (preset.visualPseudoState) {
+      return `Показывает состояние «${label.toLocaleLowerCase('ru-RU')}» на фактическом интерактивном элементе компонента.`;
+    }
+    if (changedControlLabels.length > 0) {
+      return `Применяет настройки состояния «${label.toLocaleLowerCase('ru-RU')}» к целевому компоненту.`;
+    }
+    if (Object.keys(preset.environment ?? {}).length > 0) {
+      return `Проверяет тот же компонент в окружении «${label.toLocaleLowerCase('ru-RU')}».`;
+    }
+    return `Показывает базовую композицию ${componentName} до применения другого состояния.`;
+  }
+  if (preset.visualPseudoState) {
+    return `Shows the ${preset.label.toLocaleLowerCase()} state on the actual target control.`;
+  }
+  if (changedControlLabels.length > 0) {
+    return `Applies ${changedControlLabels.map((value) => value.toLocaleLowerCase()).join(', ')} to the target component.`;
+  }
+  if (Object.keys(preset.environment ?? {}).length > 0) {
+    return `Checks the same component in the ${preset.label.toLocaleLowerCase()} environment.`;
+  }
+  return `Shows the baseline ${componentName} composition before a state is applied.`;
+}
+
 @Component({
   selector: 'kdocs-preview-fixture-en',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -262,7 +301,14 @@ export class PreviewFixture {
 @Component({
   selector: 'kdocs-component-playground',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PreviewFixture, RouterLink, KrnThemeDirective, KrnCodeBlock, KrnCopyButton],
+  imports: [
+    PreviewFixture,
+    RouterLink,
+    NgTemplateOutlet,
+    KrnThemeDirective,
+    KrnCodeBlock,
+    KrnCopyButton,
+  ],
   templateUrl: './component-playground.html',
   styleUrl: './component-playground.css',
 })
@@ -289,15 +335,27 @@ export class ComponentPlayground {
     return definition;
   });
   protected readonly controls = computed(() => this.definition().controls);
+  protected readonly essentialControls = computed(() => {
+    const keys = new Set(this.definition().essentialControlKeys);
+    return this.controls().filter(({ key }) => keys.has(key));
+  });
   protected readonly presets = computed(() => this.definition().presets);
+  protected readonly featuredPresets = computed(() =>
+    this.definition().featuredPresetIds.flatMap((id) => {
+      const preset = this.presets().find((candidate) => candidate.id === id);
+      return preset ? [preset] : [];
+    }),
+  );
   protected readonly scenarios = computed<readonly KernSpecimenScenario[]>(
     () => this.definition().scenarios,
   );
   protected readonly state = computed(() => {
     const requested = this.queryParams().get('state');
-    return requested && this.definition().states.includes(requested) ? requested : 'default';
+    return requested && this.definition().states.includes(requested)
+      ? requested
+      : this.definition().defaultStoryId;
   });
-  private readonly selectedPreset = computed(
+  protected readonly selectedPreset = computed(
     () =>
       this.presets().find(({ id }) => id === this.state()) ??
       this.presets().find(({ id }) => id === 'default') ??
@@ -411,6 +469,20 @@ export class ComponentPlayground {
   );
   protected readonly scenario = computed<KernSpecimenScenario>(() => this.resolvedState().scenario);
   protected readonly args = computed<KernPlaygroundValues>(() => this.resolvedState().args);
+  protected readonly storyDescription = computed(() => {
+    const preset = this.selectedPreset();
+    if (!preset) return '';
+    return describeKernPlaygroundStory(
+      this.locale(),
+      this.item().name,
+      preset,
+      this.changedPresetControls(preset).map(({ label }) => label),
+    );
+  });
+
+  protected presetLabel(preset: KernPlaygroundStatePreset): string {
+    return localizeKernPlaygroundPresetLabel(this.locale(), preset);
+  }
   protected readonly configuredCode = computed(() => {
     return materializePublicBindings(
       this.code(),
@@ -523,6 +595,14 @@ export class ComponentPlayground {
     return serializePlaygroundValue(this.args()[control.key] ?? control.defaultValue);
   }
 
+  protected textArg(control: KernPlaygroundControl): string {
+    return localizeKernPlaygroundStringArgument(
+      this.locale(),
+      control.key,
+      this.stringArg(control),
+    );
+  }
+
   protected serializedValue(value: KernPlaygroundValue): string {
     return serializePlaygroundValue(value);
   }
@@ -542,6 +622,15 @@ export class ComponentPlayground {
 
   protected setNumberArg(control: KernPlaygroundControl, event: Event): void {
     this.setArg(control, Number(readInput(event)), event.type === 'input');
+  }
+
+  protected selectPreset(presetId: string): void {
+    const query: Record<string, string | null> = {
+      state: presetId === this.definition().defaultStoryId ? null : presetId,
+      scenario: null,
+    };
+    for (const control of this.controls()) query[`arg.${control.key}`] = null;
+    this.updateQuery(query);
   }
 
   protected reset(): void {
@@ -566,9 +655,19 @@ export class ComponentPlayground {
       query['arg.virtualize'] = null;
     }
     if (owns(this.selectedPreset()?.args ?? {}, control.key)) {
-      query['state'] = null;
+      query['state'] = this.definition().defaultStoryId === 'default' ? null : 'default';
     }
     this.updateQuery(query, replaceUrl);
+  }
+
+  private changedPresetControls(
+    preset: KernPlaygroundStatePreset,
+  ): readonly KernPlaygroundControl[] {
+    return this.controls().filter(
+      (control) =>
+        owns(preset.args, control.key) &&
+        !Object.is(preset.args[control.key], control.defaultValue),
+    );
   }
 
   private updateQuery(values: Record<string, string | null>, replaceUrl = false): void {
@@ -615,7 +714,7 @@ export class ComponentPlayground {
     const state =
       source['state'] && this.definition().states.includes(source['state'])
         ? source['state']
-        : 'default';
+        : this.definition().defaultStoryId;
     const preset =
       this.presets().find(({ id }) => id === state) ??
       this.presets().find(({ id }) => id === 'default') ??
@@ -641,7 +740,7 @@ export class ComponentPlayground {
     if (preset?.scenario === 'default' && scenario !== ENVIRONMENT_DEFAULTS.scenario) {
       query['scenario'] = scenario;
     }
-    if (state !== 'default') query['state'] = state;
+    if (state !== this.definition().defaultStoryId) query['state'] = state;
 
     const normalizedArgs = enforceComponentConstraints(
       this.item().id,

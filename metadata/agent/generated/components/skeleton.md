@@ -2,18 +2,18 @@
 
 - ID: `skeleton`
 - Selector: `krn-skeleton`
-- Import: `import { KrnSkeleton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSkeleton } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnSkeleton`
 - Lifecycle: **stable**
 - Category: Feedback
 
-Skeleton. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Skeleton. Reserves content geometry with a non-interactive loading placeholder.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Skeleton for this specific contract: Reserves content geometry with a non-interactive loading placeholder.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Skeleton for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSkeleton } from '@kern-ui/angular/kit';
+import { KrnSkeleton } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-skeleton-agent-example',
@@ -52,7 +52,7 @@ void bootstrapApplication(KernSkeletonAgentExample);
 | -------- | ----- | ----------------------------------- | -------- | ---------------------- | ---------------------------------------------------------------- |
 | `width`  | input | `string`                            | no       | `'100%'`               | Explicit inline size of the rendered surface.                    |
 | `height` | input | `string`                            | no       | `'var(--krn-space-4)'` | Explicit block size of the rendered surface or virtual viewport. |
-| `shape`  | input | `"circle" \| "rectangle" \| "text"` | no       | `'text'`               | Named geometry applied to the avatar or media boundary.          |
+| `shape`  | input | `"circle" \| "rectangle" \| "text"` | no       | `'text'`               | Defines the component's shape behavior or presentation.          |
 
 ## Deprecated selectors
 
@@ -68,11 +68,8 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Escape closes modal layers
-- Focus returns to the trigger
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Is hidden from assistive technology so the eventual content remains the semantic target.
 
 Manual assistive-technology validation remains required in the consuming application.
 

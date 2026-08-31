@@ -2,18 +2,18 @@
 
 - ID: `bottom-navigation`
 - Selector: `krn-bottom-navigation`
-- Import: `import { KrnBottomNavigation } from '@kern-ui/angular/kit';`
+- Import: `import { KrnBottomNavigation } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnBottomNavigation`
 - Lifecycle: **stable**
 - Category: Navigation
 
-Bottom Navigation. A keyboard-first wayfinding primitive that preserves orientation and current location.
+Bottom Navigation. Presents a small set of primary destinations in a touch-friendly bottom navigation bar.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Bottom Navigation for this specific contract: Presents a small set of primary destinations in a touch-friendly bottom navigation bar.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Bottom Navigation for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBottomNavigation, type KrnNavigationItem } from '@kern-ui/angular/kit';
+import { KrnBottomNavigation, type KrnNavigationItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-bottom-navigation-agent-example',
@@ -78,12 +78,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys move within composites
-- Home / End jump
-- Enter activates
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab visits each destination; Enter follows the focused native link
+- Destinations retain native link semantics and expose current location where applicable.
+- Composite navigation uses one documented focus model without changing reading order.
 
 Manual assistive-technology validation remains required in the consuming application.
 

@@ -387,6 +387,7 @@ async function discoverPublicApi(apiConfig) {
   const deprecatedMembers = new Map();
 
   for (const entrypoint of apiConfig.entrypoints) {
+    if (entrypoint.lifecycle === false) continue;
     if (entrypoint.subpath === '.') continue;
     const baselinePath = resolve(workspaceRoot, 'projects/kern/api', entrypoint.baseline);
     const sourceText = await readFile(baselinePath, 'utf8');

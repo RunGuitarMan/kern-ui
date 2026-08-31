@@ -9,14 +9,14 @@
   "symbol": "KrnRadio",
   "canonicalSymbol": "KrnRadio",
   "canonicalId": "radio",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Radio. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Radio. Represents one option inside a radio group while retaining native radio semantics.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -62,7 +62,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -82,7 +82,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "this.generatedId",
-      "description": "Required human-readable name for the represented person, item, or action.",
+      "description": "Native form-control name forwarded to the owned interactive element.",
       "descriptionSource": "inferred"
     },
     {
@@ -196,14 +196,11 @@
   "a11y": {
     "target": "WCAG 2.2 AA",
     "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
+      "Tab follows the owning radio-group contract; Arrow keys change the group selection"
     ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The real form control retains its visible name, described-by relationships, and Angular state.",
+      "Required, readonly, disabled, and invalid states remain programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -222,7 +219,7 @@
       "title": "Individual radio option",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Individual radio option\n *\n * Provide a stable submitted value and visible option label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRadio } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-radio-agent-example',\n  standalone: true,\n  imports: [KrnRadio],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-radio name=\"plan\" value=\"enterprise\">Enterprise plan</krn-radio> `,\n})\nexport class KernRadioAgentExample {}\n\nvoid bootstrapApplication(KernRadioAgentExample);\n",
+      "code": "/**\n * Individual radio option\n *\n * Provide a stable submitted value and visible option label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRadio } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-radio-agent-example',\n  standalone: true,\n  imports: [KrnRadio],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-radio name=\"plan\" value=\"enterprise\">Enterprise plan</krn-radio> `,\n})\nexport class KernRadioAgentExample {}\n\nvoid bootstrapApplication(KernRadioAgentExample);\n",
       "verification": "compiled",
       "source": "examples/radio.ts"
     }
@@ -248,8 +245,8 @@
     "selected"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Radio for this specific contract: Represents one option inside a radio group while retaining native radio semantics.",
+    "avoidWhen": "Do not choose Radio for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Do not omit required inputs: `value`.",
@@ -319,7 +316,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component checked contract.",
+        "description": "Controlled checked state rendered by the native choice control.",
         "binding": {
           "kind": "input",
           "publicName": "checked",
@@ -332,7 +329,7 @@
         "kind": "text",
         "defaultValue": "Flexible, billed each month",
         "testValue": "Flexible, billed each month · alternate",
-        "description": "Configures the component description contract.",
+        "description": "Visible supporting description for the component content.",
         "binding": {
           "kind": "input",
           "publicName": "description",
@@ -345,7 +342,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -358,7 +355,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",
@@ -491,7 +488,9 @@
         "id": "filled",
         "label": "filled",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "selected": true
+        },
         "fixtureEffect": {
           "kind": "content",
           "mode": "filled",

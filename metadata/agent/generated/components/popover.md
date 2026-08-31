@@ -2,18 +2,18 @@
 
 - ID: `popover`
 - Selector: `krn-popover`
-- Import: `import { KrnPopover } from '@kern-ui/angular/kit';`
+- Import: `import { KrnPopover } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnPopover`
 - Lifecycle: **stable**
 - Category: Feedback
 
-Popover. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Popover. Opens a focusable non-modal surface from an owned trigger and dismisses it predictably.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Popover for this specific contract: Opens a focusable non-modal surface from an owned trigger and dismisses it predictably.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Popover for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnPopover } from '@kern-ui/angular/kit';
+import { KrnPopover } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-popover-agent-example',
@@ -72,11 +72,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Escape closes modal layers
-- Focus returns to the trigger
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Enter or Space toggles the trigger; Escape closes and restores focus
+- The owned trigger exposes expanded state and the relationship to the popover surface.
+- Dismissal restores focus without turning the popover into an implicit modal dialog.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -116,10 +114,10 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument    | Control | Default | Test value | Binding                      | Description                                  |
-| ----------- | ------- | ------- | ---------- | ---------------------------- | -------------------------------------------- |
-| `open`      | boolean | `false` | `true`     | model `open`                 | Opens the popover surface.                   |
-| `autoFocus` | boolean | `true`  | `false`    | input `autoFocus` (property) | Configures the component autoFocus contract. |
+| Argument    | Control | Default | Test value | Binding                      | Description                                                     |
+| ----------- | ------- | ------- | ---------- | ---------------------------- | --------------------------------------------------------------- |
+| `open`      | boolean | `false` | `true`     | model `open`                 | Opens the popover surface.                                      |
+| `autoFocus` | boolean | `true`  | `false`    | input `autoFocus` (property) | Controls whether the component applies the auto focus behavior. |
 
 Exact API exclusions:
 

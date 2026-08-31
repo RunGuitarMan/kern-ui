@@ -9,14 +9,14 @@
   "symbol": "KrnSplitButton",
   "canonicalSymbol": "KrnSplitButton",
   "canonicalId": "split-button",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "actions",
+  "importPath": "@kern-ui/angular/actions",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Split Button. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.",
+  "summary": "Split Button. Pairs one primary native action with a separate menu of closely related secondary actions.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -60,7 +60,7 @@
       "type": "KrnSize",
       "required": false,
       "defaultValue": "this.options.size",
-      "description": "Named semantic size resolved through KERN density and sizing tokens.",
+      "description": "Named semantic size resolved through Kern density and sizing tokens.",
       "descriptionSource": "inferred"
     },
     {
@@ -100,7 +100,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Prevents duplicate actions and exposes accessible busy state.",
+      "description": "Prevents duplicate actions and exposes an accessible busy state.",
       "descriptionSource": "inferred"
     },
     {
@@ -199,11 +199,14 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Enter / Space activates", "Tab follows document order"],
+    "keyboard": [
+      "Tab visits the primary and menu actions in document order",
+      "Enter or Space activates the focused action",
+      "Arrow Down opens the secondary menu; Escape closes it and restores focus"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Native buttons and links retain their accessible names, focus, activation, and form behavior.",
+      "Disabled, loading, pressed, and destructive states are not communicated by color alone."
     ],
     "manualValidationRequired": true
   },
@@ -222,7 +225,7 @@
       "title": "Primary export with alternatives",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Primary export with alternatives\n *\n * Keep the default action prominent and expose related export formats.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSplitButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-split-button-agent-example',\n  standalone: true,\n  imports: [KrnSplitButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-split-button [(open)]=\"open\">\n      <span krnLabel>Export CSV</span>\n      <div krnMenu>\n        <button type=\"button\">Export XLSX</button>\n        <button type=\"button\">Export JSON</button>\n      </div>\n    </krn-split-button>\n  `,\n})\nexport class KernSplitButtonAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernSplitButtonAgentExample);\n",
+      "code": "/**\n * Primary export with alternatives\n *\n * Keep the default action prominent and expose related export formats.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSplitButton } from '@kern-ui/angular/actions';\n\n@Component({\n  selector: 'app-kern-split-button-agent-example',\n  standalone: true,\n  imports: [KrnSplitButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-split-button [(open)]=\"open\">\n      <span krnLabel>Export CSV</span>\n      <div krnMenu>\n        <button type=\"button\">Export XLSX</button>\n        <button type=\"button\">Export JSON</button>\n      </div>\n    </krn-split-button>\n  `,\n})\nexport class KernSplitButtonAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernSplitButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/split-button.ts"
     }
@@ -248,8 +251,8 @@
     "primaryAction"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Split Button for this specific contract: Pairs one primary native action with a separate menu of closely related secondary actions.",
+    "avoidWhen": "Do not choose Split Button for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -314,7 +317,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component closeOnSelection contract.",
+        "description": "Closes after an enabled menu item activates; use the keep-open marker for one item.",
         "binding": {
           "kind": "input",
           "publicName": "closeOnSelection",
@@ -327,7 +330,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Prevents interaction and participates in the component disabled contract.",
+        "description": "Prevents user interaction and participates in the disabled-state contract.",
         "binding": {
           "kind": "input",
           "publicName": "disabled",
@@ -353,7 +356,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component matchTriggerWidth contract.",
+        "description": "Makes the connected overlay exactly as wide as the complete trigger origin.",
         "binding": {
           "kind": "input",
           "publicName": "matchTriggerWidth",
@@ -366,7 +369,7 @@
         "kind": "number",
         "defaultValue": 8,
         "testValue": 9,
-        "description": "Configures the component menuOffset contract.",
+        "description": "Non-negative logical gap in CSS pixels between the trigger and menu.",
         "binding": {
           "kind": "input",
           "publicName": "menuOffset",
@@ -382,7 +385,7 @@
         "kind": "select",
         "defaultValue": "md",
         "testValue": "sm",
-        "description": "Semantic component size.",
+        "description": "Named semantic size resolved through Kern density and sizing tokens.",
         "binding": {
           "kind": "input",
           "publicName": "size",
@@ -409,7 +412,7 @@
         "kind": "select",
         "defaultValue": "brand",
         "testValue": "neutral",
-        "description": "Semantic intent; color is never the only state indicator.",
+        "description": "Semantic intent that selects coordinated text, icon, border, and surface tokens.",
         "binding": {
           "kind": "input",
           "publicName": "tone",
@@ -448,7 +451,7 @@
         "kind": "select",
         "defaultValue": "solid",
         "testValue": "soft",
-        "description": "Visual emphasis within the component hierarchy.",
+        "description": "Named visual hierarchy treatment that preserves the component semantics.",
         "binding": {
           "kind": "input",
           "publicName": "variant",

@@ -11,9 +11,13 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import {
-  KERN_CATEGORIES,
-  KERN_CATALOG_INDEX,
-  catalogIndexByCategory,
+  KERN_CANONICAL_CATALOG_INDEX,
+  KERN_COMPONENT_CATALOG_INDEX,
+  KERN_COMPONENT_CATEGORIES,
+  KERN_RECIPE_CATALOG_INDEX,
+  canonicalCatalogId,
+  catalogNavigationGroups,
+  type KernCatalogNavigationGroup,
   type KernCategory,
 } from '@kern-ui/showcase/catalog-index';
 import { filter, map, startWith } from 'rxjs';
@@ -45,8 +49,11 @@ export class App {
   private readonly viewportScroller = inject(ViewportScroller);
   protected readonly i18n = inject(DocsI18n);
   protected readonly prefs = inject(DocsPreferences);
-  protected readonly categories = KERN_CATEGORIES;
-  protected readonly catalog = KERN_CATALOG_INDEX;
+  protected readonly categories = KERN_COMPONENT_CATEGORIES;
+  protected readonly catalog = KERN_CANONICAL_CATALOG_INDEX;
+  protected readonly componentCatalog = KERN_COMPONENT_CATALOG_INDEX;
+  protected readonly recipes = KERN_RECIPE_CATALOG_INDEX;
+  protected readonly recipeCategory: KernCategory = 'Patterns';
   protected readonly docsVersionLabel = KERN_DOCS_VERSION_LABEL;
   protected readonly docsReleaseStateLabel = KERN_DOCS_RELEASE_STATE_LABEL;
   protected readonly essentials = [
@@ -55,7 +62,7 @@ export class App {
     'dialog',
     'data-grid',
     'app-shell',
-    'global-search',
+    'tabs',
   ]
     .map((id) => this.catalog.find((item) => item.id === id))
     .filter((item): item is (typeof this.catalog)[number] => Boolean(item));
@@ -77,7 +84,8 @@ export class App {
   );
   protected readonly activeCategory = computed<KernCategory | null>(() => {
     const match = this.currentUrl().match(/^\/components\/([^/?#]+)/);
-    return this.catalog.find((item) => item.id === match?.[1])?.category ?? null;
+    const id = canonicalCatalogId(match?.[1] ?? '');
+    return this.catalog.find((item) => item.id === id)?.category ?? null;
   });
 
   constructor() {
@@ -115,8 +123,16 @@ export class App {
     });
   }
 
-  protected itemsFor(category: KernCategory) {
-    return catalogIndexByCategory(category);
+  protected groupsFor(category: KernCategory) {
+    return catalogNavigationGroups(category);
+  }
+
+  protected groupLabel(group: KernCatalogNavigationGroup): string | undefined {
+    return group.label ? this.i18n.catalogFamilyName(group.id, group.label) : undefined;
+  }
+
+  protected itemCountFor(category: KernCategory): number {
+    return this.catalog.filter((item) => item.category === category).length;
   }
 
   protected optionLabel(value: string): string {

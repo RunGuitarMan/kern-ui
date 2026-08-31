@@ -5,6 +5,10 @@
       "baseline": "root.api.d.ts"
     },
     {
+      "subpath": "./actions",
+      "baseline": "actions.api.d.ts"
+    },
+    {
       "subpath": "./addon-charts",
       "baseline": "addon-charts.api.d.ts"
     },
@@ -21,12 +25,33 @@
       "baseline": "core.api.d.ts"
     },
     {
+      "subpath": "./data-display",
+      "baseline": "data-display.api.d.ts"
+    },
+    {
+      "subpath": "./feedback",
+      "baseline": "feedback.api.d.ts"
+    },
+    {
+      "subpath": "./forms",
+      "baseline": "forms.api.d.ts"
+    },
+    {
       "subpath": "./i18n",
       "baseline": "i18n.api.d.ts"
     },
     {
       "subpath": "./kit",
-      "baseline": "kit.api.d.ts"
+      "baseline": "kit.api.d.ts",
+      "lifecycle": false
+    },
+    {
+      "subpath": "./layout",
+      "baseline": "layout.api.d.ts"
+    },
+    {
+      "subpath": "./navigation",
+      "baseline": "navigation.api.d.ts"
     },
     {
       "subpath": "./patterns",

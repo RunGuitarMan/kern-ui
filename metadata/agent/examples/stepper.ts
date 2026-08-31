@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnStepper, type KrnStepItem } from '@kern-ui/angular/kit';
+import { KrnStepper, type KrnStepItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-stepper-agent-example',

@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCommandPalette, type KrnCommandItem } from '@kern-ui/angular/kit';
+import { KrnCommandPalette, type KrnCommandItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-command-palette-agent-example',

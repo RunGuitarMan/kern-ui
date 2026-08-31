@@ -9,14 +9,14 @@
   "symbol": "KrnDivider",
   "canonicalSymbol": "KrnDivider",
   "canonicalId": "divider",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Divider. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Divider. Separates adjacent content horizontally or vertically, with optional inset and visible label.",
   "acceptanceStates": ["default", "dark", "high contrast", "compact", "RTL", "mobile"],
   "lifecycle": {
     "status": "stable",
@@ -80,11 +80,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Exposes separator semantics and the configured orientation.",
+      "A visible label supplements rather than replaces the surrounding section structure."
     ],
     "manualValidationRequired": true
   },
@@ -103,7 +102,7 @@
       "title": "Labeled section divider",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Labeled section divider\n *\n * Separate two form sections with visible context.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDivider } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-divider-agent-example',\n  standalone: true,\n  imports: [KrnDivider],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-divider label=\"Advanced settings\" /> `,\n})\nexport class KernDividerAgentExample {}\n\nvoid bootstrapApplication(KernDividerAgentExample);\n",
+      "code": "/**\n * Labeled section divider\n *\n * Separate two form sections with visible context.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDivider } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-divider-agent-example',\n  standalone: true,\n  imports: [KrnDivider],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-divider label=\"Advanced settings\" /> `,\n})\nexport class KernDividerAgentExample {}\n\nvoid bootstrapApplication(KernDividerAgentExample);\n",
       "verification": "compiled",
       "source": "examples/divider.ts"
     }
@@ -120,8 +119,8 @@
     "label"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Divider for this specific contract: Separates adjacent content horizontally or vertically, with optional inset and visible label.",
+    "avoidWhen": "Do not choose Divider for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -187,7 +186,7 @@
         "kind": "text",
         "defaultValue": "0",
         "testValue": "20rem",
-        "description": "Configures the component inset contract.",
+        "description": "Insets both ends of the divider along its length using a spacing token, pixels, or CSS length.",
         "binding": {
           "kind": "input",
           "publicName": "inset",

@@ -9,14 +9,14 @@
   "symbol": "KrnResponsiveShowHide",
   "canonicalSymbol": "KrnShow",
   "canonicalId": "responsive-show-hide",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": ["KrnShow"],
     "selectors": ["krn-show"],
     "componentIds": []
   },
-  "summary": "Responsive Show Hide. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Responsive Show Hide. Shows or hides projected content between named responsive boundaries without duplicating it.",
   "acceptanceStates": ["default", "dark", "high contrast", "compact", "RTL", "mobile"],
   "lifecycle": {
     "status": "stable",
@@ -87,11 +87,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Hidden content is removed consistently from visual display and the accessibility tree.",
+      "Responsive visibility never changes the relative order of content that remains present."
     ],
     "manualValidationRequired": true
   },
@@ -110,7 +109,7 @@
       "title": "Responsive supporting guidance",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Responsive supporting guidance\n *\n * Show supplemental copy only when its target layout has enough room.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnResponsiveShowHide } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-responsive-show-hide-agent-example',\n  standalone: true,\n  imports: [KrnResponsiveShowHide],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-responsive-show-hide from=\"md\" display=\"block\">\n      Keyboard shortcuts are available from the command palette.\n    </krn-responsive-show-hide>\n  `,\n})\nexport class KernResponsiveShowHideAgentExample {}\n\nvoid bootstrapApplication(KernResponsiveShowHideAgentExample);\n",
+      "code": "/**\n * Responsive supporting guidance\n *\n * Show supplemental copy only when its target layout has enough room.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnResponsiveShowHide } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-responsive-show-hide-agent-example',\n  standalone: true,\n  imports: [KrnResponsiveShowHide],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-responsive-show-hide from=\"md\" display=\"block\">\n      Keyboard shortcuts are available from the command palette.\n    </krn-responsive-show-hide>\n  `,\n})\nexport class KernResponsiveShowHideAgentExample {}\n\nvoid bootstrapApplication(KernResponsiveShowHideAgentExample);\n",
       "verification": "compiled",
       "source": "examples/responsive-show-hide.ts"
     }
@@ -128,8 +127,8 @@
     "display"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Responsive Show Hide for this specific contract: Shows or hides projected content between named responsive boundaries without duplicating it.",
+    "avoidWhen": "Do not choose Responsive Show Hide for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

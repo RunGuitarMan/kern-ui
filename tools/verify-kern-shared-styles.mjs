@@ -5,24 +5,44 @@ import { fileURLToPath } from 'node:url';
 const workspaceRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const sourceRoot = join(workspaceRoot, 'projects/kern/src');
 const kernStylePath = join(sourceRoot, 'styles/kern.css');
-const sharedStyles = [
+const foundationStylePath = join(sourceRoot, 'styles/foundation.css');
+const componentStyleRoot = join(sourceRoot, 'styles/components');
+const stylePolicy = JSON.parse(
+  readFileSync(join(workspaceRoot, 'projects/kern/api/style-policy.json'), 'utf8'),
+);
+const bundleBudgets = JSON.parse(
+  readFileSync(join(workspaceRoot, 'projects/kern/api/bundle-budgets.json'), 'utf8'),
+);
+const runtimeEntrypoints = JSON.parse(
+  readFileSync(join(workspaceRoot, 'projects/kern/api/runtime-entrypoints.json'), 'utf8'),
+);
+const familyStyles = [
   {
     family: 'actions',
-    path: join(sourceRoot, 'styles/components/actions.css'),
+    path: join(componentStyleRoot, 'actions.css'),
+    leaves: [
+      'actions-core.css',
+      'actions-groups.css',
+      'actions-menus.css',
+      'actions-utilities.css',
+    ],
   },
   {
     family: 'forms',
-    path: join(sourceRoot, 'styles/components/forms.css'),
+    path: join(componentStyleRoot, 'forms.css'),
+    leaves: [
+      'forms-foundation.css',
+      'forms-selection.css',
+      'forms-pickers.css',
+      'forms-specialized.css',
+    ],
   },
   {
     family: 'projection',
-    path: join(sourceRoot, 'styles/components/projection.css'),
+    path: join(componentStyleRoot, 'projection.css'),
+    leaves: [],
   },
 ];
-// The accessible JSON tree and motion-rich overlay/toast surfaces add 34.8 kB (2.35%)
-// over the pre-hardening 1,480,500-byte bundle. Keep only 4.7 kB of regression
-// headroom so future growth still requires an explicit budget review.
-const maxRuntimeBundleBytes = 1_520_000;
 const failures = [];
 
 function walk(directory, extension) {
@@ -57,8 +77,8 @@ function splitSelectorList(selectorList) {
 }
 
 const componentSources = [
-  ...walk(join(workspaceRoot, 'projects/kern/kit/src/lib/actions'), '.ts'),
-  ...walk(join(workspaceRoot, 'projects/kern/kit/src/lib/forms'), '.ts'),
+  ...walk(join(workspaceRoot, 'projects/kern/actions/src/lib/actions'), '.ts'),
+  ...walk(join(workspaceRoot, 'projects/kern/forms/src/lib/forms'), '.ts'),
 ];
 
 const kernProjectRoot = join(workspaceRoot, 'projects/kern');
@@ -88,14 +108,50 @@ for (const path of componentSources) {
 }
 
 const kernStyle = readFileSync(kernStylePath, 'utf8');
+const foundationStyle = readFileSync(foundationStylePath, 'utf8');
 
-for (const { family, path } of sharedStyles) {
+if (kernStyle.split("@import './foundation.css';").length - 1 !== 1) {
+  failures.push('styles/kern.css must import foundation.css exactly once.');
+}
+for (const foundationFile of [
+  'layers',
+  'tokens',
+  'themes',
+  'density',
+  'preferences',
+  'reset',
+  'base',
+  'utilities',
+]) {
+  const expectedImport = `@import './${foundationFile}.css';`;
+  if (foundationStyle.split(expectedImport).length - 1 !== 1) {
+    failures.push(`styles/foundation.css must import ${foundationFile}.css exactly once.`);
+  }
+}
+
+for (const { family, path, leaves } of familyStyles) {
   const expectedImport = `@import './components/${family}.css';`;
   const importCount = kernStyle.split(expectedImport).length - 1;
   if (importCount !== 1) {
     failures.push(`styles/kern.css must import ${family}.css exactly once (found ${importCount}).`);
   }
 
+  const css = readFileSync(path, 'utf8');
+  if (leaves.length) {
+    const expectedAggregator = `${leaves.map((leaf) => `@import './${leaf}';`).join('\n')}\n`;
+    if (css !== expectedAggregator) {
+      failures.push(`${relative(workspaceRoot, path)} must remain a pure ordered aggregator.`);
+    }
+  }
+}
+
+const scopedStylePaths = [
+  ...familyStyles.flatMap(({ path, leaves }) =>
+    leaves.length ? leaves.map((leaf) => join(dirname(path), leaf)) : [path],
+  ),
+];
+
+for (const path of scopedStylePaths) {
   const css = readFileSync(path, 'utf8');
   if (/:host(?:-context)?\b|::ng-deep/.test(css)) {
     failures.push(`${relative(workspaceRoot, path)} contains component-only Angular selectors.`);
@@ -125,10 +181,16 @@ for (const { family, path } of sharedStyles) {
       }
     }
   }
+
+  if (css.split('\n').length > 751) {
+    failures.push(
+      `${relative(workspaceRoot, path)} exceeds the 750-line shared-style module limit.`,
+    );
+  }
 }
 
-const actionStyles = readFileSync(sharedStyles[0].path, 'utf8');
-const projectionStyles = readFileSync(sharedStyles[2].path, 'utf8');
+const actionStyles = readFileSync(join(componentStyleRoot, 'actions-utilities.css'), 'utf8');
+const projectionStyles = readFileSync(join(componentStyleRoot, 'projection.css'), 'utf8');
 if (!projectionStyles.includes('.krn-responsive-media :is(img, video, iframe, svg)')) {
   failures.push('Responsive Media projection styles must support wrapped media descendants.');
 }
@@ -140,24 +202,65 @@ if (linkFocusRule.includes('var(--_action-')) {
   failures.push('Link focus-visible styles must not depend on private action-root variables.');
 }
 
+const colorLiteral = /(?:#[0-9a-fA-F]{3,8}\b|(?:rgb|hsl|oklch|color)\([^)]*\))/g;
+const dimensionLiteral = /(?<![-\w])(?:-?(?:\d+\.?\d*|\.\d+))(?:px|rem|em|ms|s|dvh|dvb|vw|vh)\b/g;
+const controlledStyleFiles = [
+  'base.css',
+  'kern.css',
+  'reset.css',
+  'utilities.css',
+  ...readdirSync(componentStyleRoot)
+    .filter((name) => name.endsWith('.css') && !['actions.css', 'forms.css'].includes(name))
+    .map((name) => `components/${name}`),
+].sort();
+const policyStyleFiles = Object.keys(stylePolicy.literalBudgets).sort();
+if (JSON.stringify(controlledStyleFiles) !== JSON.stringify(policyStyleFiles)) {
+  failures.push('style-policy.json must cover every non-token implementation stylesheet exactly.');
+}
+for (const styleFile of controlledStyleFiles) {
+  const policy = stylePolicy.literalBudgets[styleFile];
+  if (!policy) continue;
+  const css = readFileSync(join(sourceRoot, 'styles', styleFile), 'utf8').replaceAll(
+    /\/\*[\s\S]*?\*\//g,
+    '',
+  );
+  const colors = css.match(colorLiteral)?.length ?? 0;
+  const dimensions = css.match(dimensionLiteral)?.length ?? 0;
+  if (colors > policy.colors || dimensions > policy.dimensions) {
+    failures.push(
+      `${styleFile} exceeds its non-token literal budget: colors ${colors}/${policy.colors}, dimensions ${dimensions}/${policy.dimensions}.`,
+    );
+  }
+}
+
 const bundleDirectory = join(workspaceRoot, 'dist/kern/fesm2022');
 let bundleSummary = 'bundle not present';
 
 if (existsSync(bundleDirectory)) {
-  const bundlePath = readdirSync(bundleDirectory)
-    .filter((name) => name.endsWith('.mjs'))
-    .map((name) => join(bundleDirectory, name))
-    .sort((left, right) => statSync(right).size - statSync(left).size)[0];
-
-  if (bundlePath) {
+  const expectedBudgetNames = [
+    ...runtimeEntrypoints.entrypoints.map((entrypoint) => entrypoint.name),
+    ...(runtimeEntrypoints.compatibilityEntrypoints ?? []).map((entrypoint) => entrypoint.name),
+  ].sort();
+  const actualBudgetNames = Object.keys(bundleBudgets.entrypoints).sort();
+  if (JSON.stringify(expectedBudgetNames) !== JSON.stringify(actualBudgetNames)) {
+    failures.push('bundle-budgets.json must cover every runtime and compatibility entrypoint.');
+  }
+  const sizes = [];
+  for (const name of expectedBudgetNames) {
+    const bundlePath = join(bundleDirectory, `kern-ui-angular-${name}.mjs`);
+    if (!existsSync(bundlePath)) {
+      failures.push(`Missing FESM bundle for ${name}.`);
+      continue;
+    }
     const bundle = readFileSync(bundlePath, 'utf8');
     const embeddedControlRoots = bundle.split('--_control-height:').length - 1;
     const embeddedActionRoots = bundle.split('--_action-height:').length - 1;
-    bundleSummary = `${statSync(bundlePath).size} bytes; embedded roots: forms=${embeddedControlRoots}, actions=${embeddedActionRoots}`;
+    const size = statSync(bundlePath).size;
+    sizes.push(`${name}=${size}`);
 
-    if (statSync(bundlePath).size > maxRuntimeBundleBytes) {
+    if (size > bundleBudgets.entrypoints[name]) {
       failures.push(
-        `The primary uncompressed FESM exceeds the ${maxRuntimeBundleBytes} byte regression budget.`,
+        `${name} FESM is ${size} bytes and exceeds its ${bundleBudgets.entrypoints[name]}-byte budget.`,
       );
     }
 
@@ -165,6 +268,7 @@ if (existsSync(bundleDirectory)) {
       failures.push('The FESM still contains embedded shared form/action style roots.');
     }
   }
+  bundleSummary = sizes.join(', ');
 }
 
 if (failures.length) {

@@ -9,14 +9,14 @@
   "symbol": "KrnPopover",
   "canonicalSymbol": "KrnPopover",
   "canonicalId": "popover",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Popover. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Popover. Opens a focusable non-modal surface from an owned trigger and dismisses it predictably.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -116,11 +116,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
+    "keyboard": ["Enter or Space toggles the trigger; Escape closes and restores focus"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The owned trigger exposes expanded state and the relationship to the popover surface.",
+      "Dismissal restores focus without turning the popover into an implicit modal dialog."
     ],
     "manualValidationRequired": true
   },
@@ -140,7 +139,7 @@
       "title": "Controlled contextual popover",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled contextual popover\n *\n * Compose trigger and content while keeping disclosure state application-owned.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnPopover } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-popover-agent-example',\n  standalone: true,\n  imports: [KrnPopover],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-popover [(open)]=\"open\" ariaLabel=\"Account health details\">\n      <span krnPopoverTrigger>Health details</span>\n      <p>Three checks passed and one requires attention.</p>\n    </krn-popover>\n  `,\n})\nexport class KernPopoverAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernPopoverAgentExample);\n",
+      "code": "/**\n * Controlled contextual popover\n *\n * Compose trigger and content while keeping disclosure state application-owned.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnPopover } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-popover-agent-example',\n  standalone: true,\n  imports: [KrnPopover],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-popover [(open)]=\"open\" ariaLabel=\"Account health details\">\n      <span krnPopoverTrigger>Health details</span>\n      <p>Three checks passed and one requires attention.</p>\n    </krn-popover>\n  `,\n})\nexport class KernPopoverAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernPopoverAgentExample);\n",
       "verification": "compiled",
       "source": "examples/popover.ts"
     }
@@ -161,8 +160,8 @@
     "closed"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Popover for this specific contract: Opens a focusable non-modal surface from an owned trigger and dismisses it predictably.",
+    "avoidWhen": "Do not choose Popover for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -206,7 +205,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component autoFocus contract.",
+        "description": "Controls whether the component applies the auto focus behavior.",
         "binding": {
           "kind": "input",
           "publicName": "autoFocus",

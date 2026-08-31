@@ -21,6 +21,8 @@ export {
   provideKrnTheme,
 } from './theme';
 export { provideKrnTranslationBridge } from './translation-bridge';
+export { krnInputFallback } from './reactive-input';
+export { krnInheritedLocale, krnResolvedLocale, type KrnIntlLocale } from './reactive-locale';
 
 export type { KrnConfig, KrnDirection, KrnMotionPreference, KrnOverlayHost } from './config';
 export type { KrnDateTimeSnapshot } from './date-time';

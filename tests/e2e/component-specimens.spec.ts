@@ -3,6 +3,9 @@ import { expect, test, type Page } from '@playwright/test';
 import { KERN_CATALOG } from '../../projects/showcase/src/lib/catalog';
 import { DOCS_URL, expectNoPageOverflow, settlePage, watchRuntimeErrors } from '../support/browser';
 
+const CANONICAL_CATALOG = KERN_CATALOG.filter((item) => item.variantOf === undefined);
+const CATALOG_ALIASES = KERN_CATALOG.filter((item) => item.variantOf !== undefined);
+
 const ERROR_OVERLAY_SELECTOR = [
   'vite-error-overlay',
   'ng-error-overlay',
@@ -71,8 +74,9 @@ test.describe('Complete component specimen routing', () => {
     });
 
     expect(KERN_CATALOG).toHaveLength(132);
+    expect(CANONICAL_CATALOG).toHaveLength(127);
 
-    for (const item of KERN_CATALOG) {
+    for (const item of CANONICAL_CATALOG) {
       activeRoute = item.id;
       const errorsBeforeRoute = runtimeErrors.length;
       const response = await page.goto(`${DOCS_URL}/components/${item.id}`, {
@@ -227,6 +231,28 @@ test.describe('Complete component specimen routing', () => {
     }
 
     expect(runtimeErrors, runtimeErrors.join('\n')).toEqual([]);
+  });
+
+  test('legacy alias routes resolve to one canonical page and remain visible there', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    for (const alias of CATALOG_ALIASES) {
+      const canonical = KERN_CATALOG.find((item) => item.id === alias.variantOf);
+      expect(canonical, `${alias.id}: canonical catalog entry`).toBeDefined();
+      if (!canonical) continue;
+
+      await page.goto(`${DOCS_URL}/components/${alias.id}`);
+      await settlePage(page);
+      await expect(page).toHaveURL(new RegExp(`/components/${canonical.id}$`));
+      await expect(page.getByRole('heading', { level: 1, name: canonical.name })).toBeVisible();
+      await expect(page.getByTestId(`component-specimen-${canonical.id}`)).toBeVisible();
+      await expect(page.locator('.alias-card')).toContainText(alias.name);
+      await expect(page.locator('.alias-card')).toContainText(`/components/${alias.id}`);
+    }
+
+    assertNoRuntimeErrors();
   });
 });
 

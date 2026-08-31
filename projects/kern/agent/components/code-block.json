@@ -9,14 +9,14 @@
   "symbol": "KrnCodeBlock",
   "canonicalSymbol": "KrnCodeBlock",
   "canonicalId": "code-block",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Code Block. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Code Block. Renders selectable source code with language metadata and an optional copy action.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -53,7 +53,7 @@
       "type": "string",
       "required": true,
       "defaultValue": "required",
-      "description": "Required source text rendered by the syntax-aware code presentation.",
+      "description": "Defines the component's code behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -63,7 +63,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "'text'",
-      "description": "Language identifier used by syntax highlighting and accessible code metadata.",
+      "description": "Defines the component's language behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -99,11 +99,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["Tab reaches the optional copy action; code text remains natively selectable"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -123,7 +122,7 @@
       "title": "Copyable API request example",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Copyable API request example\n *\n * Render a complete short code sample with language metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCodeBlock } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-code-block-agent-example',\n  standalone: true,\n  imports: [KrnCodeBlock],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-code-block\n      language=\"typescript\"\n      languageLabel=\"TypeScript\"\n      [code]=\"sourceCode\"\n      [(copied)]=\"copied\"\n    />\n  `,\n})\nexport class KernCodeBlockAgentExample {\n  readonly sourceCode = \"const customer = await client.customers.get('cus-2048');\";\n\n  copied = false;\n}\n\nvoid bootstrapApplication(KernCodeBlockAgentExample);\n",
+      "code": "/**\n * Copyable API request example\n *\n * Render a complete short code sample with language metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCodeBlock } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-code-block-agent-example',\n  standalone: true,\n  imports: [KrnCodeBlock],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-code-block\n      language=\"typescript\"\n      languageLabel=\"TypeScript\"\n      [code]=\"sourceCode\"\n      [(copied)]=\"copied\"\n    />\n  `,\n})\nexport class KernCodeBlockAgentExample {\n  readonly sourceCode = \"const customer = await client.customers.get('cus-2048');\";\n\n  copied = false;\n}\n\nvoid bootstrapApplication(KernCodeBlockAgentExample);\n",
       "verification": "compiled",
       "source": "examples/code-block.ts"
     }
@@ -141,8 +140,8 @@
     "copied"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Code Block for this specific contract: Renders selectable source code with language metadata and an optional copy action.",
+    "avoidWhen": "Do not choose Code Block for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Do not omit required inputs: `code`.",

@@ -2,18 +2,18 @@
 
 - ID: `split-layout`
 - Selector: `krn-split-layout`
-- Import: `import { KrnSplitLayout } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSplitLayout } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnSplitLayout`
 - Lifecycle: **stable**
 - Category: Layout
 
-Split Layout. A composable spatial primitive that keeps product layouts predictable across containers.
+Split Layout. Places two panels in a configurable ratio and stacks them below a container breakpoint.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Split Layout for this specific contract: Places two panels in a configurable ratio and stacks them below a container breakpoint.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Split Layout for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSplitLayout } from '@kern-ui/angular/kit';
+import { KrnSplitLayout } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-split-layout-agent-example',
@@ -73,10 +73,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Projected content retains its document order and native semantics as layout changes.
+- Logical sizing and placement work in both LTR and RTL without duplicating content.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -111,12 +110,12 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument     | Control | Default   | Test value | Binding                       | Description                                   |
-| ------------ | ------- | --------- | ---------- | ----------------------------- | --------------------------------------------- |
-| `ratio`      | select  | `"1:2"`   | `"1:1"`    | input `ratio` (property)      | Changes the primary-to-secondary pane ratio.  |
-| `gap`        | text    | `"4"`     | `"20rem"`  | input `gap` (property)        | Sets the separation between panes.            |
-| `align`      | select  | `"start"` | `"center"` | input `align` (property)      | Configures the component align contract.      |
-| `collapseAt` | select  | `"md"`    | `"none"`   | input `collapseAt` (property) | Configures the component collapseAt contract. |
+| Argument     | Control | Default   | Test value | Binding                       | Description                                                                            |
+| ------------ | ------- | --------- | ---------- | ----------------------------- | -------------------------------------------------------------------------------------- |
+| `ratio`      | select  | `"1:2"`   | `"1:1"`    | input `ratio` (property)      | Changes the primary-to-secondary pane ratio.                                           |
+| `gap`        | text    | `"4"`     | `"20rem"`  | input `gap` (property)        | Sets the separation between panes.                                                     |
+| `align`      | select  | `"start"` | `"center"` | input `align` (property)      | Aligns the panels within the split layout's block axis.                                |
+| `collapseAt` | select  | `"md"`    | `"none"`   | input `collapseAt` (property) | Stacks the panels when the split layout's inline size reaches the selected breakpoint. |
 
 Exact API exclusions:
 

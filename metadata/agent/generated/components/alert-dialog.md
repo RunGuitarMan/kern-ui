@@ -2,18 +2,18 @@
 
 - ID: `alert-dialog`
 - Selector: `krn-alert-dialog`
-- Import: `import { KrnAlertDialog } from '@kern-ui/angular/kit';`
+- Import: `import { KrnAlertDialog } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnAlertDialog`
 - Lifecycle: **stable**
 - Category: Feedback
 
-Alert Dialog. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Alert Dialog. Requests a decision before a consequential action and keeps focus within the modal surface.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Alert Dialog for this specific contract: Requests a decision before a consequential action and keeps focus within the modal surface.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Alert Dialog for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAlertDialog } from '@kern-ui/angular/kit';
+import { KrnAlertDialog } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-alert-dialog-agent-example',
@@ -71,8 +71,8 @@ void bootstrapApplication(KernAlertDialogAgentExample);
 | `closeOnOutside`  | input  | `boolean \| null`              | no       | `null`             | Allows an interaction outside the owned overlay to dismiss it.                |
 | `initialFocus`    | input  | `string`                       | no       | `'first-tabbable'` | Identifies the element that receives focus when the modal surface opens.      |
 | `restoreFocus`    | input  | `HTMLElement \| false \| null` | no       | `null`             | Explicit focus return target, or `false` to disable focus restoration.        |
-| `contentTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template used to render the component body with its typed context.            |
-| `actionsTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template used to render product-owned actions in the designated slot.         |
+| `contentTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template or projected content used to render content.                         |
+| `actionsTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template or projected content used to render actions.                         |
 | `closed`          | output | `KrnOverlayCloseReason`        | no       | `undefined`        | Notifies the consumer after the closed interaction completes.                 |
 | `afterExited`     | output | `void`                         | no       | `undefined`        | Emits after exit motion and global modal cleanup have completed.              |
 
@@ -91,11 +91,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Escape closes modal layers
-- Focus returns to the trigger
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab stays within the alert dialog; Escape closes only when explicitly allowed
+- The surface exposes alertdialog semantics with a visible decision and consequence.
+- Initial focus, modal containment, and restoration follow the destructive decision flow.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -138,12 +136,12 @@ component inputs or models.
 | ---------------- | ------- | --------------------------------- | --------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------ |
 | `open`           | boolean | `false`                           | `true`                                        | model `open`                      | Opens the destructive confirmation.                                                              |
 | `closeOnOutside` | select  | `null`                            | `true`                                        | input `closeOnOutside` (property) | Inherits the surface policy by default, or explicitly enables or disables outside-click closing. |
-| `closeOnEscape`  | boolean | `true`                            | `false`                                       | input `closeOnEscape` (property)  | Configures the component closeOnEscape contract.                                                 |
-| `description`    | text    | `"This action cannot be undone."` | `"This action cannot be undone. · alternate"` | input `description` (property)    | Configures the component description contract.                                                   |
-| `eyebrow`        | text    | `""`                              | `"Alternate value"`                           | input `eyebrow` (property)        | Configures the component eyebrow contract.                                                       |
-| `modal`          | boolean | `true`                            | `false`                                       | input `modal` (property)          | Configures the component modal contract.                                                         |
-| `showClose`      | boolean | `true`                            | `false`                                       | input `showClose` (property)      | Configures the component showClose contract.                                                     |
-| `title`          | text    | `"Delete Northstar?"`             | `"Delete Northstar? · alternate"`             | input `title` (property)          | Configures the component title contract.                                                         |
+| `closeOnEscape`  | boolean | `true`                            | `false`                                       | input `closeOnEscape` (property)  | Allows Escape to dismiss the topmost owned overlay.                                              |
+| `description`    | text    | `"This action cannot be undone."` | `"This action cannot be undone. · alternate"` | input `description` (property)    | Visible supporting description for the component content.                                        |
+| `eyebrow`        | text    | `""`                              | `"Alternate value"`                           | input `eyebrow` (property)        | Human-readable copy for the eyebrow state or control.                                            |
+| `modal`          | boolean | `true`                            | `false`                                       | input `modal` (property)          | Blocks background interaction and traps focus while the alert dialog is open.                    |
+| `showClose`      | boolean | `true`                            | `false`                                       | input `showClose` (property)      | Controls whether the component applies the show close behavior.                                  |
+| `title`          | text    | `"Delete Northstar?"`             | `"Delete Northstar? · alternate"`             | input `title` (property)          | Visible title that also names the component surface or data view.                                |
 
 Exact API exclusions:
 

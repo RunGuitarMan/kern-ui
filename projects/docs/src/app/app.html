@@ -214,7 +214,7 @@
 
         @for (category of categories; track category; let categoryIndex = $index) {
           <details
-            class="category"
+            class="category component-category"
             [open]="categoryOpen(category)"
             (toggle)="setCategoryOpen(category, $event)"
           >
@@ -223,23 +223,61 @@
                 >{{ (categoryIndex + 1).toString().padStart(2, '0') }} /
                 {{ i18n.category(category) }}</span
               >
-              <small>{{ itemsFor(category).length }}</small>
+              <small>{{ itemCountFor(category) }}</small>
             </summary>
-            <div>
-              @for (item of itemsFor(category); track item.id) {
-                <a [routerLink]="['/components', item.id]" routerLinkActive="active">
-                  <span>{{ sidebarNames().get(item.id) ?? item.name }}</span>
-                </a>
+            <div class="category-groups">
+              @for (group of groupsFor(category); track group.id) {
+                <div class="catalog-group" [class.ungrouped]="!group.label">
+                  @if (groupLabel(group); as label) {
+                    <p class="family-label">{{ label }}</p>
+                  }
+                  @for (item of group.items; track item.id) {
+                    <a [routerLink]="['/components', item.id]" routerLinkActive="active">
+                      <span>{{ sidebarNames().get(item.id) ?? item.name }}</span>
+                    </a>
+                  }
+                </div>
               }
             </div>
           </details>
         }
+
+        <section class="recipe-section">
+          <p>{{ tr('shell.recipes', 'Recipes') }} / {{ i18n.category(recipeCategory) }}</p>
+          <details
+            class="category recipe-category"
+            [open]="categoryOpen(recipeCategory)"
+            (toggle)="setCategoryOpen(recipeCategory, $event)"
+          >
+            <summary>
+              <span>{{ i18n.category(recipeCategory) }}</span>
+              <small>{{ recipes.length }}</small>
+            </summary>
+            <div class="category-groups">
+              @for (group of groupsFor(recipeCategory); track group.id) {
+                <div class="catalog-group" [class.ungrouped]="!group.label">
+                  @if (groupLabel(group); as label) {
+                    <p class="family-label">{{ label }}</p>
+                  }
+                  @for (item of group.items; track item.id) {
+                    <a [routerLink]="['/components', item.id]" routerLinkActive="active">
+                      <span>{{ sidebarNames().get(item.id) ?? item.name }}</span>
+                    </a>
+                  }
+                </div>
+              }
+            </div>
+          </details>
+        </section>
       </nav>
       <footer>
         <span class="docs-version"
           >{{ docsVersionLabel }} · {{ tr('changelog.releaseState', docsReleaseStateLabel) }}</span
         >
-        <span>{{ catalog.length }} {{ tr('shell.entries', 'documented entries') }}</span>
+        <span
+          >{{ componentCatalog.length }} {{ tr('shell.components', 'components') }} ·
+          {{ recipes.length }} {{ tr('shell.patterns', 'patterns') }}</span
+        >
       </footer>
     </aside>
     @if (prefs.navigationOpen()) {

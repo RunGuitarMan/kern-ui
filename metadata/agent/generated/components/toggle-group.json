@@ -9,8 +9,8 @@
   "symbol": "KrnToggleGroup",
   "canonicalSymbol": "KrnToggleGroup",
   "canonicalId": "toggle-group",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "actions",
+  "importPath": "@kern-ui/angular/actions",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -161,7 +161,7 @@
       "title": "Multi-select view controls",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Multi-select view controls\n *\n * Control a set of pressed view options by stable string values.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnToggleButton, KrnToggleGroup } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-toggle-group-agent-example',\n  standalone: true,\n  imports: [KrnToggleGroup, KrnToggleButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <div\n      krnToggleGroup\n      aria-label=\"Visible dashboard layers\"\n      [multiple]=\"true\"\n      [(values)]=\"visibleLayers\"\n    >\n      <button krnToggleButton value=\"targets\">Targets</button>\n      <button krnToggleButton value=\"forecast\">Forecast</button>\n    </div>\n  `,\n})\nexport class KernToggleGroupAgentExample {\n  visibleLayers: readonly string[] = ['targets'];\n}\n\nvoid bootstrapApplication(KernToggleGroupAgentExample);\n",
+      "code": "/**\n * Multi-select view controls\n *\n * Control a set of pressed view options by stable string values.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnToggleButton, KrnToggleGroup } from '@kern-ui/angular/actions';\n\n@Component({\n  selector: 'app-kern-toggle-group-agent-example',\n  standalone: true,\n  imports: [KrnToggleGroup, KrnToggleButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <div\n      krnToggleGroup\n      aria-label=\"Visible dashboard layers\"\n      [multiple]=\"true\"\n      [(values)]=\"visibleLayers\"\n    >\n      <button krnToggleButton value=\"targets\">Targets</button>\n      <button krnToggleButton value=\"forecast\">Forecast</button>\n    </div>\n  `,\n})\nexport class KernToggleGroupAgentExample {\n  visibleLayers: readonly string[] = ['targets'];\n}\n\nvoid bootstrapApplication(KernToggleGroupAgentExample);\n",
       "verification": "compiled",
       "source": "examples/toggle-group.ts"
     }

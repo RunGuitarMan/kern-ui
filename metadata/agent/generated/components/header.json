@@ -9,14 +9,14 @@
   "symbol": "KrnHeader",
   "canonicalSymbol": "KrnHeader",
   "canonicalId": "header",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Header. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Header. Provides a sticky or static header landmark with configurable height, offset, and elevation.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -73,7 +73,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "true",
-      "description": "Keeps the surface attached to its scrolling boundary while content moves.",
+      "description": "Defines the component's sticky behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -83,7 +83,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Adds semantic surface elevation for content that sits above its surroundings.",
+      "description": "Defines the component's elevated behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -138,11 +138,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Renders a native header landmark and accepts aria-label or aria-labelledby when more than one header exists.",
+      "Sticky positioning does not change reading or focus order."
     ],
     "manualValidationRequired": true
   },
@@ -161,7 +160,7 @@
       "title": "Application header",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Application header\n *\n * Arrange product identity, page context and account actions.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnHeader } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-header-agent-example',\n  standalone: true,\n  imports: [KrnHeader],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-header sticky>\n      <strong krnHeaderStart>KERN Console</strong>\n      <span>Production</span>\n      <button krnHeaderEnd type=\"button\">Account</button>\n    </krn-header>\n  `,\n})\nexport class KernHeaderAgentExample {}\n\nvoid bootstrapApplication(KernHeaderAgentExample);\n",
+      "code": "/**\n * Application header\n *\n * Arrange product identity, page context and account actions.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnHeader } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-header-agent-example',\n  standalone: true,\n  imports: [KrnHeader],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-header sticky>\n      <strong krnHeaderStart>KERN Console</strong>\n      <span>Production</span>\n      <button krnHeaderEnd type=\"button\">Account</button>\n    </krn-header>\n  `,\n})\nexport class KernHeaderAgentExample {}\n\nvoid bootstrapApplication(KernHeaderAgentExample);\n",
       "verification": "compiled",
       "source": "examples/header.ts"
     }
@@ -181,8 +180,8 @@
     "ariaLabelledBy"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Header for this specific contract: Provides a sticky or static header landmark with configurable height, offset, and elevation.",
+    "avoidWhen": "Do not choose Header for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -225,7 +224,7 @@
         "kind": "text",
         "defaultValue": "4rem",
         "testValue": "20rem",
-        "description": "Configures the component height contract.",
+        "description": "Explicit block size of the rendered surface or virtual viewport.",
         "binding": {
           "kind": "input",
           "publicName": "height",
@@ -238,7 +237,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component sticky contract.",
+        "description": "Defines the component's sticky behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "sticky",
@@ -251,7 +250,7 @@
         "kind": "text",
         "defaultValue": "0",
         "testValue": "1rem",
-        "description": "Configures the component stickyOffset contract.",
+        "description": "Logical inset between a sticky header and its scrolling boundary.",
         "binding": {
           "kind": "input",
           "publicName": "stickyOffset",

@@ -2,7 +2,7 @@
 
 - ID: `tree`
 - Selector: `krn-tree`
-- Import: `import { KrnTree } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTree } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnTree`
 - Lifecycle: **beta**
 - Category: Data display
@@ -27,7 +27,7 @@ Avoid: Use Tree Navigation for route wayfinding and nested lists when items do n
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTree, type KrnTreeNode } from '@kern-ui/angular/kit';
+import { KrnTree, type KrnTreeNode } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-tree-agent-example',

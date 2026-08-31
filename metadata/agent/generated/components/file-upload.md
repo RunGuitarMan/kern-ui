@@ -2,18 +2,18 @@
 
 - ID: `file-upload`
 - Selector: `krn-file-upload`
-- Import: `import { KrnFileUpload } from '@kern-ui/angular/kit';`
+- Import: `import { KrnFileUpload } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnFileUpload`
 - Lifecycle: **stable**
 - Category: Forms
 
-File Upload. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+File Upload. Selects one or more files and reports type, size, and file-count rejections.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use File Upload for this specific contract: Selects one or more files and reports type, size, and file-count rejections.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose File Upload for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnFileUpload } from '@kern-ui/angular/kit';
+import { KrnFileUpload } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-file-upload-agent-example',
@@ -56,12 +56,13 @@ void bootstrapApplication(KernFileUploadAgentExample);
 
 | Name              | Kind   | Type                                | Required | Default                    | Description                                                                                      |
 | ----------------- | ------ | ----------------------------------- | -------- | -------------------------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`                            | no       | `''`                       | Stable identifier value used by the id contract.                                                 |
+| `presentation`    | input  | `KrnUploadPresentation`             | no       | `'button'`                 | Selects a compact picker button or a drag-and-drop surface.                                      |
+| `id`              | input  | `string`                            | no       | `''`                       | Stable identifier used by the id contract.                                                       |
 | `label`           | input  | `string \| undefined`               | no       | `undefined`                | Visible text that names the control or data value.                                               |
 | `locale`          | input  | `string \| undefined`               | no       | `undefined`                | Locale identifier used for collation, formatting, and component-owned copy.                      |
 | `description`     | input  | `string`                            | no       | `''`                       | Visible supporting description for the component content.                                        |
 | `accept`          | input  | `string`                            | no       | `''`                       | Comma-separated file types accepted by the upload control.                                       |
-| `multiple`        | input  | `boolean`                           | no       | `false`                    | Allows more than one value or file to be selected in one interaction.                            |
+| `multiple`        | input  | `boolean`                           | no       | `false`                    | Defines the component's multiple behavior or presentation.                                       |
 | `maxSize`         | input  | `number`                            | no       | `Number.POSITIVE_INFINITY` | Upper or lower bound applied to the size value.                                                  |
 | `maxFiles`        | input  | `number`                            | no       | `Number.POSITIVE_INFINITY` | Upper or lower bound applied to the files value.                                                 |
 | `disabled`        | input  | `boolean`                           | no       | `false`                    | Prevents user interaction and participates in the disabled-state contract.                       |
@@ -70,6 +71,7 @@ void bootstrapApplication(KernFileUploadAgentExample);
 | `invalid`         | input  | `boolean`                           | no       | `false`                    | Exposes an externally controlled invalid presentation state.                                     |
 | `filesChange`     | output | `ReadonlyArray<File>`               | no       | `undefined`                | Notifies the consumer after the files change interaction completes.                              |
 | `rejected`        | output | `ReadonlyArray<KrnUploadRejection>` | no       | `undefined`                | Notifies the consumer after the rejected interaction completes.                                  |
+| `dropLabel`       | input  | `string \| undefined`               | no       | `undefined`                | Localized instruction shown inside the drag-and-drop upload surface.                             |
 | `ariaLabelledBy`  | input  | `string`                            | no       | `''`                       | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input  | `string`                            | no       | `''`                       | Space-separated element ids composed with Form Field hints and validation descriptions.          |
 | `tabindex`        | input  | `number`                            | no       | `0`                        | Native sequential-focus order forwarded to the owned interactive element.                        |
@@ -89,12 +91,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Enter or Space on the browse action opens the native file picker
+- The real form control retains its visible name, described-by relationships, and Angular state.
+- Required, readonly, disabled, and invalid states remain programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -132,36 +131,38 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/file-upload`
 
 Scenarios: `default`.
-Public API coverage: 12/16
-directly controlled; 4 exact exclusions; 0 unclassified.
+Public API coverage: 12/18
+directly controlled; 6 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default               | Test value                        | Binding                        | Description                                                               |
-| ------------- | ------- | --------------------- | --------------------------------- | ------------------------------ | ------------------------------------------------------------------------- |
-| `multiple`    | boolean | `false`               | `true`                            | input `multiple` (property)    | Allows more than one file to be selected.                                 |
-| `accept`      | text    | `".csv,text/csv"`     | `".png,.jpg"`                     | input `accept` (property)      | Configures the component accept contract.                                 |
-| `description` | text    | `"CSV, up to 10 MB."` | `"CSV, up to 10 MB. · alternate"` | input `description` (property) | Configures the component description contract.                            |
-| `disabled`    | boolean | `false`               | `true`                            | input `disabled` (property)    | Prevents interaction and participates in the component disabled contract. |
-| `id`          | text    | `""`                  | `"Alternate value"`               | input `id` (property)          | Configures the component id contract.                                     |
-| `invalid`     | boolean | `false`               | `true`                            | input `invalid` (property)     | Exposes an externally controlled invalid presentation state.              |
-| `label`       | text    | `"Choose a CSV file"` | `"Choose a CSV file · alternate"` | input `label` (property)       | Configures the component label contract.                                  |
-| `maxFiles`    | number  | `5`                   | `6`                               | input `maxFiles` (property)    | Configures the component maxFiles contract.                               |
-| `maxSize`     | number  | `10485760`            | `10485759`                        | input `maxSize` (property)     | Configures the component maxSize contract.                                |
-| `readonly`    | boolean | `false`               | `true`                            | input `readonly` (property)    | Configures the component readonly contract.                               |
-| `required`    | boolean | `false`               | `true`                            | input `required` (property)    | Marks the value as required and participates in Angular Forms validation. |
-| `tabindex`    | number  | `0`                   | `1`                               | input `tabindex` (property)    | Configures the component tabindex contract.                               |
+| Argument      | Control | Default               | Test value                        | Binding                        | Description                                                                |
+| ------------- | ------- | --------------------- | --------------------------------- | ------------------------------ | -------------------------------------------------------------------------- |
+| `multiple`    | boolean | `false`               | `true`                            | input `multiple` (property)    | Allows more than one file to be selected.                                  |
+| `accept`      | text    | `".csv,text/csv"`     | `".png,.jpg"`                     | input `accept` (property)      | Comma-separated file types accepted by the upload control.                 |
+| `description` | text    | `"CSV, up to 10 MB."` | `"CSV, up to 10 MB. · alternate"` | input `description` (property) | Visible supporting description for the component content.                  |
+| `disabled`    | boolean | `false`               | `true`                            | input `disabled` (property)    | Prevents user interaction and participates in the disabled-state contract. |
+| `id`          | text    | `""`                  | `"Alternate value"`               | input `id` (property)          | Stable identifier used by the id contract.                                 |
+| `invalid`     | boolean | `false`               | `true`                            | input `invalid` (property)     | Exposes an externally controlled invalid presentation state.               |
+| `label`       | text    | `"Choose a CSV file"` | `"Choose a CSV file · alternate"` | input `label` (property)       | Visible text that names the control or data value.                         |
+| `maxFiles`    | number  | `5`                   | `6`                               | input `maxFiles` (property)    | Upper or lower bound applied to the files value.                           |
+| `maxSize`     | number  | `10485760`            | `10485759`                        | input `maxSize` (property)     | Upper or lower bound applied to the size value.                            |
+| `readonly`    | boolean | `false`               | `true`                            | input `readonly` (property)    | Keeps the value perceivable while preventing user edits.                   |
+| `required`    | boolean | `false`               | `true`                            | input `required` (property)    | Marks the value as required and participates in Angular Forms validation.  |
+| `tabindex`    | number  | `0`                   | `1`                               | input `tabindex` (property)    | Native sequential-focus order forwarded to the owned interactive element.  |
 
 Exact API exclusions:
 
-| Public API        | Category           | Evidence                                                 | Reason                                                                                                                  |
-| ----------------- | ------------------ | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#file-upload` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
-| `ariaLabelledBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#file-upload` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
-| `locale`          | locale-environment | `locale-preview:preview/file-upload?locale=ru-RU`        | Locale is owned by the playground environment selector so every locale-sensitive component changes consistently.        |
-| `value`           | complex-data       | `specimen-fixture:preview/file-upload?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
+| Public API        | Category           | Evidence                                                 | Reason                                                                                                                                                               |
+| ----------------- | ------------------ | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#file-upload` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `ariaLabelledBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#file-upload` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `dropLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#file-upload` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `locale`          | locale-environment | `locale-preview:preview/file-upload?locale=ru-RU`        | Locale is owned by the playground environment selector so every locale-sensitive component changes consistently.                                                     |
+| `presentation`    | complex-data       | `specimen-fixture:preview/file-upload?state=default`     | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                     |
+| `value`           | complex-data       | `specimen-fixture:preview/file-upload?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
 
 Presets:
 

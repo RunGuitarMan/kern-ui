@@ -2,18 +2,18 @@
 
 - ID: `breadcrumbs`
 - Selector: `krn-breadcrumbs`
-- Import: `import { KrnBreadcrumbs } from '@kern-ui/angular/kit';`
+- Import: `import { KrnBreadcrumbs } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnBreadcrumbs`
 - Lifecycle: **stable**
 - Category: Navigation
 
-Breadcrumbs. A keyboard-first wayfinding primitive that preserves orientation and current location.
+Breadcrumbs. Shows the current location hierarchy and collapses middle items when space is limited.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Breadcrumbs for this specific contract: Shows the current location hierarchy and collapses middle items when space is limited.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Breadcrumbs for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBreadcrumbs, type KrnBreadcrumbItem } from '@kern-ui/angular/kit';
+import { KrnBreadcrumbs, type KrnBreadcrumbItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-breadcrumbs-agent-example',
@@ -52,7 +52,7 @@ void bootstrapApplication(KernBreadcrumbsAgentExample);
 | --------------- | ------ | ---------------------------------- | -------- | ----------- | --------------------------------------------------------------------- |
 | `items`         | input  | `ReadonlyArray<KrnBreadcrumbItem>` | no       | `[]`        | Ordered item collection rendered by the composite widget.             |
 | `maxItems`      | input  | `number`                           | no       | `5`         | Upper or lower bound applied to the items value.                      |
-| `separator`     | input  | `string`                           | no       | `'›'`       | Visible text inserted between adjacent values or navigation segments. |
+| `separator`     | input  | `string`                           | no       | `'›'`       | Defines the component's separator behavior or presentation.           |
 | `ariaLabel`     | input  | `string \| undefined`              | no       | `undefined` | Accessible name used when visible content is not sufficient.          |
 | `moreLabel`     | input  | `string \| undefined`              | no       | `undefined` | Human-readable copy for the more state or control.                    |
 | `showAllLabel`  | input  | `string \| undefined`              | no       | `undefined` | Human-readable copy for the show all state or control.                |
@@ -72,12 +72,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys move within composites
-- Home / End jump
-- Enter activates
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab visits destination links in document order; Enter follows the focused link
+- Destinations retain native link semantics and expose current location where applicable.
+- Composite navigation uses one documented focus model without changing reading order.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -117,10 +114,10 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument    | Control | Default | Test value        | Binding                      | Description                                  |
-| ----------- | ------- | ------- | ----------------- | ---------------------------- | -------------------------------------------- |
-| `maxItems`  | number  | `5`     | `6`               | input `maxItems` (property)  | Controls when middle breadcrumbs collapse.   |
-| `separator` | text    | `"›"`   | `"› · alternate"` | input `separator` (property) | Configures the component separator contract. |
+| Argument    | Control | Default | Test value        | Binding                      | Description                                                 |
+| ----------- | ------- | ------- | ----------------- | ---------------------------- | ----------------------------------------------------------- |
+| `maxItems`  | number  | `5`     | `6`               | input `maxItems` (property)  | Controls when middle breadcrumbs collapse.                  |
+| `separator` | text    | `"›"`   | `"› · alternate"` | input `separator` (property) | Defines the component's separator behavior or presentation. |
 
 Exact API exclusions:
 

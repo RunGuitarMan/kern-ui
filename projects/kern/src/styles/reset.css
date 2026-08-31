@@ -1,0 +1,24 @@
+@layer krn.reset {
+  :where(body) {
+    margin: 0;
+  }
+
+  :where(*, *::before, *::after) {
+    box-sizing: border-box;
+  }
+
+  :where(button, input, select, textarea) {
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+  }
+
+  :where(img, picture, svg, video, canvas) {
+    display: block;
+    max-inline-size: 100%;
+  }
+
+  :where([hidden]) {
+    display: none !important;
+  }
+}

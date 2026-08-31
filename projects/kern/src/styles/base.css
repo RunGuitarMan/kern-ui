@@ -1,6 +1,3 @@
-@layer krn.reset, krn.tokens, krn.themes, krn.density, krn.preferences, krn.base,
-  krn.utilities;
-
 @layer krn.base {
   :where(html) {
     min-inline-size: min(20rem, 100%);
@@ -17,26 +14,10 @@
 
   :where(body) {
     min-block-size: 100dvb;
-    margin: 0;
     background: inherit;
     color: inherit;
     font-size: var(--krn-font-size-md);
     line-height: var(--krn-line-height-body);
-  }
-
-  :where(*, *::before, *::after) {
-    box-sizing: border-box;
-  }
-
-  :where(button, input, select, textarea) {
-    color: inherit;
-    font: inherit;
-    letter-spacing: inherit;
-  }
-
-  :where(img, picture, svg, video, canvas) {
-    display: block;
-    max-inline-size: 100%;
   }
 
   :where(a) {
@@ -48,10 +29,6 @@
   :where(::selection) {
     background: var(--krn-color-selection);
     color: var(--krn-color-text);
-  }
-
-  :where([hidden]) {
-    display: none !important;
   }
 
   :where([aria-disabled='true'], :disabled) {

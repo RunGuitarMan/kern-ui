@@ -4,130 +4,50 @@
   "libraryVersion": "0.1.2",
   "generatedBy": "scripts/generate-lifecycle-evidence.mjs",
   "artifacts": {
-    "agent-aot-verifier": {
-      "path": "tools/verify-kern-agent-dx.mjs",
-      "anchor": "Packed-package AOT emitted",
-      "sha256": "sha256-60a1ec3e95023300122b40dcd938f17f837bb11ff799372cf33a8ba4e426cb32"
-    },
-    "agent-example-autocomplete": {
-      "path": "projects/kern/agent/examples/autocomplete.ts",
+    "api-actions": {
+      "path": "projects/kern/api/actions.api.d.ts",
       "anchor": "",
-      "sha256": "sha256-a5673cbf534a15d84ae312d4778698bd29ed8517853ef4770a6ffaa5d51e9775"
-    },
-    "agent-example-bar-chart": {
-      "path": "projects/kern/agent/examples/bar-chart.ts",
-      "anchor": "",
-      "sha256": "sha256-112ff5801f416abe130c05e8efcb3bbb352d4b15a6430feee87994064dd4c090"
-    },
-    "agent-example-bottom-sheet": {
-      "path": "projects/kern/agent/examples/bottom-sheet.ts",
-      "anchor": "",
-      "sha256": "sha256-7a9f3b20c3586c1cab139d8602ab0a81d3745d54873cc466f45fb71dadcc69a2"
-    },
-    "agent-example-color-picker": {
-      "path": "projects/kern/agent/examples/color-picker.ts",
-      "anchor": "",
-      "sha256": "sha256-87d8db1cc4a102b57d1b8f0e465747e5190b351e4ff5a95ca3cfbc50542b6592"
-    },
-    "agent-example-combobox": {
-      "path": "projects/kern/agent/examples/combobox.ts",
-      "anchor": "",
-      "sha256": "sha256-a62fc5be960a909bf8e06a89911716560a6b145897bcdc93b5db02d4fcee82db"
-    },
-    "agent-example-command-palette": {
-      "path": "projects/kern/agent/examples/command-palette.ts",
-      "anchor": "",
-      "sha256": "sha256-e787d5413fa7c6679cb440b1a3c3fe5e7afe7078e1df6373555e1af2c7d2b3c1"
-    },
-    "agent-example-data-grid": {
-      "path": "projects/kern/agent/examples/data-grid.ts",
-      "anchor": "",
-      "sha256": "sha256-aa2117d295ffab4fc72bffa68cc7b42040e13ee5b68be70c1dc59d340f2de28a"
-    },
-    "agent-example-data-table": {
-      "path": "projects/kern/agent/examples/data-table.ts",
-      "anchor": "",
-      "sha256": "sha256-d31b42257c6042598433afb23e3fa25799fa7cb1ae490e80b7c04c6825d3b457"
-    },
-    "agent-example-date-picker": {
-      "path": "projects/kern/agent/examples/date-picker.ts",
-      "anchor": "",
-      "sha256": "sha256-b4ba7b7c123c2a2b2f3ce3ef027b9beb6940ae734227d410e3c977fb81abe097"
-    },
-    "agent-example-date-range-picker": {
-      "path": "projects/kern/agent/examples/date-range-picker.ts",
-      "anchor": "",
-      "sha256": "sha256-91ee6a07eaf3dace138ea03e60cab52fc191f7477d5e732a160ff8652d43e623"
-    },
-    "agent-example-dialog": {
-      "path": "projects/kern/agent/examples/dialog.ts",
-      "anchor": "",
-      "sha256": "sha256-978995bc68fcd1f880efacbadd9041ce1b837794719f62308b4ce4ea713b2914"
-    },
-    "agent-example-donut-chart": {
-      "path": "projects/kern/agent/examples/donut-chart.ts",
-      "anchor": "",
-      "sha256": "sha256-12c10f032450390c6c98493656e75d735f1331315167dc685bd11b5c3a365eb7"
-    },
-    "agent-example-drawer": {
-      "path": "projects/kern/agent/examples/drawer.ts",
-      "anchor": "",
-      "sha256": "sha256-26bf7642875f88c48a34e05625bfb79c877f6de3c1663c71301b66e9678c961b"
-    },
-    "agent-example-json-view": {
-      "path": "projects/kern/agent/examples/json-view.ts",
-      "anchor": "",
-      "sha256": "sha256-87182862e21a8f7cd3aa9bf7799c8138de8728a75a2fbbb416acfe0e9d45c8c1"
-    },
-    "agent-example-line-chart": {
-      "path": "projects/kern/agent/examples/line-chart.ts",
-      "anchor": "",
-      "sha256": "sha256-aa8f2186f32b647659b007b7fb96034f1bad36d15c79dffe9be18e297f91f8ea"
-    },
-    "agent-example-multi-select": {
-      "path": "projects/kern/agent/examples/multi-select.ts",
-      "anchor": "",
-      "sha256": "sha256-69d2aee857ff4b87d9233a1ca9a7e8b1a1f06930d9a8e29b7fd0281346b3cec2"
-    },
-    "agent-example-select": {
-      "path": "projects/kern/agent/examples/select.ts",
-      "anchor": "",
-      "sha256": "sha256-a20167a1d3e2a0ec16bf68ddbfd01286ebacf84c7b70273aa9b159c5c2866cb5"
-    },
-    "agent-example-time-picker": {
-      "path": "projects/kern/agent/examples/time-picker.ts",
-      "anchor": "",
-      "sha256": "sha256-764c605f11219ec6e28560c912fcff24cc794ef212364d36b8d87394446e5c7b"
-    },
-    "agent-example-tree": {
-      "path": "projects/kern/agent/examples/tree.ts",
-      "anchor": "",
-      "sha256": "sha256-5ad45f750c255ced1fbe5e3dab7150458eadeeba365d5ff63d14f95bafdedcc6"
-    },
-    "agent-example-tree-navigation": {
-      "path": "projects/kern/agent/examples/tree-navigation.ts",
-      "anchor": "",
-      "sha256": "sha256-78645f9db38a55fa66b2e1602e2c071e8f2a2c406cfd2c057271841ee5185a55"
+      "sha256": "sha256-ae7268d9c00a2b233672388a8c61468588db36267a4b0157443db7908c99d686"
     },
     "api-addon-charts": {
       "path": "projects/kern/api/addon-charts.api.d.ts",
       "anchor": "",
-      "sha256": "sha256-0a87151fd59a67606d3268cec050f49981ca21343b9a8c5002897a356c90056f"
+      "sha256": "sha256-c061d155f5f1e841bf4d01e7241f5171055d3eda86857b953213a97bf3b2352d"
     },
     "api-addon-grid": {
       "path": "projects/kern/api/addon-grid.api.d.ts",
       "anchor": "",
       "sha256": "sha256-25a7830627598ed9b20d83aac12539ec27973e7b19cdd3a5d47d486ff333cbed"
     },
-    "api-kit": {
-      "path": "projects/kern/api/kit.api.d.ts",
+    "api-data-display": {
+      "path": "projects/kern/api/data-display.api.d.ts",
       "anchor": "",
-      "sha256": "sha256-cbefe617858d7d1d487b0b5621e2a2ae4d38ea2958ae598a6a09a22cb09dc5da"
+      "sha256": "sha256-952e9c2ef80be84927cd2684e41ace81568b1d4dc9eaec684a270842ed7986b3"
+    },
+    "api-feedback": {
+      "path": "projects/kern/api/feedback.api.d.ts",
+      "anchor": "",
+      "sha256": "sha256-3fedb391f6cebd9bab645e65ad8a3e5ea5c2e206cb37a9038df1e2079902e520"
+    },
+    "api-forms": {
+      "path": "projects/kern/api/forms.api.d.ts",
+      "anchor": "",
+      "sha256": "sha256-2163fc898b922ddbeaf6ff6b7ea5571c9c9103c50a4e106757be9e6dac850dac"
+    },
+    "api-layout": {
+      "path": "projects/kern/api/layout.api.d.ts",
+      "anchor": "",
+      "sha256": "sha256-be886012bcae0c32bc8bfc056daf947603b089357d4c93b063452db4461f1096"
+    },
+    "api-navigation": {
+      "path": "projects/kern/api/navigation.api.d.ts",
+      "anchor": "",
+      "sha256": "sha256-b82ea0cf992e57943101ab6ba7b6d9137bb980fc74d5a89d6ea20e928479a5c3"
     },
     "api-patterns": {
       "path": "projects/kern/api/patterns.api.d.ts",
       "anchor": "",
-      "sha256": "sha256-608a2a03061aa83746df077a1b24ae135d2594ff8e480fefc6f3c006a3cac217"
+      "sha256": "sha256-ac27bc5711d26762241422db3e5fe670e17649a414a9428b4f2ce75fa1a6f40d"
     },
     "catalog-a11y": {
       "path": "tests/a11y/accessibility.spec.ts",
@@ -137,102 +57,302 @@
     "catalog-hydration": {
       "path": "tests/e2e/component-specimens.spec.ts",
       "anchor": "hydration preserves every server-rendered specimen node",
-      "sha256": "sha256-c5bbad0de45a8ab182de6181bcc7fd3d930c5f68b45b50b71733c29b9d12bd87"
+      "sha256": "sha256-7a9e89682be555c20abc1a50188b3334a915c481bd51f9ba851a0a39027b7a52"
     },
     "catalog-keyboard": {
       "path": "tests/e2e/quality-regressions.spec.ts",
       "anchor": "visible enabled controls are keyboard reachable without focus geometry shifts",
-      "sha256": "sha256-09cbdea080f97495224bff8391f74ba9f34a771cc814264bfa27dcb69ca54611"
+      "sha256": "sha256-0d3d62889aacee819a1de2190eac7cc812bd2c53b9d5ace4de92c0613e8f24e6"
     },
     "catalog-ssr": {
       "path": "tests/e2e/component-specimens.spec.ts",
       "anchor": "raw SSR response contains every exact catalog route specimen",
-      "sha256": "sha256-c5bbad0de45a8ab182de6181bcc7fd3d930c5f68b45b50b71733c29b9d12bd87"
+      "sha256": "sha256-7a9e89682be555c20abc1a50188b3334a915c481bd51f9ba851a0a39027b7a52"
     },
     "catalog-visual": {
       "path": "tests/visual/visual.spec.ts",
       "anchor": "default specimen matches its visual baseline",
-      "sha256": "sha256-68c3dc54b121a80d1ed11d920a4e2338c5c26bbd6518ab683428f56293358958"
+      "sha256": "sha256-5a22b63e63db92b953a75a673e14aee61c5868495d5cb38a8f2afaa0f1dd61e9"
     },
     "guidance-bulk-actions": {
       "path": "projects/kern/agent/components/bulk-actions.md",
       "anchor": "## Use",
-      "sha256": "sha256-e2a99189b75fe5dd3970e700f40437b5776f984f3a8c26d6b6cc889c710d2c6f"
+      "sha256": "sha256-10b5da5196054f051d5cc9fa817d647a59c8691493cda6efc2872547b854a088"
     },
     "guidance-crud-toolbar": {
       "path": "projects/kern/agent/components/crud-toolbar.md",
       "anchor": "## Use",
-      "sha256": "sha256-7e2b2d70b4413bf4b3fa2e3ea8be9c5a9d8abaa8c67e01b0f7f5659eec643310"
+      "sha256": "sha256-c3700232e1fedb7e9a430427fc8425d1fc74a2d94b3d2c8f1a5a883b11492807"
     },
     "guidance-dashboard-widget": {
       "path": "projects/kern/agent/components/dashboard-widget.md",
       "anchor": "## Use",
-      "sha256": "sha256-26a6761b0ae9f551c7537d4a1f375fcb6512d3e137753a259668ff1e46fcf274"
+      "sha256": "sha256-0d0b3e4956254b8a24634bcb375fbb3ee84fdc12ccadd6688e0bb81c63c4d61f"
     },
     "guidance-filter-bar": {
       "path": "projects/kern/agent/components/filter-bar.md",
       "anchor": "## Use",
-      "sha256": "sha256-6cba7b83b7665f1afc7f86696cb4c4ea47f3f02793534ba99e8cde9c6bb85cd7"
+      "sha256": "sha256-973a796dabbacec7769f0352b9cd4e84f948c99639f4436225f8dfee3e5807f4"
     },
     "guidance-global-search": {
       "path": "projects/kern/agent/components/global-search.md",
       "anchor": "## Use",
-      "sha256": "sha256-07f78296822062582b131cd86e811224a99420742b6019da8e01c8f713590457"
+      "sha256": "sha256-d9e99554ecb3660c23564530ab30cf177321ca871ae3b9918a16cd633d24d921"
     },
     "guidance-login-form": {
       "path": "projects/kern/agent/components/login-form.md",
       "anchor": "## Use",
-      "sha256": "sha256-6f831b2b93bdea087e5e8a014cc55ac19966728b3a102596a37559fb357a454e"
+      "sha256": "sha256-593e94fc3dc5d720c088f3fd1eaacdd8c7d0aeca46c26381086b74171fd374ff"
     },
     "guidance-master-detail-layout": {
       "path": "projects/kern/agent/components/master-detail-layout.md",
       "anchor": "## Use",
-      "sha256": "sha256-01651d87efe8ee8fdddaa2aa0e7fa493293a6ce594d261fb9469128a9e98e728"
+      "sha256": "sha256-f71b6f6e4b0924e6cb5fbad8fc20f0bad57350f79520da99a7d5fdf26c15923f"
     },
     "guidance-mobile-navigation": {
       "path": "projects/kern/agent/components/mobile-navigation.md",
       "anchor": "## Use",
-      "sha256": "sha256-58fb85929eb58894f5841fd6acb5523cc1a18ea14d42a256ae0d04ed1f0dcece"
+      "sha256": "sha256-602fd30cefcaea0eac10f737242249a63e9553be1e25632a043b704d36a64370"
     },
     "guidance-multi-step-form": {
       "path": "projects/kern/agent/components/multi-step-form.md",
       "anchor": "## Use",
-      "sha256": "sha256-942e5fa75550cea70a47084b2f850425106b07dcb4dd5ddc74bdc1fc637b0123"
+      "sha256": "sha256-270e505c924b1c3027162f1c4620439a8648eba5227cb17cd8c06387274e0b90"
     },
     "guidance-notification-center": {
       "path": "projects/kern/agent/components/notification-center.md",
       "anchor": "## Use",
-      "sha256": "sha256-9c07e08bb07f704be0dbbdb2ce6085bf0633eee2cc95b3e7592678618a95f9c6"
+      "sha256": "sha256-35be2c9ea38877be44a3ad489bd96467bfa8aa2b24e7b7fdc22747bd67797d81"
     },
     "guidance-page-header": {
       "path": "projects/kern/agent/components/page-header.md",
       "anchor": "## Use",
-      "sha256": "sha256-5a330c04b4d95bbf5270ef8c0ee1e5a54065edc9829c8acc589df3d0a7f2c3f2"
+      "sha256": "sha256-0524f6c06b7686bbde446bf47859669182bfa601d2bed69e36455bae7dcb2fbc"
     },
     "guidance-profile-form": {
       "path": "projects/kern/agent/components/profile-form.md",
       "anchor": "## Use",
-      "sha256": "sha256-e47690fd68ad9056bdca9ab52427c87b52de3aae53b0d7b0b366568a009cb027"
+      "sha256": "sha256-198f2bbb645c528bf2a67675b84c4952b9d4c74ae67f8180702c5b6cf6557fe9"
     },
     "guidance-responsive-application-shell": {
       "path": "projects/kern/agent/components/responsive-application-shell.md",
       "anchor": "## Use",
-      "sha256": "sha256-91a2eeb7b0f5870ea2e30101652de853e81219db879c1a0fab64624507d887a1"
+      "sha256": "sha256-063fb61cd6712b2afd90044c757ee95f24638a67b031a5016f90057263bf9aaf"
     },
     "guidance-settings-panel": {
       "path": "projects/kern/agent/components/settings-panel.md",
       "anchor": "## Use",
-      "sha256": "sha256-c3523acd6fa32e77c3617d842400514ca090ddb09acefa6652d102aba52dd796"
+      "sha256": "sha256-a15f8b92912ffb419326ed2b7645617694dbf230a2fc5a0b0664c1fcd887931d"
     },
     "guidance-user-menu": {
       "path": "projects/kern/agent/components/user-menu.md",
       "anchor": "## Use",
-      "sha256": "sha256-ba35f50a908ebf8ef7004ec22d8a31b60f8a4e9471a76ba3b05f6331f0196a94"
+      "sha256": "sha256-e82cd3bd4ed2622a54aa7d7dd5840b918440ccada5955f4f7bda6f82ab883226"
+    },
+    "harness-source-autocomplete": {
+      "path": "projects/kern/testing/forms/src/selection-harness.ts",
+      "anchor": "class KrnAutocompleteHarness",
+      "sha256": "sha256-69e3abfe5646e7dfb65e40c9bde58da84735a0c888840aac3553e9fbef3bf909"
+    },
+    "harness-source-bar-chart": {
+      "path": "projects/kern/testing/data-display/src/chart-harness.ts",
+      "anchor": "class KrnBarChartHarness",
+      "sha256": "sha256-a952ed043da43a046b48e3952b30674487684a4cd914d6c817bb82906a9afb10"
+    },
+    "harness-source-bottom-sheet": {
+      "path": "projects/kern/testing/feedback/src/overlay-harness.ts",
+      "anchor": "class KrnBottomSheetHarness",
+      "sha256": "sha256-52baa0060570dcb6feca8fa636a70cc13c4f012eda7b38f45d7d61caa6de233a"
+    },
+    "harness-source-color-picker": {
+      "path": "projects/kern/testing/forms/src/color-picker-harness.ts",
+      "anchor": "class KrnColorPickerHarness",
+      "sha256": "sha256-6d3d9c1dfcbdeed38bbece7c9c8cf7d370c38b912f845a453155329131ae4054"
+    },
+    "harness-source-combobox": {
+      "path": "projects/kern/testing/forms/src/selection-harness.ts",
+      "anchor": "class KrnComboboxHarness",
+      "sha256": "sha256-69e3abfe5646e7dfb65e40c9bde58da84735a0c888840aac3553e9fbef3bf909"
+    },
+    "harness-source-command-palette": {
+      "path": "projects/kern/testing/navigation/src/command-palette-harness.ts",
+      "anchor": "class KrnCommandPaletteHarness",
+      "sha256": "sha256-f633d220ab62f64116fd7e7300c1914eb1956c187965a4aa93cd42a7044ae79d"
+    },
+    "harness-source-data-grid": {
+      "path": "projects/kern/testing/data-display/src/data-grid-harness.ts",
+      "anchor": "class KrnDataGridHarness",
+      "sha256": "sha256-0d7c456810cc0c039d44b9309373239cac422df9f8559307b60d552e2b7881a7"
+    },
+    "harness-source-data-table": {
+      "path": "projects/kern/testing/data-display/src/data-grid-harness.ts",
+      "anchor": "class KrnDataGridHarness",
+      "sha256": "sha256-0d7c456810cc0c039d44b9309373239cac422df9f8559307b60d552e2b7881a7"
+    },
+    "harness-source-date-picker": {
+      "path": "projects/kern/testing/forms/src/date-time-harness.ts",
+      "anchor": "class KrnDatePickerHarness",
+      "sha256": "sha256-699422f479127c8852dbe745ece7a4d886abafb8ad0411a2776f742ae2f2c8f6"
+    },
+    "harness-source-date-range-picker": {
+      "path": "projects/kern/testing/forms/src/date-time-harness.ts",
+      "anchor": "class KrnDateRangePickerHarness",
+      "sha256": "sha256-699422f479127c8852dbe745ece7a4d886abafb8ad0411a2776f742ae2f2c8f6"
+    },
+    "harness-source-dialog": {
+      "path": "projects/kern/testing/feedback/src/overlay-harness.ts",
+      "anchor": "class KrnDialogHarness",
+      "sha256": "sha256-52baa0060570dcb6feca8fa636a70cc13c4f012eda7b38f45d7d61caa6de233a"
+    },
+    "harness-source-donut-chart": {
+      "path": "projects/kern/testing/data-display/src/chart-harness.ts",
+      "anchor": "class KrnDonutChartHarness",
+      "sha256": "sha256-a952ed043da43a046b48e3952b30674487684a4cd914d6c817bb82906a9afb10"
+    },
+    "harness-source-drawer": {
+      "path": "projects/kern/testing/feedback/src/overlay-harness.ts",
+      "anchor": "class KrnDrawerHarness",
+      "sha256": "sha256-52baa0060570dcb6feca8fa636a70cc13c4f012eda7b38f45d7d61caa6de233a"
+    },
+    "harness-source-json-view": {
+      "path": "projects/kern/testing/data-display/src/json-view-harness.ts",
+      "anchor": "class KrnJsonViewHarness",
+      "sha256": "sha256-d5e6ec14dc1fcb698e297e6c9a3d6db2bdab7ade7b3f7693286d24c311ce6f29"
+    },
+    "harness-source-line-chart": {
+      "path": "projects/kern/testing/data-display/src/chart-harness.ts",
+      "anchor": "class KrnLineChartHarness",
+      "sha256": "sha256-a952ed043da43a046b48e3952b30674487684a4cd914d6c817bb82906a9afb10"
+    },
+    "harness-source-multi-select": {
+      "path": "projects/kern/testing/forms/src/selection-harness.ts",
+      "anchor": "class KrnMultiSelectHarness",
+      "sha256": "sha256-69e3abfe5646e7dfb65e40c9bde58da84735a0c888840aac3553e9fbef3bf909"
+    },
+    "harness-source-select": {
+      "path": "projects/kern/testing/forms/src/select-harness.ts",
+      "anchor": "class KrnSelectHarness",
+      "sha256": "sha256-770ada4873fcc2705c335270f503b8f9bcacb1910af9ff6e5e66edc6ab8e3b05"
+    },
+    "harness-source-time-picker": {
+      "path": "projects/kern/testing/forms/src/date-time-harness.ts",
+      "anchor": "class KrnTimePickerHarness",
+      "sha256": "sha256-699422f479127c8852dbe745ece7a4d886abafb8ad0411a2776f742ae2f2c8f6"
+    },
+    "harness-source-tree": {
+      "path": "projects/kern/testing/data-display/src/tree-harness.ts",
+      "anchor": "class KrnTreeHarness",
+      "sha256": "sha256-2854c4c8cb84cae014885f7b15fdce82e81dd0a72e7b46c5f2d05854e69955bc"
+    },
+    "harness-source-tree-navigation": {
+      "path": "projects/kern/testing/navigation/src/navigation-harness.ts",
+      "anchor": "class KrnTreeNavigationHarness",
+      "sha256": "sha256-f5c449ff421f5cda63c0dec7fbd56467d7196e83906940792de7247506c00315"
+    },
+    "harness-test-autocomplete": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnAutocompleteHarness.with({ ariaLabel: 'Custom tag'",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-bar-chart": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnBarChartHarness.with({ title: 'Bar trend'",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-bottom-sheet": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnBottomSheetHarness.with({ title: 'Mobile actions'",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-color-picker": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnColorPickerHarness.with({",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-combobox": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnComboboxHarness.with({ ariaLabel: 'Deployment region'",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-command-palette": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnCommandPaletteHarness.with({",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-data-grid": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnDataGridHarness.with({\n        ariaLabel: 'Workspace plans'",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-data-table": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnDataGridHarness.with({\n        ariaLabel: 'Workspace plan table'",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-date-picker": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnDatePickerHarness.with({ ariaLabel: 'Deployment date'",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-date-range-picker": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnDateRangePickerHarness.with({ ariaLabel: 'Reporting period'",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-dialog": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnDialogHarness.with({",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-donut-chart": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnDonutChartHarness.with({ title: 'Donut mix'",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-drawer": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnDrawerHarness.with({ title: 'Customer details'",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-json-view": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnJsonViewHarness.with({ ariaLabel: 'Deployment payload'",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-line-chart": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnLineChartHarness.with({ title: 'Line trend'",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-multi-select": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnMultiSelectHarness.with({",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-select": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnSelectHarness.with({",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-time-picker": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "KrnTimePickerHarness.with({ ariaLabel: 'Deployment time'",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-tree": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "loader.getHarness(KrnTreeHarness)",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
+    },
+    "harness-test-tree-navigation": {
+      "path": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "anchor": "loader.getHarness(KrnTreeNavigationHarness)",
+      "sha256": "sha256-d3829f9bd096001eef887183e43ae68e9a3054470db6d6bcf9da7e00ed2bc0ff"
     },
     "lifecycle-policy": {
       "path": "docs/LIFECYCLE.md",
       "anchor": "Current pre-1.0 promotion queue",
-      "sha256": "sha256-e5eb4c45d1792fdd63aff15abf615be632fe42af136d768687c1b4e025b06cff"
+      "sha256": "sha256-0f8540d352c17a7b987210b5c94749a4b06d0a817ea2da891280e021659d0b5f"
     },
     "mobile-form": {
       "path": "tests/mobile-touch/risk-based.spec.ts",
@@ -284,10 +404,10 @@
       "anchor": "Tree mounts 500 stable nodes",
       "sha256": "sha256-c5be305bd2e1dc6fdea59e33898a27e21c334f652e2bf8ca8f405cc24a56cf0a"
     },
-    "responsive-suite": {
+    "responsive-recipes": {
       "path": "tests/responsive/responsive.spec.ts",
-      "anchor": "Responsive, RTL, and text zoom contracts",
-      "sha256": "sha256-db7d3658f6daabbfc33a5befa8d72e4cf801e3dee4516ff986cfb570b9173fcc"
+      "anchor": "every recipe has a 320px high-contrast RTL specimen without page overflow",
+      "sha256": "sha256-6c4114904ef3e49cb0b61ede5247f71dbbe4364b067d733ad4695446a3ab71d1"
     },
     "ssr-server": {
       "path": "tests/support/serve-workspace.mjs",
@@ -295,59 +415,59 @@
       "sha256": "sha256-2f4c87b5acaab65efa30094e52d0e1d9766deded9f4d767412a01fb5523c308c"
     },
     "unit-accordion": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnAccordion",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-alert": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnAlert",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-alert-dialog": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnAlertDialog",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-app-shell": {
-      "path": "projects/kern/kit/src/lib/layout/app-shell.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/app-shell.spec.ts",
       "anchor": "KrnAppShell",
       "sha256": "sha256-779f290a84a4baeb0fda3544517e36505bde68fa02fec3310570e4f2aaac8cc0"
     },
     "unit-aspect-ratio": {
-      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/layout.spec.ts",
       "anchor": "KrnAspectRatio",
       "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
     },
     "unit-autocomplete": {
-      "path": "projects/kern/kit/src/lib/forms/autocomplete.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/autocomplete.spec.ts",
       "anchor": "KrnAutocomplete",
       "sha256": "sha256-44a66baa63b2d61af8a20cb3a8bcbb59a5c4369a66bc5d0aa4b041fc9f6b09f8"
     },
     "unit-avatar": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnAvatar",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-avatar-group": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnAvatarGroup",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-back-button": {
-      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "path": "projects/kern/navigation/src/lib/navigation/navigation.spec.ts",
       "anchor": "KrnBackButton",
       "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
     },
     "unit-badge": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnBadge",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-banner": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnBanner",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-bar-chart": {
       "path": "projects/kern/addon-charts/src/lib/charts/charts.spec.ts",
@@ -355,124 +475,124 @@
       "sha256": "sha256-9b5fb79dd777c367cf2d6bafc495cd9fc556cc0f2c6984d039bd668646d04527"
     },
     "unit-bottom-navigation": {
-      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "path": "projects/kern/navigation/src/lib/navigation/navigation.spec.ts",
       "anchor": "KrnBottomNavigation",
       "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
     },
     "unit-bottom-sheet": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnBottomSheet",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-breadcrumbs": {
-      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "path": "projects/kern/navigation/src/lib/navigation/navigation.spec.ts",
       "anchor": "KrnBreadcrumbs",
       "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
     },
     "unit-bulk-actions": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnCrudToolbar",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-button": {
-      "path": "projects/kern/kit/src/lib/actions/button.spec.ts",
+      "path": "projects/kern/actions/src/lib/actions/button.spec.ts",
       "anchor": "KrnButton",
       "sha256": "sha256-acc1f8c3be5d6c90d6ab078c6167b9d65ce8e1d204f91ee3509812ca611d124b"
     },
     "unit-button-group": {
-      "path": "projects/kern/kit/src/lib/actions/button-group.spec.ts",
+      "path": "projects/kern/actions/src/lib/actions/button-group.spec.ts",
       "anchor": "KrnButtonGroup",
       "sha256": "sha256-abcc09cd71850e46da2de0998f94c0503a83098d261ccd5584292d204e1ac184"
     },
     "unit-calendar": {
-      "path": "projects/kern/kit/src/lib/data-display/calendar.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/calendar.spec.ts",
       "anchor": "KrnCalendar",
       "sha256": "sha256-b432dfefd8f58ee7f9fcc548ed5175b5aa72252e780dfc157cec26121c186ccd"
     },
     "unit-card": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnCard",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-center": {
-      "path": "projects/kern/kit/src/lib/layout/container.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/container.spec.ts",
       "anchor": "KrnCenter",
-      "sha256": "sha256-1b0e1b7cee05c273180f5bd307c99b98e2e6209b6b153bc3dce9343039475bdc"
+      "sha256": "sha256-837126b5d99ebb9b1a46c9ef4e4eef449f11dc286a3a29aa7a7ab18ae868de41"
     },
     "unit-checkbox": {
-      "path": "projects/kern/kit/src/lib/forms/checkbox.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/checkbox.spec.ts",
       "anchor": "KrnCheckbox",
       "sha256": "sha256-8db6e3dc3dd58f0c5e2674327ae9cb20df2c2a6fdb08d8bb43adf9244fdaa2a3"
     },
     "unit-checkbox-group": {
-      "path": "projects/kern/kit/src/lib/forms/checkbox-group.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/checkbox-group.spec.ts",
       "anchor": "KrnCheckboxGroup",
       "sha256": "sha256-1875b29146c884d304b4ae8e31425c487b10fbedb5b76bd437d6491e1763e33c"
     },
     "unit-chip": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnChip",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-circular-progress": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnCircularProgress",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-cluster": {
-      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/layout.spec.ts",
       "anchor": "KrnCluster",
       "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
     },
     "unit-code-block": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnCodeBlock",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-color-picker": {
-      "path": "projects/kern/kit/src/lib/forms/color-picker.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/color-picker.spec.ts",
       "anchor": "KrnColorPicker",
       "sha256": "sha256-e6d2cd8d983a2048938eb2acd7ea35ad1501f5a346e450f70193eb7b13f0ff99"
     },
     "unit-combobox": {
-      "path": "projects/kern/kit/src/lib/forms/combobox.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/combobox.spec.ts",
       "anchor": "KrnCombobox",
       "sha256": "sha256-56cfae32be9437949809330b46f58b445aa02cead0dc18c0533911b1ee70c0b0"
     },
     "unit-command-palette": {
-      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "path": "projects/kern/navigation/src/lib/navigation/navigation.spec.ts",
       "anchor": "KrnCommandPalette",
       "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
     },
     "unit-confirmation-pattern": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnConfirmation",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-container": {
-      "path": "projects/kern/kit/src/lib/layout/container.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/container.spec.ts",
       "anchor": "KrnContainer",
-      "sha256": "sha256-1b0e1b7cee05c273180f5bd307c99b98e2e6209b6b153bc3dce9343039475bdc"
+      "sha256": "sha256-837126b5d99ebb9b1a46c9ef4e4eef449f11dc286a3a29aa7a7ab18ae868de41"
     },
     "unit-context-menu": {
-      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "path": "projects/kern/navigation/src/lib/navigation/navigation.spec.ts",
       "anchor": "KrnContextMenu",
       "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
     },
     "unit-copy-button": {
-      "path": "projects/kern/kit/src/lib/actions/copy-button.spec.ts",
+      "path": "projects/kern/actions/src/lib/actions/copy-button.spec.ts",
       "anchor": "KrnCopyButton",
       "sha256": "sha256-7ddecbef04a4e4dd3fa76fb6699937dd22045f591261d0268bf81cc7b42194c3"
     },
     "unit-crud-toolbar": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnCrudToolbar",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-dashboard-widget": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnDashboardWidget",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-data-grid": {
       "path": "projects/kern/addon-grid/src/lib/data-grid.spec.ts",
@@ -485,32 +605,32 @@
       "sha256": "sha256-45074e57ce659ec33e688f425f50b60929c424a28c9080486e4bff01dfe27a3a"
     },
     "unit-date-picker": {
-      "path": "projects/kern/kit/src/lib/forms/date-picker.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/date-picker.spec.ts",
       "anchor": "KrnDatePicker",
       "sha256": "sha256-bb7680a2aef5221d049a5e4f8008d9c5fad147fb649a9259e790dee83943bdf0"
     },
     "unit-date-range-picker": {
-      "path": "projects/kern/kit/src/lib/forms/date-range-picker.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/date-range-picker.spec.ts",
       "anchor": "KrnDateRangePicker",
       "sha256": "sha256-c57214530e6e2b5d10fbdb2c440805df832810ea0ef023250eca063a2449731a"
     },
     "unit-description-list": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnDescriptionList",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-dialog": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnDialog",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-disclosure": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnDisclosure",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-divider": {
-      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/layout.spec.ts",
       "anchor": "KrnDivider",
       "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
     },
@@ -520,97 +640,97 @@
       "sha256": "sha256-9b5fb79dd777c367cf2d6bafc495cd9fc556cc0f2c6984d039bd668646d04527"
     },
     "unit-drag-drop-upload": {
-      "path": "projects/kern/kit/src/lib/forms/drop-upload.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/drop-upload.spec.ts",
       "anchor": "KrnDropUpload",
       "sha256": "sha256-8b4fee07ff9cd0f079e1f1182413e65f0e9dbac3766898bf4ff592b9f32b72b5"
     },
     "unit-drawer": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnDrawer",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-dropdown-button": {
-      "path": "projects/kern/kit/src/lib/actions/dropdown-button.spec.ts",
+      "path": "projects/kern/actions/src/lib/actions/dropdown-button.spec.ts",
       "anchor": "KrnDropdownButton",
       "sha256": "sha256-3d44720ca3bae1ffe279c5979d661f733320ac157f6a72af0a991c86e4351fcf"
     },
     "unit-empty-state": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnEmptyState",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-error-state": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnErrorState",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-file-upload": {
-      "path": "projects/kern/kit/src/lib/forms/file-upload.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/file-upload.spec.ts",
       "anchor": "KrnFileUpload",
-      "sha256": "sha256-abe2b8d12f6d8a356806a08478c8170a911d63b19b89a1ed832539f8222bfcde"
+      "sha256": "sha256-71cc918a7c20df3d4e956283307721147449425c6f1f33f94ddae8a3e5677895"
     },
     "unit-filter-bar": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnFilterBar",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-floating-action-button": {
-      "path": "projects/kern/kit/src/lib/actions/floating-action-button.spec.ts",
+      "path": "projects/kern/actions/src/lib/actions/floating-action-button.spec.ts",
       "anchor": "KrnFloatingActionButton",
       "sha256": "sha256-e6c436d211772635ba0b4775e6d1878966117435a8b2c1401759e52d08affe98"
     },
     "unit-form-field": {
-      "path": "projects/kern/kit/src/lib/forms/form-field.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/form-field.spec.ts",
       "anchor": "KrnFormField",
       "sha256": "sha256-53ccde07587c9750e998d4a0058b4b5a7c8823869f15e439740c7d3a9ed98894"
     },
     "unit-global-search": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnGlobalSearch",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-grid": {
-      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/layout.spec.ts",
       "anchor": "KrnGrid",
       "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
     },
     "unit-header": {
-      "path": "projects/kern/kit/src/lib/layout/header.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/header.spec.ts",
       "anchor": "KrnHeader",
       "sha256": "sha256-5ef10598e79b74dc09910cfdb8fe908f03cd04adceeb7e66fa57f9fa6ed4455b"
     },
     "unit-hint": {
-      "path": "projects/kern/kit/src/lib/forms/form-field.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/form-field.spec.ts",
       "anchor": "KrnHint",
       "sha256": "sha256-53ccde07587c9750e998d4a0058b4b5a7c8823869f15e439740c7d3a9ed98894"
     },
     "unit-hover-card": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnHoverCard",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-icon-button": {
-      "path": "projects/kern/kit/src/lib/actions/icon-button.spec.ts",
+      "path": "projects/kern/actions/src/lib/actions/icon-button.spec.ts",
       "anchor": "KrnIconButton",
       "sha256": "sha256-e7a08fd01c454bf3146667d7546ca9307f0ef20169092950a1a365cb5b41507a"
     },
     "unit-inline": {
-      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/layout.spec.ts",
       "anchor": "KrnInline",
       "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
     },
     "unit-json-view": {
-      "path": "projects/kern/kit/src/lib/data-display/json-view.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/json-view.spec.ts",
       "anchor": "KrnJsonView",
       "sha256": "sha256-66ed814c30080d3085e34f791988300aa7593299ab088d780a682aa0220e75a2"
     },
     "unit-keyboard-shortcut": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnKeyboardShortcut",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-label": {
-      "path": "projects/kern/kit/src/lib/forms/form-field.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/form-field.spec.ts",
       "anchor": "KrnLabel",
       "sha256": "sha256-53ccde07587c9750e998d4a0058b4b5a7c8823869f15e439740c7d3a9ed98894"
     },
@@ -620,337 +740,337 @@
       "sha256": "sha256-9b5fb79dd777c367cf2d6bafc495cd9fc556cc0f2c6984d039bd668646d04527"
     },
     "unit-link": {
-      "path": "projects/kern/kit/src/lib/actions/link.spec.ts",
+      "path": "projects/kern/actions/src/lib/actions/link.spec.ts",
       "anchor": "KrnLink",
       "sha256": "sha256-192d0ba1af5424f4e1a81f9359b4dfd94c3f88bf1a4bfeb202938acd321b1f53"
     },
     "unit-list": {
-      "path": "projects/kern/kit/src/lib/reactive-input.spec.ts",
+      "path": "projects/kern/src/lib/reactive-input.spec.ts",
       "anchor": "KrnList",
-      "sha256": "sha256-95e6dcd45d042dadee9e2d600dc9d9b4fa7d4e2ac7c7ad100118a933ee11934a"
+      "sha256": "sha256-2cd7db82ca1d93ead5c861514c6d987135898df9701ac3911264713e988ec622"
     },
     "unit-list-item": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnListItem",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-loading-overlay": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnLoadingOverlay",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-login-form": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnLoginForm",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-master-detail-layout": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnMasterDetailLayout",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-menu": {
-      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "path": "projects/kern/navigation/src/lib/navigation/navigation.spec.ts",
       "anchor": "KrnMenu",
       "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
     },
     "unit-menubar": {
-      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "path": "projects/kern/navigation/src/lib/navigation/navigation.spec.ts",
       "anchor": "KrnMenubar",
       "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
     },
     "unit-meter": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnMeter",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-mobile-navigation": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnMobileNavigation",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-multi-select": {
-      "path": "projects/kern/kit/src/lib/forms/multi-select.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/multi-select.spec.ts",
       "anchor": "KrnMultiSelect",
       "sha256": "sha256-39e61dbb94ed07c768cb406e0747ed1cc1c9d565b5fe3b1ff5f894e8783c808c"
     },
     "unit-multi-step-form": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnMultiStepForm",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-native-select": {
-      "path": "projects/kern/kit/src/lib/forms/native-select.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/native-select.spec.ts",
       "anchor": "KrnNativeSelect",
       "sha256": "sha256-a61aed62dea9fa414999ab323f5786bee5ba2db77937a58288bd089c9757e9f6"
     },
     "unit-navigation-rail": {
-      "path": "projects/kern/kit/src/lib/layout/navigation-rail.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/navigation-rail.spec.ts",
       "anchor": "KrnNavigationRail",
       "sha256": "sha256-0944e9eef572e598c4146c9e0cfc7c4f96de59a6bd2e8d3fd1ee59b01988f062"
     },
     "unit-notification-center": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnNotificationCenter",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-number-input": {
-      "path": "projects/kern/kit/src/lib/forms/number-input.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/number-input.spec.ts",
       "anchor": "KrnNumberInput",
       "sha256": "sha256-e7191dfbe0c4efe2ffdc94dba16a3f4fb695796438cb219301a91e9ed0d3240b"
     },
     "unit-page-header": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnPageHeader",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-pagination": {
-      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "path": "projects/kern/navigation/src/lib/navigation/navigation.spec.ts",
       "anchor": "KrnPagination",
       "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
     },
     "unit-password-input": {
-      "path": "projects/kern/kit/src/lib/forms/password-input.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/password-input.spec.ts",
       "anchor": "KrnPasswordInput",
       "sha256": "sha256-db0947180fc1278d8a333bf228c2fb7bee412e25a2abaabd6f8f32dadb44ebef"
     },
     "unit-popover": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnPopover",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-profile-form": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnProfileForm",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-progress-bar": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnProgressBar",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-radio": {
-      "path": "projects/kern/kit/src/lib/forms/radio.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/radio.spec.ts",
       "anchor": "KrnRadio",
       "sha256": "sha256-f1a7bc4d541f6ce2365b6bc3d3e47210c6e837f2e6b7369043db447f68a90405"
     },
     "unit-radio-group": {
-      "path": "projects/kern/kit/src/lib/forms/radio-group.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/radio-group.spec.ts",
       "anchor": "KrnRadioGroup",
       "sha256": "sha256-1f9c7ac1a4d2d3aab7355924bbbd92799e2549aeb57fa5096134308242e1a17c"
     },
     "unit-range-slider": {
-      "path": "projects/kern/kit/src/lib/forms/range-slider.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/range-slider.spec.ts",
       "anchor": "KrnRangeSlider",
       "sha256": "sha256-71a5cdbd3b251d5c16c3d99c05dc8091931faea48ebdf23ecb55efe5ec3e98e1"
     },
     "unit-rating": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnRating",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-resizable-panels": {
-      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/layout.spec.ts",
       "anchor": "KrnResizablePanels",
       "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
     },
     "unit-responsive-application-shell": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnResponsiveApplicationShell",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-responsive-media": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnResponsiveMedia",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-responsive-show-hide": {
-      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/layout.spec.ts",
       "anchor": "KrnShow",
       "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
     },
     "unit-scroll-area": {
-      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/layout.spec.ts",
       "anchor": "KrnScrollArea",
       "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
     },
     "unit-search-input": {
-      "path": "projects/kern/kit/src/lib/forms/search-input.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/search-input.spec.ts",
       "anchor": "KrnSearchInput",
       "sha256": "sha256-89fb793f8c083b211b1ee76f1940cfd43a1c6a0b17087b91efd7c393e17c7d9d"
     },
     "unit-segmented-control": {
-      "path": "projects/kern/kit/src/lib/forms/segmented-control.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/segmented-control.spec.ts",
       "anchor": "KrnSegmentedControl",
       "sha256": "sha256-8b76e5313cf02c03b4e6d7e8c60717f8dfcfb7ed26d017add572c569cb7995c1"
     },
     "unit-select": {
-      "path": "projects/kern/kit/src/lib/forms/select.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/select.spec.ts",
       "anchor": "KrnSelect",
       "sha256": "sha256-c5cc2bb687d6584636a3e2548932011d17a62cef1db61b80b517df38cdcb00b8"
     },
     "unit-settings-panel": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnSettingsPanel",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-sidebar": {
-      "path": "projects/kern/kit/src/lib/layout/sidebar.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/sidebar.spec.ts",
       "anchor": "KrnSidebar",
       "sha256": "sha256-900379c88f50e786ac596c4f47d7f05cd7045f8783ee81667f808a2ce0c138ad"
     },
     "unit-skeleton": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnSkeleton",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-skip-link": {
-      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "path": "projects/kern/navigation/src/lib/navigation/navigation.spec.ts",
       "anchor": "KrnSkipLink",
       "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
     },
     "unit-slider": {
-      "path": "projects/kern/kit/src/lib/forms/slider.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/slider.spec.ts",
       "anchor": "KrnSlider",
       "sha256": "sha256-4f2ce1307d6fdc454742e468d5c4795a20e98840e8009baf542437331496306c"
     },
     "unit-spacer": {
-      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/layout.spec.ts",
       "anchor": "KrnSpacer",
       "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
     },
     "unit-spinner": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnSpinner",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-split-button": {
-      "path": "projects/kern/kit/src/lib/actions/split-button.spec.ts",
+      "path": "projects/kern/actions/src/lib/actions/split-button.spec.ts",
       "anchor": "KrnSplitButton",
       "sha256": "sha256-212ac2803b1693931537aa2c5f890fb1bdf708b67ce68e841d631c95720be05e"
     },
     "unit-split-layout": {
-      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/layout.spec.ts",
       "anchor": "KrnSplitLayout",
       "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
     },
     "unit-stack": {
-      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "path": "projects/kern/layout/src/lib/layout/layout.spec.ts",
       "anchor": "KrnStack",
       "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
     },
     "unit-stat": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnStat",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-status-badge": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnBadge",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-stepper": {
-      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "path": "projects/kern/navigation/src/lib/navigation/navigation.spec.ts",
       "anchor": "KrnStepper",
       "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
     },
     "unit-success-state": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnSuccessState",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-switch": {
-      "path": "projects/kern/kit/src/lib/forms/switch.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/switch.spec.ts",
       "anchor": "KrnSwitch",
       "sha256": "sha256-1a8d71f3dfdb22d7fb314721c5951193591f6f8df2d798549ea44e92a1b9392c"
     },
     "unit-table-of-contents": {
-      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "path": "projects/kern/navigation/src/lib/navigation/navigation.spec.ts",
       "anchor": "KrnTableOfContents",
       "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
     },
     "unit-tabs": {
-      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "path": "projects/kern/navigation/src/lib/navigation/navigation.spec.ts",
       "anchor": "KrnTabs",
       "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
     },
     "unit-tag": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnChip",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-tags-input": {
-      "path": "projects/kern/kit/src/lib/forms/tags-input.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/tags-input.spec.ts",
       "anchor": "KrnTagsInput",
       "sha256": "sha256-6bbdb71921a46d709641011e631f0185a05c8069b987f9dfc76f8ed2e0018ef7"
     },
     "unit-text-input": {
-      "path": "projects/kern/kit/src/lib/forms/text-input.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/text-input.spec.ts",
       "anchor": "KrnTextInput",
       "sha256": "sha256-47f29f9799559fc30c0eb26da55f4f1657895b3786ac36232927d59a421341e4"
     },
     "unit-textarea": {
-      "path": "projects/kern/kit/src/lib/forms/textarea.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/textarea.spec.ts",
       "anchor": "KrnTextarea",
       "sha256": "sha256-41fa87e971eb3bb685c90796beb6af5e63f54b65a46442b8a1ed5b77b83df22f"
     },
     "unit-time-picker": {
-      "path": "projects/kern/kit/src/lib/forms/time-picker.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/time-picker.spec.ts",
       "anchor": "KrnTimePicker",
       "sha256": "sha256-bf5c81ceceabbefb699bd0b0f34cb1824ceae92916319a19bb4ff6d0c8dbdacc"
     },
     "unit-timeline": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnTimeline",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-toast": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnToastViewport",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-toggle-button": {
-      "path": "projects/kern/kit/src/lib/actions/toggle-button.spec.ts",
+      "path": "projects/kern/actions/src/lib/actions/toggle-button.spec.ts",
       "anchor": "KrnToggleButton",
       "sha256": "sha256-7e42106ef1fc2527d015946a351b300d87ba6a5d2d870aa72ef6d1ed7dbd5cdf"
     },
     "unit-toggle-group": {
-      "path": "projects/kern/kit/src/lib/actions/toggle-group.spec.ts",
+      "path": "projects/kern/actions/src/lib/actions/toggle-group.spec.ts",
       "anchor": "KrnToggleGroup",
       "sha256": "sha256-798b1e5d9c49269a46c64670c5900224ca689c57ec20fcee75a480aece0ea4bf"
     },
     "unit-tooltip": {
-      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "path": "projects/kern/feedback/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnTooltip",
-      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
+      "sha256": "sha256-01008613729b71c7c39e0bb13893a6a58b1ed9331f45e43dfc50f4cf05bac805"
     },
     "unit-tree": {
-      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "path": "projects/kern/data-display/src/lib/data-display/display.spec.ts",
       "anchor": "KrnTree",
       "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-tree-navigation": {
-      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "path": "projects/kern/navigation/src/lib/navigation/navigation.spec.ts",
       "anchor": "KrnTreeNavigation",
       "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
     },
     "unit-user-menu": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
       "anchor": "KrnUserMenu",
-      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+      "sha256": "sha256-5187bc1bdcc2dd9f21d984e77f2c2db66251a41be56be55b0f263ac4b46dd6b1"
     },
     "unit-validation-message": {
-      "path": "projects/kern/kit/src/lib/forms/forms.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/forms.spec.ts",
       "anchor": "KrnValidationMessage",
-      "sha256": "sha256-d5994f726b5732c13b0e857d3cf355d29da3c2c5cb73e7a9050f83b045fd11f2"
+      "sha256": "sha256-af5d11c9928df3d8e6d63042806e6ce1c8472b2d9b8b3bb290c705081eef595c"
     },
     "unit-verification-code": {
-      "path": "projects/kern/kit/src/lib/forms/form-field.spec.ts",
+      "path": "projects/kern/forms/src/lib/forms/form-field.spec.ts",
       "anchor": "KrnOtpInput",
       "sha256": "sha256-53ccde07587c9750e998d4a0058b4b5a7c8823869f15e439740c7d3a9ed98894"
     },
     "unit-vertical-tabs": {
-      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "path": "projects/kern/navigation/src/lib/navigation/navigation.spec.ts",
       "anchor": "KrnTabs",
       "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
     }
@@ -961,11 +1081,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/disclosure.ts",
-      "sourceSha256": "sha256-8e8952ea63a0267661cbac4d5cda56495b2dbd1f8a8b692a94382cb3c983a607",
+      "source": "projects/kern/data-display/src/lib/data-display/disclosure.ts",
+      "sourceSha256": "sha256-3a9036923ff598bc1f7ef0c323241280a4c71b8535fdcc9cf60d2c4d006cdae2",
       "symbol": "KrnAccordion",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-accordion"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -982,11 +1102,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/alert.ts",
-      "sourceSha256": "sha256-6aa12764d1c6d186cd76e73fae3e30d1304329cc6cb6d584656ea5cffd1ae86d",
+      "source": "projects/kern/feedback/src/lib/feedback/alert.ts",
+      "sourceSha256": "sha256-59760d0d37c564d6704db50754b4b6225456e789833cb43cb74521cf17485206",
       "symbol": "KrnAlert",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-alert"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1003,11 +1123,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
-      "sourceSha256": "sha256-9cce7efc11bdaf85184145f3e04396feca662847aaca7f21c3a326f2e9b90679",
+      "source": "projects/kern/feedback/src/lib/feedback/modal-overlays.ts",
+      "sourceSha256": "sha256-10d3756358ab4c6e95217192b93fdca69f2f643efb66198d9b528804e13be136",
       "symbol": "KrnAlertDialog",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-alert-dialog"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1024,11 +1144,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/app-shell.ts",
-      "sourceSha256": "sha256-b9f08fa05f1362c652384885673746c2ef28862bf9da16257b06a7c209058a05",
+      "source": "projects/kern/layout/src/lib/layout/app-shell.ts",
+      "sourceSha256": "sha256-4955607c3b12a6891aac64e1231a6374db1ad3c3a48040130cefbe0952e6e228",
       "symbol": "KrnAppShell",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-app-shell"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1045,11 +1165,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/media-layout.ts",
+      "source": "projects/kern/layout/src/lib/layout/media-layout.ts",
       "sourceSha256": "sha256-9154909ce09fde001583a09193fc2672bc37d1775790e859a2c6de12ef8a76ca",
       "symbol": "KrnAspectRatio",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-aspect-ratio"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1066,11 +1186,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
-      "sourceSha256": "sha256-e1fcfcbe8bfc01e8d0c1fad9c480eeb60909531b1c2eed69cf90f55f45b562fe",
+      "source": "projects/kern/forms/src/lib/forms/select-controls.ts",
+      "sourceSha256": "sha256-ed97e3dafa9c6c80d5bad5a1cc5ffa7a95de50e351c1c0cf017b2f4c7ee49b22",
       "symbol": "KrnAutocomplete",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-autocomplete"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1095,7 +1215,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-autocomplete", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-autocomplete", "harness-test-autocomplete"]
         }
       ]
     },
@@ -1104,11 +1224,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/avatar.ts",
-      "sourceSha256": "sha256-d4fd41245f2e8a8242ae38f1f73c5a675f477bb953ff88cf86010377eefa0919",
+      "source": "projects/kern/data-display/src/lib/data-display/avatar.ts",
+      "sourceSha256": "sha256-18cfc04edd7d29f0cb53f536d80da4f2bd1c6b2f3f79255ad2b7671b1670e5c9",
       "symbol": "KrnAvatar",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-avatar"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1125,11 +1245,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/avatar.ts",
-      "sourceSha256": "sha256-d4fd41245f2e8a8242ae38f1f73c5a675f477bb953ff88cf86010377eefa0919",
+      "source": "projects/kern/data-display/src/lib/data-display/avatar.ts",
+      "sourceSha256": "sha256-18cfc04edd7d29f0cb53f536d80da4f2bd1c6b2f3f79255ad2b7671b1670e5c9",
       "symbol": "KrnAvatarGroup",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-avatar-group"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1146,11 +1266,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/navigation",
-      "source": "projects/kern/kit/src/lib/navigation/navigation-extras.ts",
+      "source": "projects/kern/navigation/src/lib/navigation/navigation-extras.ts",
       "sourceSha256": "sha256-02a2379062b880facf00b24aa1041cdabb6ee3b52d54a71ae65ffafa8e41c51d",
       "symbol": "KrnBackButton",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-navigation"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-back-button"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1167,11 +1287,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/badge.ts",
-      "sourceSha256": "sha256-1492b8bd82d6995412a125e89cdbabd96abf615086f0504e547e214c7a192b04",
+      "source": "projects/kern/data-display/src/lib/data-display/badge.ts",
+      "sourceSha256": "sha256-83b7380ddff026b3859d458a8389195376b98c53124e9041bc6e6585e97330d3",
       "symbol": "KrnBadge",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-badge"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1188,11 +1308,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/alert.ts",
-      "sourceSha256": "sha256-6aa12764d1c6d186cd76e73fae3e30d1304329cc6cb6d584656ea5cffd1ae86d",
+      "source": "projects/kern/feedback/src/lib/feedback/alert.ts",
+      "sourceSha256": "sha256-59760d0d37c564d6704db50754b4b6225456e789833cb43cb74521cf17485206",
       "symbol": "KrnBanner",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-banner"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1210,7 +1330,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/data-display",
       "source": "projects/kern/addon-charts/src/lib/charts/charts.ts",
-      "sourceSha256": "sha256-fe966d2f15f3fd4cad91e3ad6fe0610e5e75473634dfabca95649f66411d2a29",
+      "sourceSha256": "sha256-47127f34fbaa794e33438f834b1fabb7d5ed424c9eef78e811660fb4c93153f7",
       "symbol": "KrnBarChart",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-addon-charts"] },
@@ -1238,7 +1358,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-bar-chart", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-bar-chart", "harness-test-bar-chart"]
         }
       ]
     },
@@ -1247,11 +1367,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/navigation",
-      "source": "projects/kern/kit/src/lib/navigation/navigation-extras.ts",
+      "source": "projects/kern/navigation/src/lib/navigation/navigation-extras.ts",
       "sourceSha256": "sha256-02a2379062b880facf00b24aa1041cdabb6ee3b52d54a71ae65ffafa8e41c51d",
       "symbol": "KrnBottomNavigation",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-navigation"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-bottom-navigation"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1268,11 +1388,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
-      "sourceSha256": "sha256-9cce7efc11bdaf85184145f3e04396feca662847aaca7f21c3a326f2e9b90679",
+      "source": "projects/kern/feedback/src/lib/feedback/modal-overlays.ts",
+      "sourceSha256": "sha256-10d3756358ab4c6e95217192b93fdca69f2f643efb66198d9b528804e13be136",
       "symbol": "KrnBottomSheet",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-bottom-sheet"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1297,7 +1417,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-bottom-sheet", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-bottom-sheet", "harness-test-bottom-sheet"]
         },
         { "kind": "mobile-touch", "status": "linked", "artifactIds": ["mobile-overlay"] }
       ]
@@ -1307,11 +1427,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/navigation",
-      "source": "projects/kern/kit/src/lib/navigation/breadcrumbs.ts",
+      "source": "projects/kern/navigation/src/lib/navigation/breadcrumbs.ts",
       "sourceSha256": "sha256-f45d688cb6a895ea70b194c8e1b185de489cee5adc07995e32e9b6920ceda3fc",
       "symbol": "KrnBreadcrumbs",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-navigation"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-breadcrumbs"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1334,7 +1454,7 @@
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-bulk-actions"] },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         {
           "kind": "adaptation-guidance",
@@ -1348,11 +1468,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/actions",
-      "source": "projects/kern/kit/src/lib/actions/button.ts",
+      "source": "projects/kern/actions/src/lib/actions/button.ts",
       "sourceSha256": "sha256-59eabc027e97b8b07e0bb2a2d6bc1d07e8b5b630406aeeb576f53b5b53d81338",
       "symbol": "KrnButton",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-actions"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-button"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1369,11 +1489,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/actions",
-      "source": "projects/kern/kit/src/lib/actions/button-group.ts",
+      "source": "projects/kern/actions/src/lib/actions/button-group.ts",
       "sourceSha256": "sha256-0a34cd5fef674ba0c484c42420725347d6466afe2d3df60db5945a3f5f4b27b2",
       "symbol": "KrnButtonGroup",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-actions"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-button-group"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1390,11 +1510,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/calendar.ts",
-      "sourceSha256": "sha256-6dcac7c62537b909deb3c62d446175c4e1156c5517f1d8b37f6839539e72e2b3",
+      "source": "projects/kern/data-display/src/lib/data-display/calendar.ts",
+      "sourceSha256": "sha256-23644b712e883718ef58f4f0730841201eecf5ce344bc4db6cb095fd9a9704d7",
       "symbol": "KrnCalendar",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-calendar"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1411,11 +1531,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/card.ts",
+      "source": "projects/kern/data-display/src/lib/data-display/card.ts",
       "sourceSha256": "sha256-34b404b2cb0282e0c75f15ba305cbedd83030b5ce2fe8ea3260bf5b8ecb93d9c",
       "symbol": "KrnCard",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-card"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1432,11 +1552,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/container.ts",
-      "sourceSha256": "sha256-3f7bcfbbc3ff4ddaac13fe44ffe17a1a2016650c003415f873620386b1e4f682",
+      "source": "projects/kern/layout/src/lib/layout/container.ts",
+      "sourceSha256": "sha256-2f1c772d43382612d3f4d5cf1dfb3d7df1e260d0b472218adce591d78ba9963d",
       "symbol": "KrnCenter",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-center"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1453,11 +1573,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
-      "sourceSha256": "sha256-9a90379f52798dfb628625c6d03ff24fc4ebed3132229ecd8ab012be8cae5eaa",
+      "source": "projects/kern/forms/src/lib/forms/selection-controls.ts",
+      "sourceSha256": "sha256-f7712c0def796dd38710fe3f18a8e0ae7466bcf4eeb9b638eeba620c887f6604",
       "symbol": "KrnCheckbox",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-checkbox"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1474,11 +1594,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
-      "sourceSha256": "sha256-9a90379f52798dfb628625c6d03ff24fc4ebed3132229ecd8ab012be8cae5eaa",
+      "source": "projects/kern/forms/src/lib/forms/selection-controls.ts",
+      "sourceSha256": "sha256-f7712c0def796dd38710fe3f18a8e0ae7466bcf4eeb9b638eeba620c887f6604",
       "symbol": "KrnCheckboxGroup",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-checkbox-group"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1495,11 +1615,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/badge.ts",
-      "sourceSha256": "sha256-1492b8bd82d6995412a125e89cdbabd96abf615086f0504e547e214c7a192b04",
+      "source": "projects/kern/data-display/src/lib/data-display/badge.ts",
+      "sourceSha256": "sha256-83b7380ddff026b3859d458a8389195376b98c53124e9041bc6e6585e97330d3",
       "symbol": "KrnChip",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-chip"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1516,11 +1636,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
-      "sourceSha256": "sha256-e5de7983278dd25fda810a9aed74d4998e8fe32ef918979107374e9bd7bd2da6",
+      "source": "projects/kern/feedback/src/lib/feedback/progress.ts",
+      "sourceSha256": "sha256-1e20c21a8d7201713e38fd94252d376f3069c5499bc1d2f98f7315f3bd0f2c0c",
       "symbol": "KrnCircularProgress",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-circular-progress"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1537,11 +1657,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/flex-layout.ts",
+      "source": "projects/kern/layout/src/lib/layout/flex-layout.ts",
       "sourceSha256": "sha256-f11164fafdec4e8e37cdd34d63f94b6b49211118a6abff1f7e5deacc3d9a0952",
       "symbol": "KrnCluster",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-cluster"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1558,11 +1678,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/code-block.ts",
+      "source": "projects/kern/data-display/src/lib/data-display/code-block.ts",
       "sourceSha256": "sha256-a7dbd80bd30b7820d928c826c02c0f2ff932be1887948383799e570205fa70bc",
       "symbol": "KrnCodeBlock",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-code-block"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1579,11 +1699,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/date-time-controls.ts",
-      "sourceSha256": "sha256-a0045f9b32d75402c16f75539850766f96df29d5bc7ab8e82ad480ec60d8a795",
+      "source": "projects/kern/forms/src/lib/forms/date-time-controls.ts",
+      "sourceSha256": "sha256-117545be0575b8ad9206ed09d6ed243340a94d2a68288013cab2a5fd239be2b9",
       "symbol": "KrnColorPicker",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-color-picker"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1608,7 +1728,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-color-picker", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-color-picker", "harness-test-color-picker"]
         }
       ]
     },
@@ -1617,11 +1737,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
-      "sourceSha256": "sha256-e1fcfcbe8bfc01e8d0c1fad9c480eeb60909531b1c2eed69cf90f55f45b562fe",
+      "source": "projects/kern/forms/src/lib/forms/select-controls.ts",
+      "sourceSha256": "sha256-ed97e3dafa9c6c80d5bad5a1cc5ffa7a95de50e351c1c0cf017b2f4c7ee49b22",
       "symbol": "KrnCombobox",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-combobox"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1652,7 +1772,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-combobox", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-combobox", "harness-test-combobox"]
         }
       ]
     },
@@ -1661,11 +1781,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/navigation",
-      "source": "projects/kern/kit/src/lib/navigation/command-palette.ts",
-      "sourceSha256": "sha256-4547db960c585b19fbe66732ec0d2de5ceecbbba868d966f7c9974bac4147703",
+      "source": "projects/kern/navigation/src/lib/navigation/command-palette.ts",
+      "sourceSha256": "sha256-a0cee0485232a0c0a0d1e411d0b394cd3b0219361bbada07d6001516f2db40ac",
       "symbol": "KrnCommandPalette",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-navigation"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-command-palette"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1700,7 +1820,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-command-palette", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-command-palette", "harness-test-command-palette"]
         }
       ]
     },
@@ -1709,11 +1829,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/states.ts",
-      "sourceSha256": "sha256-553428e82fec3402688ea472948247c735252847718e086171cb0dd8af0ec093",
+      "source": "projects/kern/feedback/src/lib/feedback/states.ts",
+      "sourceSha256": "sha256-68de3229a4c2bc4cc835b73feea48c473cec9010ca8d42bfa9af615fbf13aca3",
       "symbol": "KrnConfirmation",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-confirmation-pattern"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1730,11 +1850,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/container.ts",
-      "sourceSha256": "sha256-3f7bcfbbc3ff4ddaac13fe44ffe17a1a2016650c003415f873620386b1e4f682",
+      "source": "projects/kern/layout/src/lib/layout/container.ts",
+      "sourceSha256": "sha256-2f1c772d43382612d3f4d5cf1dfb3d7df1e260d0b472218adce591d78ba9963d",
       "symbol": "KrnContainer",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-container"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1751,11 +1871,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/navigation",
-      "source": "projects/kern/kit/src/lib/navigation/menu.ts",
+      "source": "projects/kern/navigation/src/lib/navigation/menu.ts",
       "sourceSha256": "sha256-07c532320fe2053d10a46640e00f2fc8309022d61e5e85d3c876b5dc468d1be5",
       "symbol": "KrnContextMenu",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-navigation"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-context-menu"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1772,11 +1892,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/actions",
-      "source": "projects/kern/kit/src/lib/actions/copy-button.ts",
+      "source": "projects/kern/actions/src/lib/actions/copy-button.ts",
       "sourceSha256": "sha256-108f0650c966829c7959789fc8a3a5f2d9ae53019c9a93fbde92118f63c23160",
       "symbol": "KrnCopyButton",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-actions"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-copy-button"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1799,7 +1919,7 @@
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-crud-toolbar"] },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         {
           "kind": "adaptation-guidance",
@@ -1814,12 +1934,12 @@
       "evidenceProfile": "recipe-validation",
       "owner": "kern/patterns",
       "source": "projects/kern/patterns/src/lib/patterns/dashboard-widget.ts",
-      "sourceSha256": "sha256-a480f3d32704a3f579d97354aed0327007d815b79f304d93b12cd6544ab689cd",
+      "sourceSha256": "sha256-03bb0f29b964da7dadb33963f2fc688e051520d316a2c1f65bb3d3653321eac3",
       "symbol": "KrnDashboardWidget",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-dashboard-widget"] },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         {
           "kind": "adaptation-guidance",
@@ -1868,7 +1988,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-data-grid", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-data-grid", "harness-test-data-grid"]
         },
         { "kind": "mobile-touch", "status": "linked", "artifactIds": ["mobile-scroll"] }
       ]
@@ -1907,7 +2027,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-data-table", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-data-table", "harness-test-data-table"]
         }
       ]
     },
@@ -1916,11 +2036,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/date-time-controls.ts",
-      "sourceSha256": "sha256-a0045f9b32d75402c16f75539850766f96df29d5bc7ab8e82ad480ec60d8a795",
+      "source": "projects/kern/forms/src/lib/forms/date-time-controls.ts",
+      "sourceSha256": "sha256-117545be0575b8ad9206ed09d6ed243340a94d2a68288013cab2a5fd239be2b9",
       "symbol": "KrnDatePicker",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-date-picker"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1951,7 +2071,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-date-picker", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-date-picker", "harness-test-date-picker"]
         }
       ]
     },
@@ -1960,11 +2080,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/date-time-controls.ts",
-      "sourceSha256": "sha256-a0045f9b32d75402c16f75539850766f96df29d5bc7ab8e82ad480ec60d8a795",
+      "source": "projects/kern/forms/src/lib/forms/date-time-controls.ts",
+      "sourceSha256": "sha256-117545be0575b8ad9206ed09d6ed243340a94d2a68288013cab2a5fd239be2b9",
       "symbol": "KrnDateRangePicker",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-date-range-picker"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -1989,7 +2109,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-date-range-picker", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-date-range-picker", "harness-test-date-range-picker"]
         }
       ]
     },
@@ -1998,11 +2118,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/description-list.ts",
+      "source": "projects/kern/data-display/src/lib/data-display/description-list.ts",
       "sourceSha256": "sha256-efc4c2058aaaff89e8db8df2b5ced0e6472bdeeb78cb50ca6f8c34385aad99c0",
       "symbol": "KrnDescriptionList",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-description-list"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2019,11 +2139,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
-      "sourceSha256": "sha256-9cce7efc11bdaf85184145f3e04396feca662847aaca7f21c3a326f2e9b90679",
+      "source": "projects/kern/feedback/src/lib/feedback/modal-overlays.ts",
+      "sourceSha256": "sha256-10d3756358ab4c6e95217192b93fdca69f2f643efb66198d9b528804e13be136",
       "symbol": "KrnDialog",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-dialog"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2054,7 +2174,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-dialog", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-dialog", "harness-test-dialog"]
         }
       ]
     },
@@ -2063,11 +2183,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/disclosure.ts",
-      "sourceSha256": "sha256-8e8952ea63a0267661cbac4d5cda56495b2dbd1f8a8b692a94382cb3c983a607",
+      "source": "projects/kern/data-display/src/lib/data-display/disclosure.ts",
+      "sourceSha256": "sha256-3a9036923ff598bc1f7ef0c323241280a4c71b8535fdcc9cf60d2c4d006cdae2",
       "symbol": "KrnDisclosure",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-disclosure"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2084,11 +2204,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/media-layout.ts",
+      "source": "projects/kern/layout/src/lib/layout/media-layout.ts",
       "sourceSha256": "sha256-9154909ce09fde001583a09193fc2672bc37d1775790e859a2c6de12ef8a76ca",
       "symbol": "KrnDivider",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-divider"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2106,7 +2226,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/data-display",
       "source": "projects/kern/addon-charts/src/lib/charts/charts.ts",
-      "sourceSha256": "sha256-fe966d2f15f3fd4cad91e3ad6fe0610e5e75473634dfabca95649f66411d2a29",
+      "sourceSha256": "sha256-47127f34fbaa794e33438f834b1fabb7d5ed424c9eef78e811660fb4c93153f7",
       "symbol": "KrnDonutChart",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-addon-charts"] },
@@ -2138,7 +2258,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-donut-chart", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-donut-chart", "harness-test-donut-chart"]
         }
       ]
     },
@@ -2147,11 +2267,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/upload-controls.ts",
-      "sourceSha256": "sha256-fed894a24bda5fc90b4735a05b3ab02936ba97d025a968e84aec29a6419d2b35",
+      "source": "projects/kern/forms/src/lib/forms/upload-controls.ts",
+      "sourceSha256": "sha256-55e8f76ede4d3b44b51408525adc92c85185c995f05a380cf7bf988551a793d1",
       "symbol": "KrnDropUpload",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-drag-drop-upload"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2168,11 +2288,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
-      "sourceSha256": "sha256-9cce7efc11bdaf85184145f3e04396feca662847aaca7f21c3a326f2e9b90679",
+      "source": "projects/kern/feedback/src/lib/feedback/modal-overlays.ts",
+      "sourceSha256": "sha256-10d3756358ab4c6e95217192b93fdca69f2f643efb66198d9b528804e13be136",
       "symbol": "KrnDrawer",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-drawer"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2197,7 +2317,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-drawer", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-drawer", "harness-test-drawer"]
         }
       ]
     },
@@ -2206,11 +2326,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/actions",
-      "source": "projects/kern/kit/src/lib/actions/dropdown-button.ts",
+      "source": "projects/kern/actions/src/lib/actions/dropdown-button.ts",
       "sourceSha256": "sha256-2e54b53bceb7b5930e2e53b66301b6a6f9c47f03be7e467acec48b217f290429",
       "symbol": "KrnDropdownButton",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-actions"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-dropdown-button"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2227,11 +2347,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/states.ts",
-      "sourceSha256": "sha256-553428e82fec3402688ea472948247c735252847718e086171cb0dd8af0ec093",
+      "source": "projects/kern/feedback/src/lib/feedback/states.ts",
+      "sourceSha256": "sha256-68de3229a4c2bc4cc835b73feea48c473cec9010ca8d42bfa9af615fbf13aca3",
       "symbol": "KrnEmptyState",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-empty-state"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2248,11 +2368,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/states.ts",
-      "sourceSha256": "sha256-553428e82fec3402688ea472948247c735252847718e086171cb0dd8af0ec093",
+      "source": "projects/kern/feedback/src/lib/feedback/states.ts",
+      "sourceSha256": "sha256-68de3229a4c2bc4cc835b73feea48c473cec9010ca8d42bfa9af615fbf13aca3",
       "symbol": "KrnErrorState",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-error-state"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2269,11 +2389,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/upload-controls.ts",
-      "sourceSha256": "sha256-fed894a24bda5fc90b4735a05b3ab02936ba97d025a968e84aec29a6419d2b35",
+      "source": "projects/kern/forms/src/lib/forms/upload-controls.ts",
+      "sourceSha256": "sha256-55e8f76ede4d3b44b51408525adc92c85185c995f05a380cf7bf988551a793d1",
       "symbol": "KrnFileUpload",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-file-upload"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2291,12 +2411,12 @@
       "evidenceProfile": "recipe-validation",
       "owner": "kern/patterns",
       "source": "projects/kern/patterns/src/lib/patterns/filter-bar.ts",
-      "sourceSha256": "sha256-81af195cbb911faad7267eb3d68fc73facb9f03df65283b8606ea97cf248ef37",
+      "sourceSha256": "sha256-2b42a8dd776ac62ba66226dddb0d5dfaa273877ae2560990acddf2a1c8aab567",
       "symbol": "KrnFilterBar",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-filter-bar"] },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         {
           "kind": "adaptation-guidance",
@@ -2310,11 +2430,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/actions",
-      "source": "projects/kern/kit/src/lib/actions/button.ts",
+      "source": "projects/kern/actions/src/lib/actions/button.ts",
       "sourceSha256": "sha256-59eabc027e97b8b07e0bb2a2d6bc1d07e8b5b630406aeeb576f53b5b53d81338",
       "symbol": "KrnFloatingActionButton",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-actions"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-floating-action-button"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2331,11 +2451,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/form-field.ts",
+      "source": "projects/kern/forms/src/lib/forms/form-field.ts",
       "sourceSha256": "sha256-cbf67a56132b3552bd0c98065e8cb2ed76eb7987e310ad4be7ef2ded81f78920",
       "symbol": "KrnFormField",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-form-field"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2358,7 +2478,7 @@
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-global-search"] },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         {
           "kind": "adaptation-guidance",
@@ -2372,11 +2492,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/grid.ts",
+      "source": "projects/kern/layout/src/lib/layout/grid.ts",
       "sourceSha256": "sha256-266ef96361822aefd5dd528fb8a99e775eee94edebe9a3ade4dbec0ee510fbbf",
       "symbol": "KrnGrid",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-grid"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2393,11 +2513,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/app-shell.ts",
-      "sourceSha256": "sha256-b9f08fa05f1362c652384885673746c2ef28862bf9da16257b06a7c209058a05",
+      "source": "projects/kern/layout/src/lib/layout/app-shell.ts",
+      "sourceSha256": "sha256-4955607c3b12a6891aac64e1231a6374db1ad3c3a48040130cefbe0952e6e228",
       "symbol": "KrnHeader",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-header"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2414,11 +2534,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/form-field.ts",
+      "source": "projects/kern/forms/src/lib/forms/form-field.ts",
       "sourceSha256": "sha256-cbf67a56132b3552bd0c98065e8cb2ed76eb7987e310ad4be7ef2ded81f78920",
       "symbol": "KrnHint",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-hint"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2435,11 +2555,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/hint-overlays.ts",
-      "sourceSha256": "sha256-7c5c77f5de0771139949f47bb44e839f2550cb1c92fda2d62da10ea93928bd3c",
+      "source": "projects/kern/feedback/src/lib/feedback/hint-overlays.ts",
+      "sourceSha256": "sha256-25a3850aeb75ac32e1320dccc05edf8b73f7225e6bc3cefebd8161f7102ddbbe",
       "symbol": "KrnHoverCard",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-hover-card"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2456,11 +2576,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/actions",
-      "source": "projects/kern/kit/src/lib/actions/icon-button.ts",
+      "source": "projects/kern/actions/src/lib/actions/icon-button.ts",
       "sourceSha256": "sha256-e7a7df1ded3647c06cfe093033263b6de3909ab156183fb6f112447b1751d7cb",
       "symbol": "KrnIconButton",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-actions"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-icon-button"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2477,11 +2597,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/flex-layout.ts",
+      "source": "projects/kern/layout/src/lib/layout/flex-layout.ts",
       "sourceSha256": "sha256-f11164fafdec4e8e37cdd34d63f94b6b49211118a6abff1f7e5deacc3d9a0952",
       "symbol": "KrnInline",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-inline"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2498,11 +2618,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/json-view.ts",
+      "source": "projects/kern/data-display/src/lib/data-display/json-view.ts",
       "sourceSha256": "sha256-a7c7e7b1e0b5e1869e8d4b9e50029ae78b021ff27baf7205bb11242516d84237",
       "symbol": "KrnJsonView",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-json-view"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2531,7 +2651,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-json-view", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-json-view", "harness-test-json-view"]
         }
       ]
     },
@@ -2540,11 +2660,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/code-block.ts",
+      "source": "projects/kern/data-display/src/lib/data-display/code-block.ts",
       "sourceSha256": "sha256-a7dbd80bd30b7820d928c826c02c0f2ff932be1887948383799e570205fa70bc",
       "symbol": "KrnKeyboardShortcut",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-keyboard-shortcut"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2561,11 +2681,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/form-field.ts",
+      "source": "projects/kern/forms/src/lib/forms/form-field.ts",
       "sourceSha256": "sha256-cbf67a56132b3552bd0c98065e8cb2ed76eb7987e310ad4be7ef2ded81f78920",
       "symbol": "KrnLabel",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-label"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2583,7 +2703,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/data-display",
       "source": "projects/kern/addon-charts/src/lib/charts/charts.ts",
-      "sourceSha256": "sha256-fe966d2f15f3fd4cad91e3ad6fe0610e5e75473634dfabca95649f66411d2a29",
+      "sourceSha256": "sha256-47127f34fbaa794e33438f834b1fabb7d5ed424c9eef78e811660fb4c93153f7",
       "symbol": "KrnLineChart",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-addon-charts"] },
@@ -2615,7 +2735,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-line-chart", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-line-chart", "harness-test-line-chart"]
         }
       ]
     },
@@ -2624,11 +2744,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/actions",
-      "source": "projects/kern/kit/src/lib/actions/link.ts",
+      "source": "projects/kern/actions/src/lib/actions/link.ts",
       "sourceSha256": "sha256-08a07226d77a09a5206ece95581a0a3505de12eb91ba1b61a4ed26ebbd22f363",
       "symbol": "KrnLink",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-actions"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-link"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2645,11 +2765,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/list.ts",
-      "sourceSha256": "sha256-5dac4e6b8055b107a985027d0acdc26ed8edcbc620d90172136ec05efe67c8db",
+      "source": "projects/kern/data-display/src/lib/data-display/list.ts",
+      "sourceSha256": "sha256-b3f94713d4ad34a3c054e9439039b6eae4c7497db8386526da8d5511ed113503",
       "symbol": "KrnList",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-list"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2666,11 +2786,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/list.ts",
-      "sourceSha256": "sha256-5dac4e6b8055b107a985027d0acdc26ed8edcbc620d90172136ec05efe67c8db",
+      "source": "projects/kern/data-display/src/lib/data-display/list.ts",
+      "sourceSha256": "sha256-b3f94713d4ad34a3c054e9439039b6eae4c7497db8386526da8d5511ed113503",
       "symbol": "KrnListItem",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-list-item"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2687,11 +2807,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
-      "sourceSha256": "sha256-e5de7983278dd25fda810a9aed74d4998e8fe32ef918979107374e9bd7bd2da6",
+      "source": "projects/kern/feedback/src/lib/feedback/progress.ts",
+      "sourceSha256": "sha256-1e20c21a8d7201713e38fd94252d376f3069c5499bc1d2f98f7315f3bd0f2c0c",
       "symbol": "KrnLoadingOverlay",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-loading-overlay"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2714,7 +2834,7 @@
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-login-form"] },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         {
           "kind": "adaptation-guidance",
@@ -2734,7 +2854,7 @@
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-master-detail-layout"] },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         {
           "kind": "adaptation-guidance",
@@ -2748,11 +2868,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/navigation",
-      "source": "projects/kern/kit/src/lib/navigation/menu.ts",
+      "source": "projects/kern/navigation/src/lib/navigation/menu.ts",
       "sourceSha256": "sha256-07c532320fe2053d10a46640e00f2fc8309022d61e5e85d3c876b5dc468d1be5",
       "symbol": "KrnMenu",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-navigation"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-menu"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2769,11 +2889,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/navigation",
-      "source": "projects/kern/kit/src/lib/navigation/menu.ts",
+      "source": "projects/kern/navigation/src/lib/navigation/menu.ts",
       "sourceSha256": "sha256-07c532320fe2053d10a46640e00f2fc8309022d61e5e85d3c876b5dc468d1be5",
       "symbol": "KrnMenubar",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-navigation"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-menubar"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2790,11 +2910,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/meter.ts",
-      "sourceSha256": "sha256-e385b2063d8fe9d008806c436c75c998d4e85be0344f8bfb306c9107866a2003",
+      "source": "projects/kern/data-display/src/lib/data-display/meter.ts",
+      "sourceSha256": "sha256-e73b9eba37df3afd988973f7890c69317e71b47bb546a2cd0866240aeb4d7ddd",
       "symbol": "KrnMeter",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-meter"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2812,12 +2932,12 @@
       "evidenceProfile": "recipe-validation",
       "owner": "kern/patterns",
       "source": "projects/kern/patterns/src/lib/patterns/mobile-navigation.ts",
-      "sourceSha256": "sha256-06458844bd7c84b55721594d85a860fd445ea91ec6212ec347ae7e338f277099",
+      "sourceSha256": "sha256-979d58a5d24bafd8dbfd0519d7e66ebd4ac7758bf6868b71a145f52b74ca8c4a",
       "symbol": "KrnMobileNavigation",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-mobile-navigation"] },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         {
           "kind": "adaptation-guidance",
@@ -2831,11 +2951,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
-      "sourceSha256": "sha256-e1fcfcbe8bfc01e8d0c1fad9c480eeb60909531b1c2eed69cf90f55f45b562fe",
+      "source": "projects/kern/forms/src/lib/forms/select-controls.ts",
+      "sourceSha256": "sha256-ed97e3dafa9c6c80d5bad5a1cc5ffa7a95de50e351c1c0cf017b2f4c7ee49b22",
       "symbol": "KrnMultiSelect",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-multi-select"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2860,7 +2980,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-multi-select", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-multi-select", "harness-test-multi-select"]
         }
       ]
     },
@@ -2875,7 +2995,7 @@
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-multi-step-form"] },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         {
           "kind": "adaptation-guidance",
@@ -2889,11 +3009,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
-      "sourceSha256": "sha256-e1fcfcbe8bfc01e8d0c1fad9c480eeb60909531b1c2eed69cf90f55f45b562fe",
+      "source": "projects/kern/forms/src/lib/forms/select-controls.ts",
+      "sourceSha256": "sha256-ed97e3dafa9c6c80d5bad5a1cc5ffa7a95de50e351c1c0cf017b2f4c7ee49b22",
       "symbol": "KrnNativeSelect",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-native-select"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2910,11 +3030,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/app-shell.ts",
-      "sourceSha256": "sha256-b9f08fa05f1362c652384885673746c2ef28862bf9da16257b06a7c209058a05",
+      "source": "projects/kern/layout/src/lib/layout/app-shell.ts",
+      "sourceSha256": "sha256-4955607c3b12a6891aac64e1231a6374db1ad3c3a48040130cefbe0952e6e228",
       "symbol": "KrnNavigationRail",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-navigation-rail"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2932,12 +3052,12 @@
       "evidenceProfile": "recipe-validation",
       "owner": "kern/patterns",
       "source": "projects/kern/patterns/src/lib/patterns/notification-center.ts",
-      "sourceSha256": "sha256-b20ca2ed1a4c91450b8fb17b6ff8047bfa8b6cc87dc3dcf59eeff3d01d4aa12a",
+      "sourceSha256": "sha256-acbcc90cc506f64b626b70f6eab69e39df974ecc36a87e1abc3dcab8d25ed83b",
       "symbol": "KrnNotificationCenter",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-notification-center"] },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         {
           "kind": "adaptation-guidance",
@@ -2951,11 +3071,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
-      "sourceSha256": "sha256-e820383cf41963318eb8d8a39fd15d33906707706b1a008906ab03bddb0f31c9",
+      "source": "projects/kern/forms/src/lib/forms/text-inputs.ts",
+      "sourceSha256": "sha256-425643159bc9433b57f0b1127929b3bdcd990af13c20f2bb288d9c29e15233e0",
       "symbol": "KrnNumberInput",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-number-input"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -2979,7 +3099,7 @@
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-page-header"] },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         {
           "kind": "adaptation-guidance",
@@ -2993,11 +3113,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/navigation",
-      "source": "projects/kern/kit/src/lib/navigation/pagination.ts",
+      "source": "projects/kern/navigation/src/lib/navigation/pagination.ts",
       "sourceSha256": "sha256-01699ca289b1937a469da5b3651c7c5617fa8210e4672cb9e6736006f5a299ca",
       "symbol": "KrnPagination",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-navigation"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-pagination"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3014,11 +3134,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
-      "sourceSha256": "sha256-e820383cf41963318eb8d8a39fd15d33906707706b1a008906ab03bddb0f31c9",
+      "source": "projects/kern/forms/src/lib/forms/text-inputs.ts",
+      "sourceSha256": "sha256-425643159bc9433b57f0b1127929b3bdcd990af13c20f2bb288d9c29e15233e0",
       "symbol": "KrnPasswordInput",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-password-input"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3035,11 +3155,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/hint-overlays.ts",
-      "sourceSha256": "sha256-7c5c77f5de0771139949f47bb44e839f2550cb1c92fda2d62da10ea93928bd3c",
+      "source": "projects/kern/feedback/src/lib/feedback/hint-overlays.ts",
+      "sourceSha256": "sha256-25a3850aeb75ac32e1320dccc05edf8b73f7225e6bc3cefebd8161f7102ddbbe",
       "symbol": "KrnPopover",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-popover"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3062,7 +3182,7 @@
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-profile-form"] },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         {
           "kind": "adaptation-guidance",
@@ -3076,11 +3196,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
-      "sourceSha256": "sha256-e5de7983278dd25fda810a9aed74d4998e8fe32ef918979107374e9bd7bd2da6",
+      "source": "projects/kern/feedback/src/lib/feedback/progress.ts",
+      "sourceSha256": "sha256-1e20c21a8d7201713e38fd94252d376f3069c5499bc1d2f98f7315f3bd0f2c0c",
       "symbol": "KrnProgressBar",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-progress-bar"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3097,11 +3217,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
-      "sourceSha256": "sha256-9a90379f52798dfb628625c6d03ff24fc4ebed3132229ecd8ab012be8cae5eaa",
+      "source": "projects/kern/forms/src/lib/forms/selection-controls.ts",
+      "sourceSha256": "sha256-f7712c0def796dd38710fe3f18a8e0ae7466bcf4eeb9b638eeba620c887f6604",
       "symbol": "KrnRadio",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-radio"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3118,11 +3238,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
-      "sourceSha256": "sha256-9a90379f52798dfb628625c6d03ff24fc4ebed3132229ecd8ab012be8cae5eaa",
+      "source": "projects/kern/forms/src/lib/forms/selection-controls.ts",
+      "sourceSha256": "sha256-f7712c0def796dd38710fe3f18a8e0ae7466bcf4eeb9b638eeba620c887f6604",
       "symbol": "KrnRadioGroup",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-radio-group"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3139,11 +3259,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/range-controls.ts",
-      "sourceSha256": "sha256-0d060f83e65cc60bf05264a062b0258ddcf2aa6cf59eaad4f5f55737efcd6be1",
+      "source": "projects/kern/forms/src/lib/forms/range-controls.ts",
+      "sourceSha256": "sha256-1f6f9507836d0c50b214362dc9c7e585d53c2aacaeed507288d7b7544b2b5f91",
       "symbol": "KrnRangeSlider",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-range-slider"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3160,11 +3280,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/meter.ts",
-      "sourceSha256": "sha256-e385b2063d8fe9d008806c436c75c998d4e85be0344f8bfb306c9107866a2003",
+      "source": "projects/kern/data-display/src/lib/data-display/meter.ts",
+      "sourceSha256": "sha256-e73b9eba37df3afd988973f7890c69317e71b47bb546a2cd0866240aeb4d7ddd",
       "symbol": "KrnRating",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-rating"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3181,11 +3301,11 @@
       "status": "experimental",
       "evidenceProfile": "experimental-incubation",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/resizable-panels.ts",
+      "source": "projects/kern/layout/src/lib/layout/resizable-panels.ts",
       "sourceSha256": "sha256-e9fa5b1c92707d65cd3081317059534d3de91a8c16459e3b67394948a6f157d3",
       "symbol": "KrnResizablePanels",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "owner", "status": "linked", "artifactIds": ["lifecycle-policy"] },
         { "kind": "limitations", "status": "linked", "artifactIds": ["lifecycle-policy"] },
         { "kind": "exit-criteria", "status": "linked", "artifactIds": ["lifecycle-policy"] }
@@ -3197,7 +3317,7 @@
       "evidenceProfile": "recipe-validation",
       "owner": "kern/patterns",
       "source": "projects/kern/patterns/src/lib/patterns/responsive-application-shell.ts",
-      "sourceSha256": "sha256-4fea502b1e5f92366a84954f837253a2553e9c9b2734b34d844dd92a3ad539d4",
+      "sourceSha256": "sha256-9f41a99ca5937976ad004b5e306651c9def8365f784eac95e893b8f9f57cb8d8",
       "symbol": "KrnResponsiveApplicationShell",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
@@ -3206,7 +3326,7 @@
           "status": "linked",
           "artifactIds": ["unit-responsive-application-shell"]
         },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         {
           "kind": "adaptation-guidance",
@@ -3220,11 +3340,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/responsive-media.ts",
-      "sourceSha256": "sha256-bb817008901b8bef1c56f13a83a985f2fa7885c39c5cdb0037ec9c2282260c35",
+      "source": "projects/kern/data-display/src/lib/data-display/responsive-media.ts",
+      "sourceSha256": "sha256-5c9fb7239319fe5e0768b1b2e715cf6aab6a8d6d2b5ef1c0b64b2f4ba8be2a8b",
       "symbol": "KrnResponsiveMedia",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-responsive-media"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3241,11 +3361,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/media-layout.ts",
+      "source": "projects/kern/layout/src/lib/layout/media-layout.ts",
       "sourceSha256": "sha256-9154909ce09fde001583a09193fc2672bc37d1775790e859a2c6de12ef8a76ca",
       "symbol": "KrnShow",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-responsive-show-hide"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3262,11 +3382,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/media-layout.ts",
+      "source": "projects/kern/layout/src/lib/layout/media-layout.ts",
       "sourceSha256": "sha256-9154909ce09fde001583a09193fc2672bc37d1775790e859a2c6de12ef8a76ca",
       "symbol": "KrnScrollArea",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-scroll-area"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3283,11 +3403,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
-      "sourceSha256": "sha256-e820383cf41963318eb8d8a39fd15d33906707706b1a008906ab03bddb0f31c9",
+      "source": "projects/kern/forms/src/lib/forms/text-inputs.ts",
+      "sourceSha256": "sha256-425643159bc9433b57f0b1127929b3bdcd990af13c20f2bb288d9c29e15233e0",
       "symbol": "KrnSearchInput",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-search-input"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3304,11 +3424,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
-      "sourceSha256": "sha256-9a90379f52798dfb628625c6d03ff24fc4ebed3132229ecd8ab012be8cae5eaa",
+      "source": "projects/kern/forms/src/lib/forms/selection-controls.ts",
+      "sourceSha256": "sha256-f7712c0def796dd38710fe3f18a8e0ae7466bcf4eeb9b638eeba620c887f6604",
       "symbol": "KrnSegmentedControl",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-segmented-control"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3325,11 +3445,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
-      "sourceSha256": "sha256-e1fcfcbe8bfc01e8d0c1fad9c480eeb60909531b1c2eed69cf90f55f45b562fe",
+      "source": "projects/kern/forms/src/lib/forms/select-controls.ts",
+      "sourceSha256": "sha256-ed97e3dafa9c6c80d5bad5a1cc5ffa7a95de50e351c1c0cf017b2f4c7ee49b22",
       "symbol": "KrnSelect",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-select"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3360,7 +3480,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-select", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-select", "harness-test-select"]
         },
         { "kind": "mobile-touch", "status": "linked", "artifactIds": ["mobile-form"] }
       ]
@@ -3371,12 +3491,12 @@
       "evidenceProfile": "recipe-validation",
       "owner": "kern/patterns",
       "source": "projects/kern/patterns/src/lib/patterns/settings-panel.ts",
-      "sourceSha256": "sha256-ef5f544607503728cba71b861fede442f58534ce4aa34844c533a76c5c67173f",
+      "sourceSha256": "sha256-f69cb3b5f6e2e36f37b9bd1825abe05d40e41113ee95d614e3bcc92e14f97b0e",
       "symbol": "KrnSettingsPanel",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-settings-panel"] },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         {
           "kind": "adaptation-guidance",
@@ -3390,11 +3510,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/app-shell.ts",
-      "sourceSha256": "sha256-b9f08fa05f1362c652384885673746c2ef28862bf9da16257b06a7c209058a05",
+      "source": "projects/kern/layout/src/lib/layout/app-shell.ts",
+      "sourceSha256": "sha256-4955607c3b12a6891aac64e1231a6374db1ad3c3a48040130cefbe0952e6e228",
       "symbol": "KrnSidebar",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-sidebar"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3411,11 +3531,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
-      "sourceSha256": "sha256-e5de7983278dd25fda810a9aed74d4998e8fe32ef918979107374e9bd7bd2da6",
+      "source": "projects/kern/feedback/src/lib/feedback/progress.ts",
+      "sourceSha256": "sha256-1e20c21a8d7201713e38fd94252d376f3069c5499bc1d2f98f7315f3bd0f2c0c",
       "symbol": "KrnSkeleton",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-skeleton"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3432,11 +3552,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/navigation",
-      "source": "projects/kern/kit/src/lib/navigation/navigation-extras.ts",
+      "source": "projects/kern/navigation/src/lib/navigation/navigation-extras.ts",
       "sourceSha256": "sha256-02a2379062b880facf00b24aa1041cdabb6ee3b52d54a71ae65ffafa8e41c51d",
       "symbol": "KrnSkipLink",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-navigation"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-skip-link"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3453,11 +3573,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/range-controls.ts",
-      "sourceSha256": "sha256-0d060f83e65cc60bf05264a062b0258ddcf2aa6cf59eaad4f5f55737efcd6be1",
+      "source": "projects/kern/forms/src/lib/forms/range-controls.ts",
+      "sourceSha256": "sha256-1f6f9507836d0c50b214362dc9c7e585d53c2aacaeed507288d7b7544b2b5f91",
       "symbol": "KrnSlider",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-slider"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3474,11 +3594,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/flex-layout.ts",
+      "source": "projects/kern/layout/src/lib/layout/flex-layout.ts",
       "sourceSha256": "sha256-f11164fafdec4e8e37cdd34d63f94b6b49211118a6abff1f7e5deacc3d9a0952",
       "symbol": "KrnSpacer",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-spacer"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3495,11 +3615,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
-      "sourceSha256": "sha256-e5de7983278dd25fda810a9aed74d4998e8fe32ef918979107374e9bd7bd2da6",
+      "source": "projects/kern/feedback/src/lib/feedback/progress.ts",
+      "sourceSha256": "sha256-1e20c21a8d7201713e38fd94252d376f3069c5499bc1d2f98f7315f3bd0f2c0c",
       "symbol": "KrnSpinner",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-spinner"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3516,11 +3636,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/actions",
-      "source": "projects/kern/kit/src/lib/actions/dropdown-button.ts",
+      "source": "projects/kern/actions/src/lib/actions/dropdown-button.ts",
       "sourceSha256": "sha256-2e54b53bceb7b5930e2e53b66301b6a6f9c47f03be7e467acec48b217f290429",
       "symbol": "KrnSplitButton",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-actions"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-split-button"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3537,11 +3657,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/split-layout.ts",
+      "source": "projects/kern/layout/src/lib/layout/split-layout.ts",
       "sourceSha256": "sha256-6b9432aed3316aa8aca4c41f1c9721f0191d144dd28440fd6a3a6948536251bf",
       "symbol": "KrnSplitLayout",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-split-layout"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3558,11 +3678,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/layout",
-      "source": "projects/kern/kit/src/lib/layout/flex-layout.ts",
+      "source": "projects/kern/layout/src/lib/layout/flex-layout.ts",
       "sourceSha256": "sha256-f11164fafdec4e8e37cdd34d63f94b6b49211118a6abff1f7e5deacc3d9a0952",
       "symbol": "KrnStack",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-layout"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-stack"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3579,11 +3699,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/card.ts",
+      "source": "projects/kern/data-display/src/lib/data-display/card.ts",
       "sourceSha256": "sha256-34b404b2cb0282e0c75f15ba305cbedd83030b5ce2fe8ea3260bf5b8ecb93d9c",
       "symbol": "KrnStat",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-stat"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3600,11 +3720,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/badge.ts",
-      "sourceSha256": "sha256-1492b8bd82d6995412a125e89cdbabd96abf615086f0504e547e214c7a192b04",
+      "source": "projects/kern/data-display/src/lib/data-display/badge.ts",
+      "sourceSha256": "sha256-83b7380ddff026b3859d458a8389195376b98c53124e9041bc6e6585e97330d3",
       "symbol": "KrnBadge",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-status-badge"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3621,11 +3741,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/navigation",
-      "source": "projects/kern/kit/src/lib/navigation/stepper.ts",
+      "source": "projects/kern/navigation/src/lib/navigation/stepper.ts",
       "sourceSha256": "sha256-4ac2f80477a9d31f5958dce8baa29c06230095047b88574d3ecb9446b3ebabb1",
       "symbol": "KrnStepper",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-navigation"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-stepper"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3642,11 +3762,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/states.ts",
-      "sourceSha256": "sha256-553428e82fec3402688ea472948247c735252847718e086171cb0dd8af0ec093",
+      "source": "projects/kern/feedback/src/lib/feedback/states.ts",
+      "sourceSha256": "sha256-68de3229a4c2bc4cc835b73feea48c473cec9010ca8d42bfa9af615fbf13aca3",
       "symbol": "KrnSuccessState",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-success-state"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3663,11 +3783,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
-      "sourceSha256": "sha256-9a90379f52798dfb628625c6d03ff24fc4ebed3132229ecd8ab012be8cae5eaa",
+      "source": "projects/kern/forms/src/lib/forms/selection-controls.ts",
+      "sourceSha256": "sha256-f7712c0def796dd38710fe3f18a8e0ae7466bcf4eeb9b638eeba620c887f6604",
       "symbol": "KrnSwitch",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-switch"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3684,11 +3804,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/navigation",
-      "source": "projects/kern/kit/src/lib/navigation/navigation-extras.ts",
+      "source": "projects/kern/navigation/src/lib/navigation/navigation-extras.ts",
       "sourceSha256": "sha256-02a2379062b880facf00b24aa1041cdabb6ee3b52d54a71ae65ffafa8e41c51d",
       "symbol": "KrnTableOfContents",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-navigation"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-table-of-contents"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3705,11 +3825,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/navigation",
-      "source": "projects/kern/kit/src/lib/navigation/tabs.ts",
+      "source": "projects/kern/navigation/src/lib/navigation/tabs.ts",
       "sourceSha256": "sha256-fd327c97b4977023df869ac198c967bf3297df00de598cfc0898e2483a77c9d6",
       "symbol": "KrnTabs",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-navigation"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-tabs"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3726,11 +3846,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/badge.ts",
-      "sourceSha256": "sha256-1492b8bd82d6995412a125e89cdbabd96abf615086f0504e547e214c7a192b04",
+      "source": "projects/kern/data-display/src/lib/data-display/badge.ts",
+      "sourceSha256": "sha256-83b7380ddff026b3859d458a8389195376b98c53124e9041bc6e6585e97330d3",
       "symbol": "KrnChip",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-tag"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         { "kind": "keyboard", "status": "linked", "artifactIds": ["catalog-keyboard", "unit-tag"] },
@@ -3743,11 +3863,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/otp-tags.ts",
-      "sourceSha256": "sha256-e08d97931c3d3bb09ec18fdf99f384107c6cbc4cbbe75eddf36530ce5ef7ee7b",
+      "source": "projects/kern/forms/src/lib/forms/otp-tags.ts",
+      "sourceSha256": "sha256-61385514316ade72c33b4bd29a3ca0e05bb9ce002a186d1afdc07a662ec34733",
       "symbol": "KrnTagsInput",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-tags-input"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3764,11 +3884,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
-      "sourceSha256": "sha256-e820383cf41963318eb8d8a39fd15d33906707706b1a008906ab03bddb0f31c9",
+      "source": "projects/kern/forms/src/lib/forms/text-inputs.ts",
+      "sourceSha256": "sha256-425643159bc9433b57f0b1127929b3bdcd990af13c20f2bb288d9c29e15233e0",
       "symbol": "KrnTextInput",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-text-input"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3785,11 +3905,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
-      "sourceSha256": "sha256-e820383cf41963318eb8d8a39fd15d33906707706b1a008906ab03bddb0f31c9",
+      "source": "projects/kern/forms/src/lib/forms/text-inputs.ts",
+      "sourceSha256": "sha256-425643159bc9433b57f0b1127929b3bdcd990af13c20f2bb288d9c29e15233e0",
       "symbol": "KrnTextarea",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-textarea"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3806,11 +3926,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/date-time-controls.ts",
-      "sourceSha256": "sha256-a0045f9b32d75402c16f75539850766f96df29d5bc7ab8e82ad480ec60d8a795",
+      "source": "projects/kern/forms/src/lib/forms/date-time-controls.ts",
+      "sourceSha256": "sha256-117545be0575b8ad9206ed09d6ed243340a94d2a68288013cab2a5fd239be2b9",
       "symbol": "KrnTimePicker",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-time-picker"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3835,7 +3955,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-time-picker", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-time-picker", "harness-test-time-picker"]
         }
       ]
     },
@@ -3844,11 +3964,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/timeline.ts",
-      "sourceSha256": "sha256-421861a0a02a57815614484814cc30cac69527f7adebe2cc5f4c34fc80322d20",
+      "source": "projects/kern/data-display/src/lib/data-display/timeline.ts",
+      "sourceSha256": "sha256-fd09ab9132bf329617da199a42f4512d60853b38e0de535cf87cecf9756d04bd",
       "symbol": "KrnTimeline",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-timeline"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3865,11 +3985,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/toast.ts",
-      "sourceSha256": "sha256-f07247c946dff019a48c23d6129699c7ac50bb2a13a7829344e0bb832ac45875",
+      "source": "projects/kern/feedback/src/lib/feedback/toast.ts",
+      "sourceSha256": "sha256-2a7bf0f2dd5b2e93517ccbacf08d0fbc507f557101a1d9cb8832560385682c22",
       "symbol": "KrnToastViewport",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-toast"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3886,11 +4006,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/actions",
-      "source": "projects/kern/kit/src/lib/actions/toggle-button.ts",
+      "source": "projects/kern/actions/src/lib/actions/toggle-button.ts",
       "sourceSha256": "sha256-73d808149ee721ea4d6838964827aa4835ffac64086ca06a8c128fa4756f742d",
       "symbol": "KrnToggleButton",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-actions"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-toggle-button"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3907,11 +4027,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/actions",
-      "source": "projects/kern/kit/src/lib/actions/toggle-group.ts",
+      "source": "projects/kern/actions/src/lib/actions/toggle-group.ts",
       "sourceSha256": "sha256-a6e62dc46aaa72be42bcf89ed3ae9b65ce29895d060591c05545a3216e02d950",
       "symbol": "KrnToggleGroup",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-actions"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-toggle-group"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3928,11 +4048,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
-      "source": "projects/kern/kit/src/lib/feedback/hint-overlays.ts",
-      "sourceSha256": "sha256-7c5c77f5de0771139949f47bb44e839f2550cb1c92fda2d62da10ea93928bd3c",
+      "source": "projects/kern/feedback/src/lib/feedback/hint-overlays.ts",
+      "sourceSha256": "sha256-25a3850aeb75ac32e1320dccc05edf8b73f7225e6bc3cefebd8161f7102ddbbe",
       "symbol": "KrnTooltip",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-feedback"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-tooltip"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3949,11 +4069,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/data-display",
-      "source": "projects/kern/kit/src/lib/data-display/tree.ts",
-      "sourceSha256": "sha256-6e6d9fba1c12bc7e8bacf90efff68dc8d09505534f63cdabd77956093078de68",
+      "source": "projects/kern/data-display/src/lib/data-display/tree.ts",
+      "sourceSha256": "sha256-b0f4c91c247957f793f8a984305ae854f8c022e8012c51a86f3a99837da6e7f8",
       "symbol": "KrnTree",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-data-display"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-tree"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -3984,7 +4104,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-tree", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-tree", "harness-test-tree"]
         }
       ]
     },
@@ -3993,11 +4113,11 @@
       "status": "beta",
       "evidenceProfile": "beta-promotion",
       "owner": "kern/navigation",
-      "source": "projects/kern/kit/src/lib/navigation/tree-navigation.ts",
-      "sourceSha256": "sha256-d89f102c6f163478bf606d954e9586c51817ae3bbdaea09cf6a04fb25c8883ae",
+      "source": "projects/kern/navigation/src/lib/navigation/tree-navigation.ts",
+      "sourceSha256": "sha256-9fea353f164a6f781338218f47f3f2ad4483c86f24335e68e84cff73c9addd19",
       "symbol": "KrnTreeNavigation",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-navigation"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-tree-navigation"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -4026,7 +4146,7 @@
         {
           "kind": "consumer-harness",
           "status": "linked",
-          "artifactIds": ["agent-example-tree-navigation", "agent-aot-verifier"]
+          "artifactIds": ["harness-source-tree-navigation", "harness-test-tree-navigation"]
         }
       ]
     },
@@ -4041,7 +4161,7 @@
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-user-menu"] },
-        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-recipes"] },
         { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
         { "kind": "adaptation-guidance", "status": "linked", "artifactIds": ["guidance-user-menu"] }
       ]
@@ -4051,11 +4171,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/form-field.ts",
+      "source": "projects/kern/forms/src/lib/forms/form-field.ts",
       "sourceSha256": "sha256-cbf67a56132b3552bd0c98065e8cb2ed76eb7987e310ad4be7ef2ded81f78920",
       "symbol": "KrnValidationMessage",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-validation-message"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -4072,11 +4192,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
-      "source": "projects/kern/kit/src/lib/forms/otp-tags.ts",
-      "sourceSha256": "sha256-e08d97931c3d3bb09ec18fdf99f384107c6cbc4cbbe75eddf36530ce5ef7ee7b",
+      "source": "projects/kern/forms/src/lib/forms/otp-tags.ts",
+      "sourceSha256": "sha256-61385514316ade72c33b4bd29a3ca0e05bb9ce002a186d1afdc07a662ec34733",
       "symbol": "KrnOtpInput",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-forms"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-verification-code"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {
@@ -4093,11 +4213,11 @@
       "status": "stable",
       "evidenceProfile": "stable-release",
       "owner": "kern/navigation",
-      "source": "projects/kern/kit/src/lib/navigation/tabs.ts",
+      "source": "projects/kern/navigation/src/lib/navigation/tabs.ts",
       "sourceSha256": "sha256-fd327c97b4977023df869ac198c967bf3297df00de598cfc0898e2483a77c9d6",
       "symbol": "KrnTabs",
       "evidence": [
-        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-navigation"] },
         { "kind": "unit", "status": "linked", "artifactIds": ["unit-vertical-tabs"] },
         { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
         {

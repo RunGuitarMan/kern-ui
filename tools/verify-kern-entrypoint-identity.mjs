@@ -71,14 +71,15 @@ function validateConfig(value) {
     typeof value !== 'object' ||
     typeof value.packageName !== 'string' ||
     typeof value.primarySourceRoot !== 'string' ||
-    !Array.isArray(value.entrypoints)
+    !Array.isArray(value.entrypoints) ||
+    !Array.isArray(value.compatibilityEntrypoints)
   ) {
     throw new Error('Invalid projects/kern/api/runtime-entrypoints.json structure.');
   }
 
   const names = new Set();
   const subpaths = new Set();
-  for (const entrypoint of value.entrypoints) {
+  for (const entrypoint of [...value.entrypoints, ...value.compatibilityEntrypoints]) {
     if (
       !entrypoint ||
       typeof entrypoint.name !== 'string' ||
@@ -118,7 +119,11 @@ async function verifyInstalledExports(installedRoot, config) {
     );
   }
 
-  for (const subpath of ['.', ...config.entrypoints.map((entrypoint) => entrypoint.subpath)]) {
+  for (const subpath of [
+    '.',
+    ...config.entrypoints.map((entrypoint) => entrypoint.subpath),
+    ...config.compatibilityEntrypoints.map((entrypoint) => entrypoint.subpath),
+  ]) {
     const conditions = manifest.exports?.[subpath];
     if (
       !conditions ||
@@ -161,7 +166,9 @@ function validateIdentityReport(value, config) {
     throw new Error('Linked identity fixture returned an invalid report.');
   }
 
-  const expectedNames = config.entrypoints.map((entrypoint) => entrypoint.name).sort();
+  const expectedNames = [...config.entrypoints, ...config.compatibilityEntrypoints]
+    .map((entrypoint) => entrypoint.name)
+    .sort();
   const actualNames = Object.keys(value.exportsByEntrypoint).sort();
   if (JSON.stringify(actualNames) !== JSON.stringify(expectedNames)) {
     throw new Error(
@@ -170,7 +177,7 @@ function validateIdentityReport(value, config) {
   }
 
   let exportCount = 0;
-  for (const entrypoint of config.entrypoints) {
+  for (const entrypoint of [...config.entrypoints, ...config.compatibilityEntrypoints]) {
     const exportNames = value.exportsByEntrypoint[entrypoint.name];
     if (!Array.isArray(exportNames) || !exportNames.every((name) => typeof name === 'string')) {
       throw new Error(`Invalid identity export list for "${entrypoint.name}".`);
@@ -190,11 +197,16 @@ function identityProgram(config) {
     name: entrypoint.name,
     specifier: `${config.packageName}${entrypoint.subpath.slice(1)}`,
   }));
+  const compatibilityEntrypoints = config.compatibilityEntrypoints.map((entrypoint) => ({
+    name: entrypoint.name,
+    specifier: `${config.packageName}${entrypoint.subpath.slice(1)}`,
+  }));
 
   return `
 await import('@angular/compiler');
 const root = await import(${JSON.stringify(config.packageName)});
 const entrypoints = ${JSON.stringify(entrypoints)};
+const compatibilityEntrypoints = ${JSON.stringify(compatibilityEntrypoints)};
 const owners = new Map();
 const failures = [];
 const exportsByEntrypoint = {};
@@ -224,6 +236,26 @@ for (const entrypoint of entrypoints) {
       failures.push(
         'Root and "' + entrypoint.name +
         '" expose different runtime identities for "' + name + '".',
+      );
+    }
+  }
+}
+
+for (const entrypoint of compatibilityEntrypoints) {
+  const module = await import(entrypoint.specifier);
+  const exportNames = Object.keys(module).filter((name) => name !== 'default').sort();
+  exportsByEntrypoint[entrypoint.name] = exportNames;
+
+  for (const name of exportNames) {
+    if (!owners.has(name)) {
+      failures.push(
+        'Compatibility entrypoint "' + entrypoint.name +
+        '" exposes "' + name + '" without a canonical owner.',
+      );
+    } else if (!(name in root) || !Object.is(root[name], module[name])) {
+      failures.push(
+        'Compatibility entrypoint "' + entrypoint.name +
+        '" does not preserve root identity for "' + name + '".',
       );
     }
   }
@@ -263,6 +295,9 @@ async function main() {
   const sourceRoots = [
     resolve(workspaceRoot, config.primarySourceRoot),
     ...config.entrypoints.map((entrypoint) => resolve(workspaceRoot, entrypoint.sourceRoot)),
+    ...config.compatibilityEntrypoints.map((entrypoint) =>
+      resolve(workspaceRoot, entrypoint.sourceRoot),
+    ),
   ];
   const emittedSourceArtifacts = (
     await Promise.all(sourceRoots.map((sourceRoot) => filesRecursively(sourceRoot)))
@@ -340,7 +375,8 @@ async function main() {
       config,
     );
     console.log(
-      `Kern runtime entrypoint identities verified: ${config.entrypoints.length} subpaths, ` +
+      `Kern runtime entrypoint identities verified: ${config.entrypoints.length} owners and ` +
+        `${config.compatibilityEntrypoints.length} compatibility subpath, ` +
         `${exportCount} uniquely owned linked exports.`,
     );
   } finally {

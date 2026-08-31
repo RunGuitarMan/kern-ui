@@ -393,7 +393,7 @@ describe('KERN agent API', () => {
       component: 'button',
       code: `
         import { Component } from '@angular/core';
-        import { KrnButton } from '@kern-ui/angular/kit';
+        import { KrnButton } from '@kern-ui/angular/actions';
 
         @Component({
           imports: [KrnButton],
@@ -418,7 +418,7 @@ describe('KERN agent API', () => {
         component: 'button',
         code: `
           import { Component } from '@angular/core';
-          import { KrnButton } from '@kern-ui/angular/kit';
+          import { KrnButton } from '@kern-ui/angular/actions';
 
           @Component({
             imports: [KrnButton],
@@ -444,15 +444,38 @@ describe('KERN agent API', () => {
     }
   });
 
+  it('accepts the kit compatibility entrypoint while recommending the canonical owner', () => {
+    const result = api.callTool('validate_usage', {
+      component: 'button',
+      code: `
+        import { Component } from '@angular/core';
+        import { KrnButton } from '@kern-ui/angular/kit';
+
+        @Component({
+          imports: [KrnButton],
+          template: '<button krnButton>Save</button>',
+        })
+        class CompatibilityButton {}
+      `,
+      stylesConfigured: true,
+    }).structuredContent;
+
+    assert.equal(result.valid, true);
+    assert.ok(
+      result.issues.some(
+        (entry) => entry.severity === 'warning' && entry.code === 'KRN_USAGE_COMPATIBILITY_IMPORT',
+      ),
+    );
+    assert.ok(!result.issues.some((entry) => entry.code === 'KRN_USAGE_DEEP_IMPORT'));
+  });
+
   it('resolves exported and local import names through the TypeScript AST', () => {
     const aliased = api.callTool('validate_usage', {
       component: 'button',
       code: `
         import { Component } from '@angular/core';
-        import {
-          KrnButton as PrimaryAction,
-          type KrnSelectOption as Option,
-        } from '@kern-ui/angular/kit';
+        import { KrnButton as PrimaryAction } from '@kern-ui/angular/actions';
+        import type { KrnSelectOption as Option } from '@kern-ui/angular/forms';
 
         const option = null as Option<string> | null;
         void option;
@@ -474,13 +497,13 @@ describe('KERN agent API', () => {
     for (const code of [
       `
         import { Component } from '@angular/core';
-        import type { KrnButton } from '@kern-ui/angular/kit';
+        import type { KrnButton } from '@kern-ui/angular/actions';
         @Component({ imports: [KrnButton], template: '<button krnButton>Save</button>' })
         class TypeOnlyButton {}
       `,
       `
         import { Component } from '@angular/core';
-        import { type KrnButton as PrimaryAction } from '@kern-ui/angular/kit';
+        import { type KrnButton as PrimaryAction } from '@kern-ui/angular/actions';
         @Component({ imports: [PrimaryAction], template: '<button krnButton>Save</button>' })
         class TypeOnlyAliasedButton {}
       `,
@@ -501,7 +524,7 @@ describe('KERN agent API', () => {
       component: 'button',
       code: `
         import { Component } from '@angular/core';
-        import { KrnSelectOption as KrnButton } from '@kern-ui/angular/kit';
+        import { KrnSelectOption as KrnButton } from '@kern-ui/angular/forms';
         @Component({ imports: [KrnButton], template: '<button krnButton>Save</button>' })
         class CollidingButton {}
       `,
@@ -518,7 +541,7 @@ describe('KERN agent API', () => {
       code: `
         import { Component } from '@angular/core';
         import { ReactiveFormsModule as Forms } from '@angular/forms';
-        import { KrnSelect as PlanSelect } from '@kern-ui/angular/kit';
+        import { KrnSelect as PlanSelect } from '@kern-ui/angular/forms';
 
         @Component({
           imports: [Forms, PlanSelect],
@@ -537,7 +560,7 @@ describe('KERN agent API', () => {
       code: `
         import { Component } from '@angular/core';
         import type { ReactiveFormsModule as Forms } from '@angular/forms';
-        import { KrnSelect } from '@kern-ui/angular/kit';
+        import { KrnSelect } from '@kern-ui/angular/forms';
         @Component({
           imports: [Forms, KrnSelect],
           template: '<krn-select formControlName="plan" [options]="plans" />',
