@@ -69,8 +69,9 @@ export class ComponentPage {
   });
   protected readonly family = computed<CatalogFamilyView | null>(() => {
     const current = this.sourceItem();
-    const family = current ? catalogFamilyFor(current.id) : undefined;
-    if (!family) return null;
+    const sourceFamily = current ? catalogFamilyFor(current.id) : undefined;
+    if (!sourceFamily) return null;
+    const family = this.i18n.catalogFamily(sourceFamily);
     return {
       ...family,
       members: family.members

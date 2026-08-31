@@ -15,6 +15,9 @@ import {
   KERN_PLAYGROUND_AUTO_CONTROL_KEYS,
   KERN_PLAYGROUND_DEFINITIONS,
   findKernPlaygroundDefinition,
+  localizeKernPlaygroundFixtureEffect,
+  localizeKernPlaygroundPresetLabel,
+  localizeKernPlaygroundStringArgument,
   normalizeKernPlaygroundApiType,
   normalizeKernPlaygroundValues,
   normalizeKernPlaygroundStateId,
@@ -29,6 +32,127 @@ function definition(id: string): KernPlaygroundDefinition {
 }
 
 describe('KERN playground registry', () => {
+  it('localizes every preset label and fixture-effect description for Russian previews', () => {
+    const cyrillic = /[А-Яа-яЁё]/;
+
+    for (const entry of KERN_PLAYGROUND_DEFINITIONS) {
+      for (const preset of entry.presets) {
+        const context = `${entry.id}.${preset.id}`;
+        expect(localizeKernPlaygroundPresetLabel('ru-RU', preset), context).toMatch(cyrillic);
+        expect(localizeKernPlaygroundPresetLabel('en-US', preset), context).toBe(preset.label);
+
+        if (preset.fixtureEffect) {
+          const localized = localizeKernPlaygroundFixtureEffect('ru-RU', preset.fixtureEffect);
+          expect(localized.label, `${context}.fixtureEffect.label`).toMatch(cyrillic);
+          expect(localized.description, `${context}.fixtureEffect.description`).toMatch(cyrillic);
+          expect(
+            localizeKernPlaygroundFixtureEffect('en-US', preset.fixtureEffect),
+            `${context}.fixtureEffect.english`,
+          ).toBe(preset.fixtureEffect);
+        }
+      }
+    }
+  });
+
+  it('localizes visible string arguments without changing enum, value, or id contracts', () => {
+    const errorState = definition('error-state');
+    const title = errorState.controls.find(({ key }) => key === 'title');
+    const description = errorState.controls.find(({ key }) => key === 'description');
+    expect(title?.binding.kind).toBe('input');
+    expect(description?.binding.kind).toBe('input');
+    expect(
+      localizeKernPlaygroundStringArgument('ru-RU', 'title', String(title?.defaultValue)),
+    ).toBe('Не удалось загрузить рабочие пространства');
+    expect(
+      localizeKernPlaygroundStringArgument(
+        'ru-RU',
+        'description',
+        String(description?.defaultValue),
+      ),
+    ).toBe('Сервис не ответил. Ваши изменения сохранены.');
+    expect(localizeKernPlaygroundStringArgument('ru-RU', 'title', String(title?.testValue))).toBe(
+      'Не удалось загрузить рабочие пространства · альтернативный вариант',
+    );
+
+    const textarea = definition('textarea');
+    const filled = textarea.presets.find(({ id }) => id === 'filled');
+    expect(
+      localizeKernPlaygroundStringArgument('ru-RU', 'value', String(filled?.args['value'])),
+    ).toBe('Продление одобрено и ожидает юридической проверки.');
+    expect(
+      localizeKernPlaygroundStringArgument(
+        'ru-RU',
+        'description',
+        'Renewal approved pending legal review.',
+      ),
+    ).toBe('Продление одобрено и ожидает юридической проверки.');
+
+    expect(localizeKernPlaygroundStringArgument('ru-RU', 'tone', 'danger')).toBe('danger');
+    expect(localizeKernPlaygroundStringArgument('ru-RU', 'value', 'Example value')).toBe(
+      'Example value',
+    );
+    expect(localizeKernPlaygroundStringArgument('ru-RU', 'id', 'Alternate value')).toBe(
+      'Alternate value',
+    );
+    expect(
+      localizeKernPlaygroundStringArgument('en-US', 'title', 'Could not load workspaces'),
+    ).toBe('Could not load workspaces');
+  });
+
+  it('covers every prose control value produced by the playground registry', () => {
+    const proseKeys = new Set([
+      'alt',
+      'content',
+      'description',
+      'detail',
+      'dirtyMessage',
+      'emptyText',
+      'error',
+      'errorMessage',
+      'errorText',
+      'eyebrow',
+      'filter',
+      'filterPlaceholder',
+      'heading',
+      'hideText',
+      'hint',
+      'label',
+      'loadingText',
+      'name',
+      'optionalText',
+      'placeholder',
+      'prompt',
+      'query',
+      'showText',
+      'text',
+      'title',
+      'valueText',
+    ]);
+    const intentionalIdentities = new Set(['20rem', 'Avery Cole', 'Northstar', 'avery@north.ops']);
+    const cyrillic = /[А-Яа-яЁё]/;
+
+    for (const entry of KERN_PLAYGROUND_DEFINITIONS) {
+      for (const control of entry.controls) {
+        if (!proseKeys.has(control.key)) continue;
+
+        for (const [source, candidate] of [
+          ['default', control.defaultValue],
+          ['test', control.testValue],
+        ] as const) {
+          if (typeof candidate !== 'string' || candidate === '') continue;
+          const localized = localizeKernPlaygroundStringArgument('ru-RU', control.key, candidate);
+          const context = `${entry.id}.${control.key}.${source}`;
+
+          if (localized === candidate) {
+            expect(intentionalIdentities.has(candidate), context).toBe(true);
+          } else {
+            expect(localized, context).toMatch(cyrillic);
+          }
+        }
+      }
+    }
+  });
+
   it('covers every catalog item exactly once with an interactive contract', () => {
     expect(KERN_CATALOG).toHaveLength(132);
     expect(KERN_PLAYGROUND_DEFINITIONS).toHaveLength(KERN_CATALOG.length);

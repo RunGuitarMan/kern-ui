@@ -15,6 +15,9 @@ import type { KernCatalogItem } from '@kern-ui/showcase';
 import {
   KernComponentSpecimen,
   findKernPlaygroundDefinition,
+  localizeKernPlaygroundFixtureEffect,
+  localizeKernPlaygroundPresetLabel,
+  localizeKernPlaygroundStringArgument,
   type KernPlaygroundControl,
   type KernPlaygroundStatePreset,
   type KernPlaygroundValue,
@@ -204,6 +207,40 @@ function materializePublicBindings(
     configuredOpeningTag +
     source.slice(openingTagMatch.index + openingTag.length)
   );
+}
+
+export function describeKernPlaygroundStory(
+  locale: string,
+  componentName: string,
+  preset: KernPlaygroundStatePreset,
+  changedControlLabels: readonly string[] = [],
+): string {
+  const label = localizeKernPlaygroundPresetLabel(locale, preset);
+  if (preset.fixtureEffect) {
+    return localizeKernPlaygroundFixtureEffect(locale, preset.fixtureEffect).description;
+  }
+  if (locale === 'ru-RU') {
+    if (preset.visualPseudoState) {
+      return `Показывает состояние «${label.toLocaleLowerCase('ru-RU')}» на фактическом интерактивном элементе компонента.`;
+    }
+    if (changedControlLabels.length > 0) {
+      return `Применяет настройки состояния «${label.toLocaleLowerCase('ru-RU')}» к целевому компоненту.`;
+    }
+    if (Object.keys(preset.environment ?? {}).length > 0) {
+      return `Проверяет тот же компонент в окружении «${label.toLocaleLowerCase('ru-RU')}».`;
+    }
+    return `Показывает базовую композицию ${componentName} до применения другого состояния.`;
+  }
+  if (preset.visualPseudoState) {
+    return `Shows the ${preset.label.toLocaleLowerCase()} state on the actual target control.`;
+  }
+  if (changedControlLabels.length > 0) {
+    return `Applies ${changedControlLabels.map((value) => value.toLocaleLowerCase()).join(', ')} to the target component.`;
+  }
+  if (Object.keys(preset.environment ?? {}).length > 0) {
+    return `Checks the same component in the ${preset.label.toLocaleLowerCase()} environment.`;
+  }
+  return `Shows the baseline ${componentName} composition before a state is applied.`;
 }
 
 @Component({
@@ -435,20 +472,17 @@ export class ComponentPlayground {
   protected readonly storyDescription = computed(() => {
     const preset = this.selectedPreset();
     if (!preset) return '';
-    if (preset.fixtureEffect) return preset.fixtureEffect.description;
-    if (preset.visualPseudoState) {
-      return `Shows the ${preset.label.toLocaleLowerCase()} state on the actual target control.`;
-    }
-    const changed = this.changedPresetControls(preset);
-    if (changed.length > 0) {
-      return `Applies ${changed.map(({ label }) => label.toLocaleLowerCase()).join(', ')} to the target component.`;
-    }
-    const environment = Object.keys(preset.environment ?? {});
-    if (environment.length > 0) {
-      return `Checks the same component in the ${preset.label.toLocaleLowerCase()} environment.`;
-    }
-    return `Shows the baseline ${this.item().name} composition before a state is applied.`;
+    return describeKernPlaygroundStory(
+      this.locale(),
+      this.item().name,
+      preset,
+      this.changedPresetControls(preset).map(({ label }) => label),
+    );
   });
+
+  protected presetLabel(preset: KernPlaygroundStatePreset): string {
+    return localizeKernPlaygroundPresetLabel(this.locale(), preset);
+  }
   protected readonly configuredCode = computed(() => {
     return materializePublicBindings(
       this.code(),
@@ -559,6 +593,14 @@ export class ComponentPlayground {
 
   protected stringArg(control: KernPlaygroundControl): string {
     return serializePlaygroundValue(this.args()[control.key] ?? control.defaultValue);
+  }
+
+  protected textArg(control: KernPlaygroundControl): string {
+    return localizeKernPlaygroundStringArgument(
+      this.locale(),
+      control.key,
+      this.stringArg(control),
+    );
   }
 
   protected serializedValue(value: KernPlaygroundValue): string {

@@ -228,8 +228,8 @@
             <div class="category-groups">
               @for (group of groupsFor(category); track group.id) {
                 <div class="catalog-group" [class.ungrouped]="!group.label">
-                  @if (group.label) {
-                    <p class="family-label">{{ group.label }}</p>
+                  @if (groupLabel(group); as label) {
+                    <p class="family-label">{{ label }}</p>
                   }
                   @for (item of group.items; track item.id) {
                     <a [routerLink]="['/components', item.id]" routerLinkActive="active">
@@ -256,8 +256,8 @@
             <div class="category-groups">
               @for (group of groupsFor(recipeCategory); track group.id) {
                 <div class="catalog-group" [class.ungrouped]="!group.label">
-                  @if (group.label) {
-                    <p class="family-label">{{ group.label }}</p>
+                  @if (groupLabel(group); as label) {
+                    <p class="family-label">{{ label }}</p>
                   }
                   @for (item of group.items; track item.id) {
                     <a [routerLink]="['/components', item.id]" routerLinkActive="active">

@@ -79,7 +79,7 @@
       "@kern-ui/angular/testing"
     ],
     "compatibilityEntrypoints": ["@kern-ui/angular/kit"],
-    "sourceDigest": "sha256-36c08c99bbcc6a0722f6477a3f8541aa32276908e3e867b75930be1a01fd3c93"
+    "sourceDigest": "sha256-df5ccb7e1c56efabace30ef63e473fc12aafe7acc63f8660b07da8baa33c39a3"
   },
   "components": [
     {

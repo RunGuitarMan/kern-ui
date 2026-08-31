@@ -17,6 +17,7 @@ import {
   KERN_RECIPE_CATALOG_INDEX,
   canonicalCatalogId,
   catalogNavigationGroups,
+  type KernCatalogNavigationGroup,
   type KernCategory,
 } from '@kern-ui/showcase/catalog-index';
 import { filter, map, startWith } from 'rxjs';
@@ -124,6 +125,10 @@ export class App {
 
   protected groupsFor(category: KernCategory) {
     return catalogNavigationGroups(category);
+  }
+
+  protected groupLabel(group: KernCatalogNavigationGroup): string | undefined {
+    return group.label ? this.i18n.catalogFamilyName(group.id, group.label) : undefined;
   }
 
   protected itemCountFor(category: KernCategory): number {

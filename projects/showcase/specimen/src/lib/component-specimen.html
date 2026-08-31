@@ -22,7 +22,10 @@
   </header>
 
   <div class="specimen-canvas" id="specimen">
-    <aside class="component-map" aria-label="Specimen composition">
+    <aside
+      class="component-map"
+      [attr.aria-label]="localized('Specimen composition', 'Состав примера')"
+    >
       <span class="target-component">
         <i>{{ localized('Target', 'Цель') }}</i>
         <strong>{{ item().name }}</strong>
@@ -54,7 +57,7 @@
         }
       </div>
     }
-    @if (effectiveFixtureEffect(); as fixtureEffect) {
+    @if (localizedFixtureEffect(); as fixtureEffect) {
       <aside
         class="fixture-effect-probe"
         [attr.data-effect-kind]="fixtureEffect.kind"
@@ -90,25 +93,31 @@
                 >
                   <krn-header>
                     <strong krnHeaderStart>NORTH / OPS</strong>
-                    <span>Workspace health</span>
-                    <krn-badge krnHeaderEnd status tone="success">Live</krn-badge>
+                    <span>{{
+                      localized('Workspace health', 'Состояние рабочего пространства')
+                    }}</span>
+                    <krn-badge krnHeaderEnd status tone="success">{{
+                      localized('Live', 'Активно')
+                    }}</krn-badge>
                   </krn-header>
-                  <krn-sidebar ariaLabel="Workspace">
+                  <krn-sidebar [ariaLabel]="localized('Workspace', 'Рабочее пространство')">
                     <strong krnSidebarHeader>Northstar</strong>
                     <nav class="demo-nav">
-                      <a [routerLink]="['/components', item().id]" fragment="specimen">Overview</a
-                      ><a [routerLink]="['/components', item().id]" fragment="specimen"
-                        >Automations</a
-                      >
+                      <a [routerLink]="['/components', item().id]" fragment="specimen">{{
+                        localized('Overview', 'Обзор')
+                      }}</a
+                      ><a [routerLink]="['/components', item().id]" fragment="specimen">{{
+                        localized('Automations', 'Автоматизации')
+                      }}</a>
                     </nav>
                   </krn-sidebar>
                   <div class="shell-content">
-                    <span>Q3 / OPERATIONS</span>
-                    <h3>Workspace health</h3>
+                    <span>{{ localized('Q3 / OPERATIONS', 'КВ. 3 / ОПЕРАЦИИ') }}</span>
+                    <h3>{{ localized('Workspace health', 'Состояние рабочего пространства') }}</h3>
                     <krn-stat
-                      label="Active automations"
+                      [label]="localized('Active automations', 'Активные автоматизации')"
                       value="18.7k"
-                      detail="+4.2% this quarter"
+                      [detail]="localized('+4.2% this quarter', '+4,2% за этот квартал')"
                       trend="up"
                     />
                   </div>
@@ -125,20 +134,29 @@
                 >
                   <strong krnHeaderStart>KERN / OPS</strong>
                   <nav class="header-links">
-                    <a [routerLink]="['/components', item().id]" fragment="specimen">Overview</a
-                    ><a [routerLink]="['/components', item().id]" fragment="specimen">Reports</a>
+                    <a [routerLink]="['/components', item().id]" fragment="specimen">{{
+                      localized('Overview', 'Обзор')
+                    }}</a
+                    ><a [routerLink]="['/components', item().id]" fragment="specimen">{{
+                      localized('Reports', 'Отчёты')
+                    }}</a>
                   </nav>
                   <krn-avatar krnHeaderEnd name="Avery Cole" size="sm" status="online" />
                 </krn-header>
                 <div class="surface-copy">
-                  Sticky structure with explicit start, content, and end slots.
+                  {{
+                    localized(
+                      'Sticky structure with explicit start, content, and end slots.',
+                      'Закреплённая структура с явными начальным, центральным и конечным слотами.'
+                    )
+                  }}
                 </div>
               </div>
             }
             @case ('sidebar') {
               <div class="sidebar-stage">
                 <krn-sidebar
-                  ariaLabel="Project navigation"
+                  [ariaLabel]="localized('Project navigation', 'Навигация проекта')"
                   [(collapsed)]="sidebarCollapsed"
                   [width]="stringArgument('width', '15rem')"
                   [collapsedMode]="stringArgument('collapsedMode', 'icons')"
@@ -151,25 +169,38 @@
                       [routerLink]="['/components', item().id]"
                       fragment="specimen"
                       aria-current="page"
-                      >Overview</a
+                      >{{ localized('Overview', 'Обзор') }}</a
                     >
                     <a [routerLink]="['/components', item().id]" fragment="specimen"
-                      >Automations <span>18</span></a
+                      >{{ localized('Automations', 'Автоматизации') }} <span>18</span></a
                     >
-                    <a [routerLink]="['/components', item().id]" fragment="specimen">Audit log</a>
+                    <a [routerLink]="['/components', item().id]" fragment="specimen">{{
+                      localized('Audit log', 'Журнал аудита')
+                    }}</a>
                   </nav>
-                  <small krnSidebarFooter>Workspace / 02</small>
+                  <small krnSidebarFooter>{{
+                    localized('Workspace / 02', 'Рабочее пространство / 02')
+                  }}</small>
                 </krn-sidebar>
                 <div class="surface-copy">
-                  <strong>Content stays independent.</strong>
-                  <p>The sidebar owns navigation, not page layout.</p>
+                  <strong>{{
+                    localized('Content stays independent.', 'Содержимое остаётся независимым.')
+                  }}</strong>
+                  <p>
+                    {{
+                      localized(
+                        'The sidebar owns navigation, not page layout.',
+                        'Боковая панель отвечает за навигацию, а не за макет страницы.'
+                      )
+                    }}
+                  </p>
                 </div>
               </div>
             }
             @case ('navigation-rail') {
               <div class="rail-stage">
                 <krn-navigation-rail
-                  ariaLabel="Primary tools"
+                  [ariaLabel]="localized('Primary tools', 'Основные инструменты')"
                   [(expanded)]="navigationRailExpanded"
                   [expandedWidth]="stringArgument('expandedWidth', '14rem')"
                   [side]="stringArgument('side', 'auto')"
@@ -180,17 +211,21 @@
                       <path d="M6 4v16M18 4 9 12l9 8" />
                     </svg>
                   </span>
-                  <button type="button" aria-label="Home" aria-current="page">
+                  <button
+                    type="button"
+                    [attr.aria-label]="localized('Home', 'Главная')"
+                    aria-current="page"
+                  >
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                       <path d="m4 11 8-7 8 7v9h-5v-6H9v6H4Z" />
                     </svg>
                   </button>
-                  <button type="button" aria-label="Reports">
+                  <button type="button" [attr.aria-label]="localized('Reports', 'Отчёты')">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                       <path d="M5 19V9m7 10V5m7 14v-7" />
                     </svg>
                   </button>
-                  <button type="button" aria-label="Settings">
+                  <button type="button" [attr.aria-label]="localized('Settings', 'Настройки')">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                       <path
                         d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm0-5v2m0 13v2m8.5-8.5h-2m-13 0h-2m14.5-6-1.4 1.4M7.4 16.6 6 18m12 0-1.4-1.4M7.4 7.4 6 6"
@@ -200,8 +235,17 @@
                   <krn-avatar krnRailFooter name="Avery Cole" size="sm" />
                 </krn-navigation-rail>
                 <div class="surface-copy">
-                  <strong>Icon-first wayfinding.</strong>
-                  <p>A narrow, independently expandable navigation surface.</p>
+                  <strong>{{
+                    localized('Icon-first wayfinding.', 'Навигация с акцентом на иконках.')
+                  }}</strong>
+                  <p>
+                    {{
+                      localized(
+                        'A narrow, independently expandable navigation surface.',
+                        'Узкая навигационная панель, которую можно раскрыть независимо.'
+                      )
+                    }}
+                  </p>
                 </div>
               </div>
             }
@@ -216,13 +260,19 @@
                 >
                   <krn-card
                     [eyebrow]="stringArgument('size', 'sm').toUpperCase() + ' / CONTAINER'"
-                    heading="Readable measure"
+                    [heading]="localized('Readable measure', 'Удобная длина строки')"
                   >
-                    Containers constrain line length and preserve logical gutters as the viewport
-                    changes.
+                    {{
+                      localized(
+                        'Containers constrain line length and preserve logical gutters as the viewport changes.',
+                        'Контейнеры ограничивают длину строки и сохраняют логические отступы при изменении ширины экрана.'
+                      )
+                    }}
                   </krn-card>
                 </krn-container>
-                <span class="measure-line">responsive inline gutters</span>
+                <span class="measure-line">{{
+                  localized('responsive inline gutters', 'адаптивные горизонтальные отступы')
+                }}</span>
               </div>
             }
             @case ('stack') {
@@ -234,20 +284,35 @@
               >
                 <article>
                   <span>01</span>
-                  <div><strong>Workspace label</strong><small>Names the control</small></div>
-                  <i>required</i>
+                  <div>
+                    <strong>{{
+                      localized('Workspace label', 'Подпись рабочего пространства')
+                    }}</strong>
+                    <small>{{
+                      localized('Names the control', 'Даёт имя элементу управления')
+                    }}</small>
+                  </div>
+                  <i>{{ localized('required', 'обязательно') }}</i>
                 </article>
                 <article>
                   <span>02</span>
-                  <div><strong>Control surface</strong><small>Receives user input</small></div>
-                  <i>interactive</i>
+                  <div>
+                    <strong>{{ localized('Control surface', 'Поверхность управления') }}</strong>
+                    <small>{{
+                      localized('Receives user input', 'Принимает ввод пользователя')
+                    }}</small>
+                  </div>
+                  <i>{{ localized('interactive', 'интерактивно') }}</i>
                 </article>
                 <article>
                   <span>03</span>
                   <div>
-                    <strong>Supporting message</strong><small>Explains the constraint</small>
+                    <strong>{{ localized('Supporting message', 'Поясняющее сообщение') }}</strong>
+                    <small>{{
+                      localized('Explains the constraint', 'Объясняет ограничение')
+                    }}</small>
                   </div>
-                  <i>optional</i>
+                  <i>{{ localized('optional', 'необязательно') }}</i>
                 </article>
               </krn-stack>
             }
@@ -259,10 +324,12 @@
                 [gap]="stringArgument('gap', '3')"
                 [justify]="stringArgument('justify', 'start')"
               >
-                <krn-badge tone="brand">Design</krn-badge>
-                <krn-badge tone="info">Engineering</krn-badge>
-                <krn-badge tone="success">Released</krn-badge>
-                <button krnButton size="sm">Add owner</button>
+                <krn-badge tone="brand">{{ localized('Design', 'Дизайн') }}</krn-badge>
+                <krn-badge tone="info">{{ localized('Engineering', 'Разработка') }}</krn-badge>
+                <krn-badge tone="success">{{ localized('Released', 'Выпущено') }}</krn-badge>
+                <button krnButton size="sm">
+                  {{ localized('Add owner', 'Добавить владельца') }}
+                </button>
               </krn-inline>
             }
             @case ('cluster') {
@@ -274,10 +341,14 @@
                 [columnGap]="stringArgument('columnGap', '')"
                 [rowGap]="stringArgument('rowGap', '')"
               >
-                <strong>12 selected records</strong>
+                <strong>{{ localized('12 selected records', 'Выбрано 12 записей') }}</strong>
                 <krn-cluster gap="2">
-                  <button krnButton size="sm" variant="outline" tone="neutral">Export</button>
-                  <button krnButton size="sm" tone="danger">Archive</button>
+                  <button krnButton size="sm" variant="outline" tone="neutral">
+                    {{ localized('Export', 'Экспорт') }}
+                  </button>
+                  <button krnButton size="sm" tone="danger">
+                    {{ localized('Archive', 'Архивировать') }}
+                  </button>
                 </krn-cluster>
               </krn-cluster>
             }
@@ -289,12 +360,24 @@
                 [align]="stringArgument('align', 'stretch')"
                 [minColumnWidth]="stringArgument('minColumnWidth', '16rem')"
               >
-                <krn-card eyebrow="01" heading="Identity">Stable naming</krn-card>
-                <krn-card eyebrow="02" heading="Policy">Visible constraints</krn-card>
-                <krn-card eyebrow="03" heading="Health">Live status</krn-card>
-                <krn-card eyebrow="04" heading="History">Audit context</krn-card>
-                <krn-card eyebrow="05" heading="People">Clear ownership</krn-card>
-                <krn-card eyebrow="06" heading="Usage">Measured load</krn-card>
+                <krn-card eyebrow="01" [heading]="localized('Identity', 'Идентичность')">{{
+                  localized('Stable naming', 'Стабильные названия')
+                }}</krn-card>
+                <krn-card eyebrow="02" [heading]="localized('Policy', 'Политика')">{{
+                  localized('Visible constraints', 'Видимые ограничения')
+                }}</krn-card>
+                <krn-card eyebrow="03" [heading]="localized('Health', 'Состояние')">{{
+                  localized('Live status', 'Текущий статус')
+                }}</krn-card>
+                <krn-card eyebrow="04" [heading]="localized('History', 'История')">{{
+                  localized('Audit context', 'Контекст аудита')
+                }}</krn-card>
+                <krn-card eyebrow="05" [heading]="localized('People', 'Люди')">{{
+                  localized('Clear ownership', 'Явные владельцы')
+                }}</krn-card>
+                <krn-card eyebrow="06" [heading]="localized('Usage', 'Использование')">{{
+                  localized('Measured load', 'Измеренная нагрузка')
+                }}</krn-card>
               </krn-grid>
             }
             @case ('split-layout') {
@@ -304,13 +387,29 @@
                 [align]="stringArgument('align', 'start')"
                 [collapseAt]="stringArgument('collapseAt', 'md')"
               >
-                <krn-card krnSplitPrimary eyebrow="FILTERS" heading="Refine results"
-                  >Persistent controls live in the primary region.</krn-card
+                <krn-card
+                  krnSplitPrimary
+                  [eyebrow]="localized('FILTERS', 'ФИЛЬТРЫ')"
+                  [heading]="localized('Refine results', 'Уточнить результаты')"
+                  >{{
+                    localized(
+                      'Persistent controls live in the primary region.',
+                      'Постоянные элементы управления находятся в основной области.'
+                    )
+                  }}</krn-card
                 >
-                <krn-card krnSplitSecondary eyebrow="RESULTS / 42" heading="Workspaces">
-                  <krn-list ariaLabel="Workspaces"
-                    ><krn-list-item heading="Northstar">Healthy · 84%</krn-list-item
-                    ><krn-list-item heading="Fieldnote">Attention · 96%</krn-list-item></krn-list
+                <krn-card
+                  krnSplitSecondary
+                  [eyebrow]="localized('RESULTS / 42', 'РЕЗУЛЬТАТЫ / 42')"
+                  [heading]="localized('Workspaces', 'Рабочие пространства')"
+                >
+                  <krn-list [ariaLabel]="localized('Workspaces', 'Рабочие пространства')"
+                    ><krn-list-item heading="Northstar">{{
+                      localized('Healthy · 84%', 'В норме · 84%')
+                    }}</krn-list-item
+                    ><krn-list-item heading="Fieldnote">{{
+                      localized('Attention · 96%', 'Требует внимания · 96%')
+                    }}</krn-list-item></krn-list
                   >
                 </krn-card>
               </krn-split-layout>
@@ -321,38 +420,68 @@
                 [maxWidth]="stringArgument('maxWidth', '28rem')"
                 [gutters]="stringArgument('gutters', '4')"
               >
-                <span class="specimen-kicker">EMPTY / 00</span>
-                <h3>Start with one workspace.</h3>
+                <span class="specimen-kicker">{{ localized('EMPTY / 00', 'ПУСТО / 00') }}</span>
+                <h3>
+                  {{
+                    localized(
+                      'Start with one workspace.',
+                      'Начните с одного рабочего пространства.'
+                    )
+                  }}
+                </h3>
                 <p>
-                  Intrinsic centering keeps a small message visually anchored without stretching its
-                  children.
+                  {{
+                    localized(
+                      'Intrinsic centering keeps a small message visually anchored without stretching its children.',
+                      'Внутреннее центрирование удерживает короткое сообщение в визуальном центре, не растягивая дочерние элементы.'
+                    )
+                  }}
                 </p>
-                <button krnButton>Create workspace</button>
+                <button krnButton>
+                  {{ localized('Create workspace', 'Создать рабочее пространство') }}
+                </button>
               </krn-center>
             }
             @case ('spacer') {
               <div class="spacer-demo">
-                <button krnButton variant="outline" tone="neutral">Cancel</button>
+                <button krnButton variant="outline" tone="neutral">
+                  {{ localized('Cancel', 'Отмена') }}
+                </button>
                 <krn-spacer
                   [axis]="stringArgument('axis', 'horizontal')"
                   [size]="stringArgument('size', '12')"
                 />
-                <button krnButton>Save changes</button>
-                <span class="spacer-measure">3rem flexible separation</span>
+                <button krnButton>{{ localized('Save changes', 'Сохранить изменения') }}</button>
+                <span class="spacer-measure">{{
+                  localized('3rem flexible separation', 'Гибкий отступ 3rem')
+                }}</span>
               </div>
             }
             @case ('divider') {
               <krn-stack class="divider-demo" gap="5">
                 <div>
-                  <strong>Workspace settings</strong><small>General identity and ownership</small>
+                  <strong>{{
+                    localized('Workspace settings', 'Настройки рабочего пространства')
+                  }}</strong>
+                  <small>{{
+                    localized('General identity and ownership', 'Основные данные и владение')
+                  }}</small>
                 </div>
                 <krn-divider
                   [orientation]="stringArgument('orientation', 'horizontal')"
-                  [label]="stringArgument('label', 'Access policy')"
+                  [label]="localizedStringArgument('label', 'Access policy', 'Политика доступа')"
                   [inset]="stringArgument('inset', '0')"
                 />
-                <div><strong>Single sign-on</strong><small>Required for administrators</small></div>
-                <krn-divider orientation="vertical" label="Logical boundary" />
+                <div>
+                  <strong>{{ localized('Single sign-on', 'Единый вход') }}</strong>
+                  <small>{{
+                    localized('Required for administrators', 'Обязательно для администраторов')
+                  }}</small>
+                </div>
+                <krn-divider
+                  orientation="vertical"
+                  [label]="localized('Logical boundary', 'Логическая граница')"
+                />
               </krn-stack>
             }
             @case ('aspect-ratio') {
@@ -361,7 +490,9 @@
                   class="media-poster"
                   viewBox="0 0 800 450"
                   role="img"
-                  aria-label="Release overview media fixture"
+                  [attr.aria-label]="
+                    localized('Release overview media fixture', 'Медиапример обзора релиза')
+                  "
                 >
                   <defs>
                     <radialGradient id="aspect-glow" cx="72%" cy="25%" r="48%">
@@ -379,10 +510,12 @@
                     16:9
                   </text>
                   <text x="400" y="236" text-anchor="middle" class="media-poster__title">
-                    Release overview
+                    {{ localized('Release overview', 'Обзор релиза') }}
                   </text>
                   <text x="400" y="286" text-anchor="middle" class="media-poster__detail">
-                    Container-safe media frame
+                    {{
+                      localized('Container-safe media frame', 'Медиарамка в границах контейнера')
+                    }}
                   </text>
                 </svg>
               </krn-aspect-ratio>
@@ -390,7 +523,7 @@
             @case ('scroll-area') {
               <krn-scroll-area
                 class="scroll-demo"
-                ariaLabel="Audit activity"
+                [ariaLabel]="localized('Audit activity', 'Действия аудита')"
                 [axis]="stringArgument('axis', 'vertical')"
                 [maxBlockSize]="stringArgument('maxBlockSize', '16rem')"
                 [keyboardAccessible]="booleanArgument('keyboardAccessible', true)"
@@ -407,8 +540,10 @@
                 @for (row of specimenRows; track 'repeat-' + row.id) {
                   <article>
                     <span>{{ (row.id + 4).toString().padStart(2, '0') }}</span
-                    ><strong>{{ row.workspace }} updated</strong
-                    ><small>Audit event · just now</small>
+                    ><strong>{{ row.workspace }} {{ localized('updated', 'обновлено') }}</strong
+                    ><small>{{
+                      localized('Audit event · just now', 'Событие аудита · только что')
+                    }}</small>
                   </article>
                 }
               </krn-scroll-area>
@@ -417,12 +552,20 @@
               <div class="responsive-demo">
                 <header>
                   <div>
-                    <span>LIVE BREAKPOINT</span>
-                    <strong>One slot is rendered at a time</strong>
+                    <span>{{ localized('LIVE BREAKPOINT', 'ТЕКУЩАЯ КОНТРОЛЬНАЯ ТОЧКА') }}</span>
+                    <strong>{{
+                      localized(
+                        'One slot is rendered at a time',
+                        'Одновременно отображается один слот'
+                      )
+                    }}</strong>
                   </div>
                   <span class="viewport-state"
-                    ><i></i><b class="viewport-mobile">Below 48rem</b
-                    ><b class="viewport-desktop">48rem and wider</b></span
+                    ><i></i
+                    ><b class="viewport-mobile">{{ localized('Below 48rem', 'Уже 48rem') }}</b
+                    ><b class="viewport-desktop">{{
+                      localized('48rem and wider', '48rem и шире')
+                    }}</b></span
                   >
                 </header>
                 <krn-show
@@ -431,23 +574,64 @@
                   [until]="stringArgument('until', 'none')"
                 >
                   <div class="responsive-card">
-                    <span>DESKTOP SLOT</span>
-                    <strong>Wide navigation + contextual actions</strong>
-                    <small><code>from="md"</code> becomes visible at 48rem.</small>
+                    <span>{{ localized('DESKTOP SLOT', 'СЛОТ ДЛЯ КОМПЬЮТЕРА') }}</span>
+                    <strong>{{
+                      localized(
+                        'Wide navigation + contextual actions',
+                        'Широкая навигация и контекстные действия'
+                      )
+                    }}</strong>
+                    <small
+                      ><code>from="md"</code>
+                      {{
+                        localized('becomes visible at 48rem.', 'становится видимым при 48rem.')
+                      }}</small
+                    >
                   </div>
                 </krn-show>
                 <krn-show until="md" [display]="stringArgument('display', 'block')">
                   <div class="responsive-card">
-                    <span>MOBILE SLOT</span>
-                    <strong>Compact navigation + essential actions</strong>
-                    <small><code>until="md"</code> stays visible below 48rem.</small>
+                    <span>{{ localized('MOBILE SLOT', 'МОБИЛЬНЫЙ СЛОТ') }}</span>
+                    <strong>{{
+                      localized(
+                        'Compact navigation + essential actions',
+                        'Компактная навигация и основные действия'
+                      )
+                    }}</strong>
+                    <small
+                      ><code>until="md"</code>
+                      {{
+                        localized('stays visible below 48rem.', 'остаётся видимым ниже 48rem.')
+                      }}</small
+                    >
                   </div>
                 </krn-show>
-                <div class="breakpoint-map" aria-label="Medium breakpoint visibility">
-                  <div><span>0—47.99rem</span><strong>Mobile slot</strong></div>
-                  <div><span>48rem+</span><strong>Desktop slot</strong></div>
+                <div
+                  class="breakpoint-map"
+                  [attr.aria-label]="
+                    localized(
+                      'Medium breakpoint visibility',
+                      'Видимость на средней контрольной точке'
+                    )
+                  "
+                >
+                  <div>
+                    <span>0—47.99rem</span
+                    ><strong>{{ localized('Mobile slot', 'Мобильный слот') }}</strong>
+                  </div>
+                  <div>
+                    <span>48rem+</span
+                    ><strong>{{ localized('Desktop slot', 'Слот для компьютера') }}</strong>
+                  </div>
                 </div>
-                <p>Resize the browser across 48rem to see the rendered slot switch.</p>
+                <p>
+                  {{
+                    localized(
+                      'Resize the browser across 48rem to see the rendered slot switch.',
+                      'Измените ширину браузера через границу 48rem, чтобы увидеть переключение слота.'
+                    )
+                  }}
+                </p>
               </div>
             }
             @case ('resizable-panels') {
@@ -457,23 +641,33 @@
                 [step]="numberArgument('step', 5)"
                 [orientation]="stringArgument('orientation', 'horizontal')"
               >
-                <krn-resizable-panel ariaLabel="Navigation">
+                <krn-resizable-panel [ariaLabel]="localized('Navigation', 'Навигация')">
                   <div class="panel-copy">
-                    <span>PANEL / A</span><strong>Navigation</strong><small>min 20%</small>
+                    <span>{{ localized('PANEL / A', 'ПАНЕЛЬ / A') }}</span
+                    ><strong>{{ localized('Navigation', 'Навигация') }}</strong
+                    ><small>{{ localized('min 20%', 'мин. 20%') }}</small>
                   </div>
                 </krn-resizable-panel>
                 <krn-resize-handle />
-                <krn-resizable-panel ariaLabel="Workspace">
+                <krn-resizable-panel [ariaLabel]="localized('Workspace', 'Рабочее пространство')">
                   <div class="panel-copy">
-                    <span>PANEL / B</span><strong>Workspace</strong
-                    ><small>Drag the separator or use arrow keys.</small>
+                    <span>{{ localized('PANEL / B', 'ПАНЕЛЬ / B') }}</span
+                    ><strong>{{ localized('Workspace', 'Рабочее пространство') }}</strong
+                    ><small>{{
+                      localized(
+                        'Drag the separator or use arrow keys.',
+                        'Перетащите разделитель или используйте клавиши со стрелками.'
+                      )
+                    }}</small>
                   </div>
                 </krn-resizable-panel>
               </krn-resizable-panels>
             }
           }
         } @placeholder {
-          <div class="specimen-loading">Loading layout specimen…</div>
+          <div class="specimen-loading">
+            {{ localized('Loading layout specimen…', 'Загрузка примера макета…') }}
+          </div>
         }
       }
 
@@ -507,7 +701,7 @@
                 <button
                   krnIconButton
                   type="button"
-                  aria-label="Create workspace"
+                  [attr.aria-label]="localized('Create workspace', 'Создать рабочее пространство')"
                   [variant]="stringArgument('variant', 'ghost')"
                   [tone]="stringArgument('tone', 'neutral')"
                   [size]="stringArgument('size', 'md')"
@@ -516,32 +710,52 @@
                 >
                   ＋
                 </button>
-                <button krnIconButton type="button" aria-label="Duplicate workspace">⧉</button>
-                <button krnIconButton type="button" aria-label="More actions">•••</button>
+                <button
+                  krnIconButton
+                  type="button"
+                  [attr.aria-label]="
+                    localized('Duplicate workspace', 'Дублировать рабочее пространство')
+                  "
+                >
+                  ⧉
+                </button>
+                <button
+                  krnIconButton
+                  type="button"
+                  [attr.aria-label]="localized('More actions', 'Другие действия')"
+                >
+                  •••
+                </button>
                 <span>
-                  Each glyph keeps a programmatic name and a square target; coarse pointers expand
-                  it to 44px.
+                  {{
+                    localized(
+                      'Each glyph keeps a programmatic name and a square target; coarse pointers expand it to 44px.',
+                      'Каждый знак сохраняет программное имя и квадратную цель; для неточных указателей цель увеличивается до 44px.'
+                    )
+                  }}
                 </span>
               </div>
             }
             @case ('button-group') {
               <div
                 krnButtonGroup
-                aria-label="Review actions"
+                [attr.aria-label]="localized('Review actions', 'Действия проверки')"
                 [orientation]="stringArgument('orientation', 'horizontal')"
                 [connected]="booleanArgument('connected')"
               >
                 <button krnButton type="button" size="sm" variant="outline" tone="neutral">
-                  Request changes
+                  {{ localized('Request changes', 'Запросить изменения') }}
                 </button>
-                <button krnButton type="button" size="sm">Approve</button>
+                <button krnButton type="button" size="sm">
+                  {{ localized('Approve', 'Одобрить') }}
+                </button>
                 <button
                   krnIconButton
                   type="button"
                   size="sm"
                   variant="ghost"
                   tone="neutral"
-                  aria-label="More review actions"
+                  [attr.aria-label]="localized('More review actions', 'Другие действия проверки')"
                 >
                   •••
                 </button>
@@ -560,15 +774,28 @@
                 [tone]="stringArgument('tone', 'brand')"
                 [variant]="stringArgument('variant', 'solid')"
               >
-                <span krnLabel>Publish</span>
-                <button krnMenu role="menuitem" type="button">Publish now</button>
-                <button krnMenu role="menuitem" type="button">Schedule…</button>
-                <button krnMenu role="menuitem" type="button">Save as draft</button>
+                <span krnLabel>{{ localized('Publish', 'Опубликовать') }}</span>
+                <button krnMenu role="menuitem" type="button">
+                  {{ localized('Publish now', 'Опубликовать сейчас') }}
+                </button>
+                <button krnMenu role="menuitem" type="button">
+                  {{ localized('Schedule…', 'Запланировать…') }}
+                </button>
+                <button krnMenu role="menuitem" type="button">
+                  {{ localized('Save as draft', 'Сохранить как черновик') }}
+                </button>
               </krn-split-button>
             }
             @case ('floating-action-button') {
               <div class="fab-stage">
-                <p>The primary creation action remains anchored above transient content.</p>
+                <p>
+                  {{
+                    localized(
+                      'The primary creation action remains anchored above transient content.',
+                      'Основное действие создания остаётся закреплённым над временным содержимым.'
+                    )
+                  }}
+                </p>
                 <button
                   krnFab
                   type="button"
@@ -580,7 +807,7 @@
                   [disabled]="booleanArgument('disabled')"
                 >
                   <span krnFabIcon>＋</span>
-                  Create workspace
+                  {{ localized('Create workspace', 'Создать рабочее пространство') }}
                 </button>
               </div>
             }
@@ -597,15 +824,17 @@
                   [unpressedVariant]="stringArgument('unpressedVariant', 'ghost')"
                   [value]="stringArgument('value', 'watch')"
                 >
-                  Watch changes
+                  {{ localized('Watch changes', 'Следить за изменениями') }}
                 </button>
-                <button krnToggleButton value="pin" [disabled]="true">Pinned by policy</button>
+                <button krnToggleButton value="pin" [disabled]="true">
+                  {{ localized('Pinned by policy', 'Закреплено политикой') }}
+                </button>
               </div>
             }
             @case ('toggle-group') {
               <div
                 krnToggleGroup
-                aria-label="View mode"
+                [attr.aria-label]="localized('View mode', 'Режим отображения')"
                 [multiple]="booleanArgument('multiple')"
                 [disabled]="booleanArgument('disabled', false)"
                 [connected]="booleanArgument('connected', true)"
@@ -613,9 +842,11 @@
                 [size]="stringArgument('size', 'sm')"
                 [(values)]="toggleValues"
               >
-                <button krnToggleButton value="list">List</button>
-                <button krnToggleButton value="board">Board</button>
-                <button krnToggleButton value="timeline">Timeline</button>
+                <button krnToggleButton value="list">{{ localized('List', 'Список') }}</button>
+                <button krnToggleButton value="board">{{ localized('Board', 'Доска') }}</button>
+                <button krnToggleButton value="timeline">
+                  {{ localized('Timeline', 'Хронология') }}
+                </button>
               </div>
             }
             @case ('copy-button') {
@@ -630,14 +861,23 @@
                     [tone]="stringArgument('tone', 'neutral')"
                     [value]="stringArgument('value', 'npm i @kern-ui/angular')"
                     [variant]="stringArgument('variant', 'outline')"
-                    >Copy install command</krn-copy-button
+                    >{{
+                      localized('Copy install command', 'Скопировать команду установки')
+                    }}</krn-copy-button
                   >
                 }
               </div>
             }
             @case ('link') {
               <div class="link-demo">
-                <p>Links move between locations; buttons perform actions in the current context.</p>
+                <p>
+                  {{
+                    localized(
+                      'Links move between locations; buttons perform actions in the current context.',
+                      'Ссылки перемещают между разделами, а кнопки выполняют действия в текущем контексте.'
+                    )
+                  }}
+                </p>
                 <a
                   krnLink
                   [attr.href]="
@@ -647,9 +887,12 @@
                   "
                   [attr.rel]="booleanArgument('externalDestination') ? 'noopener noreferrer' : null"
                   [attr.target]="booleanArgument('externalDestination') ? '_blank' : null"
-                  >Read the foundations <span aria-hidden="true">↗</span></a
+                  >{{ localized('Read the foundations', 'Изучить основы') }}
+                  <span aria-hidden="true">↗</span></a
                 >
-                <a krnLink href="/changelog">View release notes</a>
+                <a krnLink href="/changelog">{{
+                  localized('View release notes', 'Посмотреть описание релиза')
+                }}</a>
               </div>
             }
             @case ('dropdown-button') {
@@ -665,15 +908,23 @@
                 [tone]="stringArgument('tone', 'brand')"
                 [variant]="stringArgument('variant', 'solid')"
               >
-                <span krnLabel>Export</span>
-                <button krnMenu role="menuitem" type="button">CSV spreadsheet</button>
-                <button krnMenu role="menuitem" type="button">PDF report</button>
-                <button krnMenu role="menuitem" type="button">JSON archive</button>
+                <span krnLabel>{{ localized('Export', 'Экспорт') }}</span>
+                <button krnMenu role="menuitem" type="button">
+                  {{ localized('CSV spreadsheet', 'Таблица CSV') }}
+                </button>
+                <button krnMenu role="menuitem" type="button">
+                  {{ localized('PDF report', 'Отчёт PDF') }}
+                </button>
+                <button krnMenu role="menuitem" type="button">
+                  {{ localized('JSON archive', 'Архив JSON') }}
+                </button>
               </krn-dropdown-button>
             }
           }
         } @placeholder {
-          <div class="specimen-loading">Loading action specimen…</div>
+          <div class="specimen-loading">
+            {{ localized('Loading action specimen…', 'Загрузка примера действия…') }}
+          </div>
         }
       }
 
@@ -683,7 +934,12 @@
           @switch (item().id) {
             @case ('form-field') {
               @if (effectiveScenario() === 'stress') {
-                <form class="form-surface stress-form" aria-label="Enterprise form stress fixture">
+                <form
+                  class="form-surface stress-form"
+                  [attr.aria-label]="
+                    localized('Enterprise form stress fixture', 'Стресс-пример корпоративной формы')
+                  "
+                >
                   @for (field of stressFormFields; track field.id) {
                     <krn-form-field
                       [label]="stringArgumentOverride('label', field.label)"
@@ -705,8 +961,20 @@
               } @else {
                 <div class="form-surface">
                   <krn-form-field
-                    [label]="stringArgumentOverride('label', 'Workspace name')"
-                    [hint]="stringArgument('hint', 'Visible to every member.')"
+                    [label]="
+                      localizedStringArgumentOverride(
+                        'label',
+                        'Workspace name',
+                        'Название рабочего пространства'
+                      )
+                    "
+                    [hint]="
+                      localizedStringArgument(
+                        'hint',
+                        'Visible to every member.',
+                        'Видно всем участникам.'
+                      )
+                    "
                     [error]="formFieldError()"
                     [optionalText]="stringArgument('optionalText', '')"
                   >
@@ -726,13 +994,18 @@
             @case ('label') {
               <div class="form-surface label-primitive-demo">
                 <div class="control-contract">
-                  <strong>Accessible name</strong>
-                  <span>Describes a control; it does not own a value or popup.</span>
+                  <strong>{{ localized('Accessible name', 'Доступное имя') }}</strong>
+                  <span>{{
+                    localized(
+                      'Describes a control; it does not own a value or popup.',
+                      'Называет элемент управления, но не владеет его значением или всплывающим окном.'
+                    )
+                  }}</span>
                 </div>
                 <div class="message-demo">
-                  <krn-label for="workspace-slug" [required]="booleanArgument('required')"
-                    >Workspace slug</krn-label
-                  >
+                  <krn-label for="workspace-slug" [required]="booleanArgument('required')">{{
+                    localized('Workspace slug', 'Адрес рабочего пространства')
+                  }}</krn-label>
                   <krn-text-input
                     id="workspace-slug"
                     placeholder="northstar-ops"
@@ -743,33 +1016,54 @@
             }
             @case ('hint') {
               <div class="form-surface message-demo">
-                <krn-text-input ariaLabel="Workspace slug" placeholder="northstar-ops" /><krn-hint
-                  [id]="stringArgument('id', '')"
-                  >{{ stringArgument('content', 'Use at least 12 characters.') }}</krn-hint
-                >
+                <krn-text-input
+                  [ariaLabel]="localized('Workspace slug', 'Адрес рабочего пространства')"
+                  placeholder="northstar-ops"
+                /><krn-hint [id]="stringArgument('id', '')">{{
+                  localizedStringArgument(
+                    'content',
+                    'Use at least 12 characters.',
+                    'Используйте не менее 12 символов.'
+                  )
+                }}</krn-hint>
               </div>
             }
             @case ('validation-message') {
               <div class="form-surface message-demo">
                 <krn-text-input
-                  ariaLabel="Workspace name"
+                  [ariaLabel]="localized('Workspace name', 'Название рабочего пространства')"
                   invalid
                   placeholder="N"
                 /><krn-validation-message [id]="stringArgument('id', '')">{{
-                  stringArgument('content', 'Use 3–48 characters.')
+                  localizedStringArgument(
+                    'content',
+                    'Use 3–48 characters.',
+                    'Используйте от 3 до 48 символов.'
+                  )
                 }}</krn-validation-message>
               </div>
             }
             @case ('text-input') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Single-line free text</strong>
-                  <span
-                    >Use for short names and identifiers that do not need specialized
-                    semantics.</span
-                  >
+                  <strong>{{
+                    localized('Single-line free text', 'Однострочный свободный текст')
+                  }}</strong>
+                  <span>{{
+                    localized(
+                      'Use for short names and identifiers that do not need specialized semantics.',
+                      'Используйте для коротких имён и идентификаторов без специальной семантики.'
+                    )
+                  }}</span>
                 </div>
-                <krn-form-field label="Workspace name" hint="Stable identifier for members."
+                <krn-form-field
+                  [label]="localized('Workspace name', 'Название рабочего пространства')"
+                  [hint]="
+                    localized(
+                      'Stable identifier for members.',
+                      'Постоянный идентификатор для участников.'
+                    )
+                  "
                   ><krn-text-input
                     [placeholder]="stringArgument('placeholder', 'Northstar')"
                     [size]="stringArgument('size', 'md')"
@@ -790,12 +1084,32 @@
             @case ('textarea') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Multiline free text</strong>
-                  <span>Shows wrapping, auto-resize, and the optional character counter.</span>
+                  <strong>{{
+                    localized('Multiline free text', 'Многострочный свободный текст')
+                  }}</strong>
+                  <span>{{
+                    localized(
+                      'Shows wrapping, auto-resize, and the optional character counter.',
+                      'Показывает перенос строк, автоподстройку высоты и необязательный счётчик символов.'
+                    )
+                  }}</span>
                 </div>
-                <krn-form-field label="Change summary" hint="Describe the change for reviewers."
+                <krn-form-field
+                  [label]="localized('Change summary', 'Описание изменения')"
+                  [hint]="
+                    localized(
+                      'Describe the change for reviewers.',
+                      'Опишите изменение для рецензентов.'
+                    )
+                  "
                   ><krn-textarea
-                    [placeholder]="stringArgument('placeholder', 'Explain what changed and why…')"
+                    [placeholder]="
+                      localizedStringArgument(
+                        'placeholder',
+                        'Explain what changed and why…',
+                        'Опишите, что изменилось и почему…'
+                      )
+                    "
                     [size]="stringArgument('size', 'md')"
                     [maxLength]="numberArgument('maxLength', 280)"
                     [rows]="numberArgument('rows', 5)"
@@ -816,12 +1130,21 @@
             @case ('password-input') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Masked text entry</strong>
-                  <span>The trailing action reveals or hides the same controlled value.</span>
+                  <strong>{{ localized('Masked text entry', 'Ввод скрытого текста') }}</strong>
+                  <span>{{
+                    localized(
+                      'The trailing action reveals or hides the same controlled value.',
+                      'Дополнительное действие показывает или скрывает то же управляемое значение.'
+                    )
+                  }}</span>
                 </div>
-                <krn-form-field label="Password" hint="At least 12 characters."
+                <krn-form-field
+                  [label]="localized('Password', 'Пароль')"
+                  [hint]="localized('At least 12 characters.', 'Не менее 12 символов.')"
                   ><krn-password-input
-                    [placeholder]="stringArgument('placeholder', 'Enter password')"
+                    [placeholder]="
+                      localizedStringArgument('placeholder', 'Enter password', 'Введите пароль')
+                    "
                     [disabled]="booleanArgument('disabled')"
                     [readonly]="booleanArgument('readOnly')"
                     [required]="booleanArgument('required')"
@@ -839,15 +1162,23 @@
             @case ('search-input') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Search query</strong>
-                  <span
-                    >Includes explicit submit and clear behavior, not only a search-shaped
-                    icon.</span
-                  >
+                  <strong>{{ localized('Search query', 'Поисковый запрос') }}</strong>
+                  <span>{{
+                    localized(
+                      'Includes explicit submit and clear behavior, not only a search-shaped icon.',
+                      'Включает явные действия отправки и очистки, а не только иконку поиска.'
+                    )
+                  }}</span>
                 </div>
                 <krn-search-input
-                  ariaLabel="Search workspaces"
-                  [placeholder]="stringArgument('placeholder', 'Search 248 workspaces…')"
+                  [ariaLabel]="localized('Search workspaces', 'Поиск рабочих пространств')"
+                  [placeholder]="
+                    localizedStringArgument(
+                      'placeholder',
+                      'Search 248 workspaces…',
+                      'Поиск по 248 рабочим пространствам…'
+                    )
+                  "
                   [disabled]="booleanArgument('disabled')"
                   [readonly]="booleanArgument('readOnly')"
                   [invalid]="booleanArgument('invalid')"
@@ -865,14 +1196,21 @@
             @case ('number-input') {
               <div class="form-surface narrow-form">
                 <div class="control-contract">
-                  <strong>Bounded numeric value</strong>
-                  <span
-                    >Native editing is paired with optional increment and decrement actions.</span
-                  >
+                  <strong>{{
+                    localized('Bounded numeric value', 'Числовое значение в заданных границах')
+                  }}</strong>
+                  <span>{{
+                    localized(
+                      'Native editing is paired with optional increment and decrement actions.',
+                      'Нативный ввод дополнен необязательными действиями увеличения и уменьшения.'
+                    )
+                  }}</span>
                 </div>
-                <krn-form-field label="Seat limit" hint="Between 1 and 500."
+                <krn-form-field
+                  [label]="localized('Seat limit', 'Лимит мест')"
+                  [hint]="localized('Between 1 and 500.', 'От 1 до 500.')"
                   ><krn-number-input
-                    ariaLabel="Seat limit"
+                    [ariaLabel]="localized('Seat limit', 'Лимит мест')"
                     [min]="numberArgument('min', 1)"
                     [max]="numberArgument('max', 500)"
                     [step]="numberArgument('step', 5)"
@@ -892,11 +1230,15 @@
             @case ('checkbox') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Independent boolean choice</strong>
-                  <span
-                    >Checked and indeterminate are separate states; neither implies a group
-                    choice.</span
-                  >
+                  <strong>{{
+                    localized('Independent boolean choice', 'Независимый логический выбор')
+                  }}</strong>
+                  <span>{{
+                    localized(
+                      'Checked and indeterminate are separate states; neither implies a group choice.',
+                      'Выбранное и неопределённое — разные состояния; ни одно из них не подразумевает групповой выбор.'
+                    )
+                  }}</span>
                 </div>
                 <krn-checkbox
                   [ngModel]="checkboxValue()"
@@ -913,41 +1255,58 @@
                   [id]="stringArgument('id', '')"
                   [tabindex]="numberArgument('tabindex', 0)"
                   [value]="stringArgument('value', 'Example value')"
-                  >Weekly operations report</krn-checkbox
+                  >{{
+                    localized('Weekly operations report', 'Еженедельный отчёт о работе')
+                  }}</krn-checkbox
                 >
               </div>
             }
             @case ('checkbox-group') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Several independent choices</strong>
-                  <span>Any number of the labelled checkbox values may be selected.</span>
+                  <strong>{{
+                    localized('Several independent choices', 'Несколько независимых вариантов')
+                  }}</strong>
+                  <span>{{
+                    localized(
+                      'Any number of the labelled checkbox values may be selected.',
+                      'Можно выбрать любое количество подписанных значений флажков.'
+                    )
+                  }}</span>
                 </div>
                 <krn-checkbox-group
                   [disabled]="booleanArgument('disabled')"
-                  [label]="stringArgument('label', 'Included events')"
+                  [label]="localizedStringArgument('label', 'Included events', 'События в сводке')"
                   [id]="stringArgument('id', '')"
                   [invalid]="booleanArgument('invalid', false)"
                   [orientation]="stringArgument('orientation', 'vertical')"
                   [readonly]="booleanArgument('readonly', false)"
                   [required]="booleanArgument('required', false)"
-                  ><krn-checkbox>Policy changes</krn-checkbox
-                  ><krn-checkbox>Failed automations</krn-checkbox
-                  ><krn-checkbox>New members</krn-checkbox></krn-checkbox-group
+                  ><krn-checkbox>{{
+                    localized('Policy changes', 'Изменения политики')
+                  }}</krn-checkbox
+                  ><krn-checkbox>{{
+                    localized('Failed automations', 'Сбои автоматизаций')
+                  }}</krn-checkbox
+                  ><krn-checkbox>{{
+                    localized('New members', 'Новые участники')
+                  }}</krn-checkbox></krn-checkbox-group
                 >
               </div>
             }
             @case ('radio') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>One option in a group</strong>
-                  <span
-                    >The Radio is the target; Radio Group supplies its shared selection
-                    context.</span
-                  >
+                  <strong>{{ localized('One option in a group', 'Один вариант в группе') }}</strong>
+                  <span>{{
+                    localized(
+                      'The Radio is the target; Radio Group supplies its shared selection context.',
+                      'Целевым компонентом является Radio, а Radio Group задаёт общий контекст выбора.'
+                    )
+                  }}</span>
                 </div>
                 <krn-radio-group
-                  label="Billing cycle"
+                  [label]="localized('Billing cycle', 'Период оплаты')"
                   [ngModel]="radioValue()"
                   (ngModelChange)="radioValue.set($event)"
                   [disabled]="booleanArgument('disabled')"
@@ -958,9 +1317,13 @@
                     [id]="stringArgument('id', '')"
                     [tabindex]="numberArgument('tabindex', 0)"
                     [value]="stringArgument('value', 'monthly')"
-                    >Monthly</krn-radio
-                  ><krn-radio value="annual" description="Save 18% with one invoice"
-                    >Annual</krn-radio
+                    >{{ localized('Monthly', 'Ежемесячно') }}</krn-radio
+                  ><krn-radio
+                    value="annual"
+                    [description]="
+                      localized('Save 18% with one invoice', 'Экономия 18% при оплате одним счётом')
+                    "
+                    >{{ localized('Annual', 'Ежегодно') }}</krn-radio
                   ></krn-radio-group
                 >
               </div>
@@ -968,35 +1331,45 @@
             @case ('radio-group') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Exactly one choice</strong>
-                  <span
-                    >Arrow navigation and one shared value distinguish this from Checkbox
-                    Group.</span
-                  >
+                  <strong>{{ localized('Exactly one choice', 'Ровно один вариант') }}</strong>
+                  <span>{{
+                    localized(
+                      'Arrow navigation and one shared value distinguish this from Checkbox Group.',
+                      'Навигация стрелками и одно общее значение отличают этот компонент от Checkbox Group.'
+                    )
+                  }}</span>
                 </div>
                 <krn-radio-group
                   [disabled]="booleanArgument('disabled')"
-                  [label]="stringArgument('label', 'Default visibility')"
+                  [label]="
+                    localizedStringArgument('label', 'Default visibility', 'Видимость по умолчанию')
+                  "
                   [orientation]="stringArgument('orientation', 'horizontal')"
                   [id]="stringArgument('id', '')"
                   [invalid]="booleanArgument('invalid', false)"
                   [readonly]="booleanArgument('readonly', false)"
                   [required]="booleanArgument('required', false)"
                   [value]="stringArgument('value', '')"
-                  ><krn-radio value="private">Private</krn-radio
-                  ><krn-radio value="team">Team</krn-radio
-                  ><krn-radio value="public">Public</krn-radio></krn-radio-group
+                  ><krn-radio value="private">{{ localized('Private', 'Личное') }}</krn-radio
+                  ><krn-radio value="team">{{ localized('Team', 'Команда') }}</krn-radio
+                  ><krn-radio value="public">{{
+                    localized('Public', 'Публичное')
+                  }}</krn-radio></krn-radio-group
                 >
               </div>
             }
             @case ('switch') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Immediate on/off setting</strong>
-                  <span
-                    >Use when changing the value takes effect immediately rather than on
-                    submit.</span
-                  >
+                  <strong>{{
+                    localized('Immediate on/off setting', 'Немедленная настройка включения')
+                  }}</strong>
+                  <span>{{
+                    localized(
+                      'Use when changing the value takes effect immediately rather than on submit.',
+                      'Используйте, когда изменение вступает в силу сразу, а не после отправки формы.'
+                    )
+                  }}</span>
                 </div>
                 <krn-switch
                   [ngModel]="switchValue()"
@@ -1014,20 +1387,36 @@
                   [checked]="booleanArgument('checked', false)"
                   [id]="stringArgument('id', '')"
                   [tabindex]="numberArgument('tabindex', 0)"
-                  >Require SSO for administrators</krn-switch
+                  >{{
+                    localized('Require SSO for administrators', 'Требовать SSO для администраторов')
+                  }}</krn-switch
                 >
               </div>
             }
             @case ('select') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Single selection</strong>
-                  <span>One value must come from the predefined list.</span>
+                  <strong>{{ localized('Single selection', 'Одиночный выбор') }}</strong>
+                  <span>{{
+                    localized(
+                      'One value must come from the predefined list.',
+                      'Одно значение должно быть выбрано из заранее заданного списка.'
+                    )
+                  }}</span>
                 </div>
-                <krn-form-field label="Workspace plan" hint="Choose exactly one available plan."
+                <krn-form-field
+                  [label]="localized('Workspace plan', 'Тариф рабочего пространства')"
+                  [hint]="
+                    localized(
+                      'Choose exactly one available plan.',
+                      'Выберите один доступный тариф.'
+                    )
+                  "
                   ><krn-select
-                    ariaLabel="Workspace plan"
-                    [placeholder]="stringArgument('placeholder', 'Choose a plan')"
+                    [ariaLabel]="localized('Workspace plan', 'Тариф рабочего пространства')"
+                    [placeholder]="
+                      localizedStringArgument('placeholder', 'Choose a plan', 'Выберите тариф')
+                    "
                     [size]="stringArgument('size', 'md')"
                     [options]="activeSelectOptions()"
                     [optionsState]="optionsStateArgument('loading')"
@@ -1058,13 +1447,29 @@
             @case ('native-select') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Browser-native selection</strong>
-                  <span>The operating system renders the option surface.</span>
+                  <strong>{{
+                    localized('Browser-native selection', 'Нативный выбор браузера')
+                  }}</strong>
+                  <span>{{
+                    localized(
+                      'The operating system renders the option surface.',
+                      'Поверхность с вариантами отрисовывает операционная система.'
+                    )
+                  }}</span>
                 </div>
-                <krn-form-field label="Data region" hint="Best for compact, platform-native forms."
+                <krn-form-field
+                  [label]="localized('Data region', 'Регион данных')"
+                  [hint]="
+                    localized(
+                      'Best for compact, platform-native forms.',
+                      'Подходит для компактных форм в стиле платформы.'
+                    )
+                  "
                   ><krn-native-select
-                    ariaLabel="Data region"
-                    [placeholder]="stringArgument('placeholder', 'Choose a region')"
+                    [ariaLabel]="localized('Data region', 'Регион данных')"
+                    [placeholder]="
+                      localizedStringArgument('placeholder', 'Choose a region', 'Выберите регион')
+                    "
                     [size]="stringArgument('size', 'md')"
                     [options]="activeSelectOptions()"
                     [disabled]="booleanArgument('disabled')"
@@ -1080,13 +1485,24 @@
             @case ('multi-select') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Multiple selection</strong>
-                  <span>Selected values remain visible as compact tokens.</span>
+                  <strong>{{ localized('Multiple selection', 'Множественный выбор') }}</strong>
+                  <span>{{
+                    localized(
+                      'Selected values remain visible as compact tokens.',
+                      'Выбранные значения остаются видимыми как компактные маркеры.'
+                    )
+                  }}</span>
                 </div>
-                <krn-form-field label="Owners" hint="Choose one or more teams."
+                <krn-form-field
+                  [label]="localized('Owners', 'Владельцы')"
+                  [hint]="
+                    localized('Choose one or more teams.', 'Выберите одну или несколько команд.')
+                  "
                   ><krn-multi-select
-                    ariaLabel="Owners"
-                    [placeholder]="stringArgument('placeholder', 'Select owners')"
+                    [ariaLabel]="localized('Owners', 'Владельцы')"
+                    [placeholder]="
+                      localizedStringArgument('placeholder', 'Select owners', 'Выберите владельцев')
+                    "
                     [options]="activeSelectOptions()"
                     [optionsState]="optionsStateArgument('error')"
                     [(open)]="selectOpen"
@@ -1116,15 +1532,29 @@
             @case ('combobox') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Constrained value</strong>
-                  <span>Typing filters the list, but the final value must match an option.</span>
+                  <strong>{{
+                    localized('Constrained value', 'Значение из заданного списка')
+                  }}</strong>
+                  <span>{{
+                    localized(
+                      'Typing filters the list, but the final value must match an option.',
+                      'Ввод фильтрует список, но итоговое значение должно совпасть с одним из вариантов.'
+                    )
+                  }}</span>
                 </div>
                 <krn-form-field
-                  label="Workspace plan"
-                  hint="Filter the list, then choose one of the available plans."
+                  [label]="localized('Workspace plan', 'Тариф рабочего пространства')"
+                  [hint]="
+                    localized(
+                      'Filter the list, then choose one of the available plans.',
+                      'Отфильтруйте список и выберите один из доступных тарифов.'
+                    )
+                  "
                   ><krn-combobox
-                    ariaLabel="Workspace plan"
-                    [placeholder]="stringArgument('placeholder', 'Filter plans…')"
+                    [ariaLabel]="localized('Workspace plan', 'Тариф рабочего пространства')"
+                    [placeholder]="
+                      localizedStringArgument('placeholder', 'Filter plans…', 'Фильтр тарифов…')
+                    "
                     [options]="activeSelectOptions()"
                     [optionsState]="optionsStateArgument('loading')"
                     [(open)]="selectOpen"
@@ -1156,15 +1586,33 @@
             @case ('autocomplete') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Free text with suggestions</strong>
-                  <span>Suggestions accelerate entry; a new custom value is still valid.</span>
+                  <strong>{{
+                    localized('Free text with suggestions', 'Свободный текст с подсказками')
+                  }}</strong>
+                  <span>{{
+                    localized(
+                      'Suggestions accelerate entry; a new custom value is still valid.',
+                      'Подсказки ускоряют ввод, но новое произвольное значение тоже остаётся допустимым.'
+                    )
+                  }}</span>
                 </div>
                 <krn-form-field
-                  label="Workspace alias"
-                  hint="Choose a suggestion or keep the custom text you entered."
+                  [label]="localized('Workspace alias', 'Псевдоним рабочего пространства')"
+                  [hint]="
+                    localized(
+                      'Choose a suggestion or keep the custom text you entered.',
+                      'Выберите подсказку или оставьте введённый текст.'
+                    )
+                  "
                   ><krn-autocomplete
-                    ariaLabel="Workspace alias"
-                    [placeholder]="stringArgument('placeholder', 'Type a workspace alias…')"
+                    [ariaLabel]="localized('Workspace alias', 'Псевдоним рабочего пространства')"
+                    [placeholder]="
+                      localizedStringArgument(
+                        'placeholder',
+                        'Type a workspace alias…',
+                        'Введите псевдоним рабочего пространства…'
+                      )
+                    "
                     [options]="activeSelectOptions()"
                     [optionsState]="optionsStateArgument('error')"
                     [(open)]="selectOpen"
@@ -1213,8 +1661,8 @@
             @case ('range-slider') {
               <div class="form-surface">
                 <krn-range-slider
-                  startLabel="Minimum usage"
-                  endLabel="Maximum usage"
+                  [startLabel]="localized('Minimum usage', 'Минимальное использование')"
+                  [endLabel]="localized('Maximum usage', 'Максимальное использование')"
                   [min]="numberArgument('min', 0)"
                   [max]="numberArgument('max', 100)"
                   [step]="numberArgument('step', 5)"
@@ -1230,8 +1678,8 @@
             @case ('segmented-control') {
               <div class="form-surface">
                 <krn-segmented-control
-                  ariaLabel="Workspace view"
-                  [options]="segmentOptions"
+                  [ariaLabel]="localized('Workspace view', 'Вид рабочего пространства')"
+                  [options]="segmentOptions()"
                   [ngModel]="segmentedValue()"
                   (ngModelChange)="segmentedValue.set($event)"
                   [disabled]="booleanArgument('disabled')"
@@ -1247,12 +1695,17 @@
             @case ('date-picker') {
               <div class="form-surface narrow-form">
                 <div class="control-contract">
-                  <strong>One calendar date</strong>
-                  <span>The popup commits a single bounded ISO date.</span>
+                  <strong>{{ localized('One calendar date', 'Одна календарная дата') }}</strong>
+                  <span>{{
+                    localized(
+                      'The popup commits a single bounded ISO date.',
+                      'Всплывающий календарь выбирает одну ISO-дату в заданных границах.'
+                    )
+                  }}</span>
                 </div>
-                <krn-form-field label="Launch date"
+                <krn-form-field [label]="localized('Launch date', 'Дата запуска')"
                   ><krn-date-picker
-                    ariaLabel="Launch date"
+                    [ariaLabel]="localized('Launch date', 'Дата запуска')"
                     [min]="stringArgument('min', '2026-01-01')"
                     [max]="stringArgument('max', '2027-12-31')"
                     [weekStartsOn]="numberArgument('weekStartsOn', 1)"
@@ -1271,14 +1724,21 @@
             @case ('date-range-picker') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Ordered date range</strong>
-                  <span>Start and end are edited together and normalized as one value.</span>
+                  <strong>{{
+                    localized('Ordered date range', 'Упорядоченный диапазон дат')
+                  }}</strong>
+                  <span>{{
+                    localized(
+                      'Start and end are edited together and normalized as one value.',
+                      'Начало и конец редактируются вместе и нормализуются как одно значение.'
+                    )
+                  }}</span>
                 </div>
-                <krn-form-field label="Reporting period"
+                <krn-form-field [label]="localized('Reporting period', 'Отчётный период')"
                   ><krn-date-range-picker
-                    ariaLabel="Reporting period"
-                    startLabel="Period start"
-                    endLabel="Period end"
+                    [ariaLabel]="localized('Reporting period', 'Отчётный период')"
+                    [startLabel]="localized('Period start', 'Начало периода')"
+                    [endLabel]="localized('Period end', 'Конец периода')"
                     [disabled]="booleanArgument('disabled')"
                     [readonly]="booleanArgument('readOnly')"
                     [required]="booleanArgument('required')"
@@ -1296,12 +1756,26 @@
             @case ('time-picker') {
               <div class="form-surface narrow-form">
                 <div class="control-contract">
-                  <strong>Precise 24-hour time</strong>
-                  <span>Typing remains available alongside a list of common times.</span>
+                  <strong>{{
+                    localized('Precise 24-hour time', 'Точное время в 24-часовом формате')
+                  }}</strong>
+                  <span>{{
+                    localized(
+                      'Typing remains available alongside a list of common times.',
+                      'Точное время можно ввести вручную или выбрать из списка типовых значений.'
+                    )
+                  }}</span>
                 </div>
-                <krn-form-field label="Daily digest" hint="Type HH:mm or choose a common time."
+                <krn-form-field
+                  [label]="localized('Daily digest', 'Ежедневная сводка')"
+                  [hint]="
+                    localized(
+                      'Type HH:mm or choose a common time.',
+                      'Введите время в формате ЧЧ:мм или выберите из списка.'
+                    )
+                  "
                   ><krn-time-picker
-                    ariaLabel="Digest time"
+                    [ariaLabel]="localized('Digest time', 'Время сводки')"
                     [min]="stringArgument('min', '08:00')"
                     [max]="stringArgument('max', '20:00')"
                     [step]="numberArgument('step', 900)"
@@ -1319,13 +1793,22 @@
             @case ('color-picker') {
               <div class="form-surface narrow-form">
                 <div class="control-contract">
-                  <strong>Palette and text value</strong>
-                  <span>The same controlled color can be chosen visually or entered directly.</span>
+                  <strong>{{
+                    localized('Palette and text value', 'Палитра и текстовое значение')
+                  }}</strong>
+                  <span>{{
+                    localized(
+                      'The same controlled color can be chosen visually or entered directly.',
+                      'Один и тот же управляемый цвет можно выбрать визуально или ввести напрямую.'
+                    )
+                  }}</span>
                 </div>
-                <krn-form-field label="Brand accent"
+                <krn-form-field [label]="localized('Brand accent', 'Акцентный цвет бренда')"
                   ><krn-color-picker
-                    pickerLabel="Choose brand accent"
-                    textLabel="Brand color value"
+                    [pickerLabel]="
+                      localized('Choose brand accent', 'Выберите акцентный цвет бренда')
+                    "
+                    [textLabel]="localized('Brand color value', 'Значение цвета бренда')"
                     [invalid]="booleanArgument('invalid')"
                     [disabled]="booleanArgument('disabled', false)"
                     [id]="stringArgument('id', '')"
@@ -1339,10 +1822,13 @@
             @case ('file-upload') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Browse for files</strong>
-                  <span
-                    >A native file chooser enforces the declared type, size, and count policy.</span
-                  >
+                  <strong>{{ localized('Browse for files', 'Выбор файлов') }}</strong>
+                  <span>{{
+                    localized(
+                      'A native file chooser enforces the declared type, size, and count policy.',
+                      'Нативное окно выбора файлов проверяет заданные тип, размер и количество.'
+                    )
+                  }}</span>
                 </div>
                 <krn-file-upload
                   [presentation]="stringArgument('presentation', 'dropzone')"
@@ -1364,13 +1850,23 @@
             @case ('drag-drop-upload') {
               <div class="form-surface">
                 <div class="control-contract">
-                  <strong>Drop zone with browse fallback</strong>
-                  <span
-                    >Pointer drag-and-drop supplements, but never replaces, the file chooser.</span
-                  >
+                  <strong>{{
+                    localized(
+                      'Drop zone with browse fallback',
+                      'Область перетаскивания с выбором файлов'
+                    )
+                  }}</strong>
+                  <span>{{
+                    localized(
+                      'Pointer drag-and-drop supplements, but never replaces, the file chooser.',
+                      'Перетаскивание указателем дополняет, но не заменяет выбор файлов.'
+                    )
+                  }}</span>
                 </div>
                 <krn-drop-upload
-                  dropLabel="Drop brand assets here"
+                  [dropLabel]="
+                    localized('Drop brand assets here', 'Перетащите сюда материалы бренда')
+                  "
                   [multiple]="booleanArgument('multiple')"
                   [accept]="stringArgument('accept', '.svg,.png,.jpg,.jpeg')"
                   [description]="stringArgument('description', 'SVG, PNG, or JPG · 5 MB each')"
@@ -1405,9 +1901,16 @@
             }
             @case ('tags-input') {
               <div class="form-surface">
-                <krn-form-field label="Workspace tags" hint="Press Enter or comma to add."
+                <krn-form-field
+                  [label]="localized('Workspace tags', 'Теги рабочего пространства')"
+                  [hint]="
+                    localized(
+                      'Press Enter or comma to add.',
+                      'Для добавления нажмите Enter или запятую.'
+                    )
+                  "
                   ><krn-tags-input
-                    ariaLabel="Workspace tags"
+                    [ariaLabel]="localized('Workspace tags', 'Теги рабочего пространства')"
                     [disabled]="booleanArgument('disabled')"
                     [autocomplete]="stringArgument('autocomplete', 'off')"
                     [tabindex]="numberArgument('tabindex', 0)"
@@ -1424,7 +1927,9 @@
             }
           }
         } @placeholder {
-          <div class="specimen-loading">Loading form specimen…</div>
+          <div class="specimen-loading">
+            {{ localized('Loading form specimen…', 'Загрузка примера формы…') }}
+          </div>
         }
       }
 
@@ -1440,7 +1945,8 @@
                   [separator]="stringArgument('separator', '›')"
                 />
                 <div class="surface-copy">
-                  <span>Current location</span><strong>Settings</strong>
+                  <span>{{ localized('Current location', 'Текущее местоположение') }}</span
+                  ><strong>{{ localized('Settings', 'Настройки') }}</strong>
                 </div>
               </div>
             }
@@ -1451,8 +1957,15 @@
                   [orientation]="stringArgument('orientation', 'horizontal')"
                   [(value)]="tabValue"
                   ><div class="tab-panel">
-                    <strong>Overview</strong>
-                    <p>Arrow keys move between tabs without leaving the composite.</p>
+                    <strong>{{ localized('Overview', 'Обзор') }}</strong>
+                    <p>
+                      {{
+                        localized(
+                          'Arrow keys move between tabs without leaving the composite.',
+                          'Стрелки перемещают между вкладками, не покидая составной элемент.'
+                        )
+                      }}
+                    </p>
                   </div></krn-tabs
                 >
               </div>
@@ -1464,8 +1977,17 @@
                   [(value)]="tabValue"
                   [orientation]="stringArgument('orientation', 'vertical')"
                   ><div class="tab-panel">
-                    <strong>Workspace overview</strong>
-                    <p>Vertical orientation preserves the same keyboard contract.</p>
+                    <strong>{{
+                      localized('Workspace overview', 'Обзор рабочего пространства')
+                    }}</strong>
+                    <p>
+                      {{
+                        localized(
+                          'Vertical orientation preserves the same keyboard contract.',
+                          'Вертикальная ориентация сохраняет тот же клавиатурный контракт.'
+                        )
+                      }}
+                    </p>
                   </div></krn-vertical-tabs
                 >
               </div>
@@ -1473,8 +1995,10 @@
             @case ('pagination') {
               <div class="navigation-surface">
                 <p class="result-count">
-                  Showing <strong>{{ paginationRange() }}</strong> of
-                  {{ numberArgument('totalItems', 248) }} workspaces
+                  {{ localized('Showing', 'Показано') }}
+                  <strong>{{ paginationRange() }}</strong>
+                  {{ localized('of', 'из') }} {{ numberArgument('totalItems', 248) }}
+                  {{ localized('workspaces', 'рабочих пространств') }}
                 </p>
                 <krn-pagination
                   [totalItems]="numberArgument('totalItems', 248)"
@@ -1494,7 +2018,9 @@
                   [orientation]="stringArgument('orientation', 'horizontal')"
                 />
                 <div class="step-panel">
-                  <span>STEP {{ formStep() + 1 }} / {{ steps[formStep()]?.id }}</span
+                  <span
+                    >{{ localized('STEP', 'ШАГ') }} {{ formStep() + 1 }} /
+                    {{ steps[formStep()]?.id }}</span
                   ><strong>{{ steps[formStep()]?.label }}</strong>
                 </div>
               </div>
@@ -1502,34 +2028,63 @@
             @case ('menu') {
               <div class="navigation-surface compact-nav">
                 <krn-menu
-                  triggerLabel="Workspace actions"
-                  menuAriaLabel="Workspace actions"
+                  [triggerLabel]="
+                    localized('Workspace actions', 'Действия с рабочим пространством')
+                  "
+                  [menuAriaLabel]="
+                    localized('Workspace actions', 'Действия с рабочим пространством')
+                  "
                   [items]="navigationItems"
                   [(open)]="actionMenuOpen"
                 />
-                <p>Open, then use ↑ ↓ Home End and Escape.</p>
+                <p>
+                  {{
+                    localized(
+                      'Open, then use ↑ ↓ Home End and Escape.',
+                      'Откройте меню, затем используйте ↑ ↓ Home, End и Escape.'
+                    )
+                  }}
+                </p>
               </div>
             }
             @case ('menubar') {
               <div class="navigation-surface">
-                <krn-menubar ariaLabel="Editor menu" [items]="activeMenubarItems()" />
+                <krn-menubar
+                  [ariaLabel]="localized('Editor menu', 'Меню редактора')"
+                  [items]="activeMenubarItems()"
+                />
                 <div class="surface-copy">
-                  Horizontal composite navigation with roving tabindex.
+                  {{
+                    localized(
+                      'Horizontal composite navigation with roving tabindex.',
+                      'Горизонтальная составная навигация с перемещаемым tabindex.'
+                    )
+                  }}
                 </div>
               </div>
             }
             @case ('context-menu') {
-              <krn-context-menu ariaLabel="Canvas actions" [items]="contextMenuItems"
+              <krn-context-menu
+                [ariaLabel]="localized('Canvas actions', 'Действия на холсте')"
+                [items]="contextMenuItems"
                 ><div #contextMenuTarget class="context-target" tabindex="0">
-                  <span>RIGHT CLICK / CONTEXT</span><strong>Northstar workspace</strong
-                  ><small>Open the menu, then hover “Move to” for its nested destinations.</small>
+                  <span>{{ localized('RIGHT CLICK / CONTEXT', 'ПРАВЫЙ КЛИК / КОНТЕКСТ') }}</span
+                  ><strong>{{
+                    localized('Northstar workspace', 'Рабочее пространство Northstar')
+                  }}</strong
+                  ><small>{{
+                    localized(
+                      'Open the menu, then hover “Move to” for its nested destinations.',
+                      'Откройте меню, затем наведите указатель на «Переместить», чтобы увидеть вложенные назначения.'
+                    )
+                  }}</small>
                 </div></krn-context-menu
               >
             }
             @case ('tree-navigation') {
               <div class="navigation-surface tree-stage">
                 <krn-tree-navigation
-                  ariaLabel="Workspace navigation"
+                  [ariaLabel]="localized('Workspace navigation', 'Навигация рабочего пространства')"
                   [items]="activeTreeNavigationItems()"
                   [expandedIds]="
                     effectiveScenario() === 'states' ? [] : ['workspace', 'operations']
@@ -1543,10 +2098,13 @@
             @case ('bottom-navigation') {
               <div class="phone-frame">
                 <div class="phone-content">
-                  <span>MOBILE / WORKSPACE</span><strong>Northstar</strong>
+                  <span>{{
+                    localized('MOBILE / WORKSPACE', 'МОБИЛЬНАЯ ВЕРСИЯ / РАБОЧЕЕ ПРОСТРАНСТВО')
+                  }}</span
+                  ><strong>Northstar</strong>
                 </div>
                 <krn-bottom-navigation
-                  ariaLabel="Primary"
+                  [ariaLabel]="localized('Primary', 'Основная навигация')"
                   [items]="navigationItems.slice(0, 3)"
                   [(value)]="bottomNavigationValue"
                 />
@@ -1555,9 +2113,17 @@
             @case ('command-palette') {
               <div class="navigation-surface compact-nav">
                 <button krnButton (click)="commandOpen.set(true)">
-                  Open command palette <krn-keyboard-shortcut [keys]="['⌘', 'K']" />
+                  {{ localized('Open command palette', 'Открыть палитру команд') }}
+                  <krn-keyboard-shortcut [keys]="['⌘', 'K']" />
                 </button>
-                <p>Search, arrow through results, then press Enter.</p>
+                <p>
+                  {{
+                    localized(
+                      'Search, arrow through results, then press Enter.',
+                      'Введите запрос, перемещайтесь по результатам стрелками и нажмите Enter.'
+                    )
+                  }}
+                </p>
               </div>
               <krn-command-palette
                 [items]="navigationItems"
@@ -1579,12 +2145,35 @@
             @case ('table-of-contents') {
               <div class="toc-stage">
                 <div>
-                  <h3 id="specimen-overview">Component anatomy</h3>
-                  <p>Local wayfinding tracks the reader inside a long technical page.</p>
-                  <h3 id="specimen-api">API contract</h3>
-                  <p>Inputs and outputs stay on the current component route.</p>
-                  <h3 id="specimen-a11y">Accessibility</h3>
-                  <p>The active section is announced as a location.</p>
+                  <h3 id="specimen-overview">
+                    {{ localized('Component anatomy', 'Строение компонента') }}
+                  </h3>
+                  <p>
+                    {{
+                      localized(
+                        'Local wayfinding tracks the reader inside a long technical page.',
+                        'Локальная навигация показывает положение читателя внутри длинной технической страницы.'
+                      )
+                    }}
+                  </p>
+                  <h3 id="specimen-api">{{ localized('API contract', 'Контракт API') }}</h3>
+                  <p>
+                    {{
+                      localized(
+                        'Inputs and outputs stay on the current component route.',
+                        'Входы и выходы остаются на текущей странице компонента.'
+                      )
+                    }}
+                  </p>
+                  <h3 id="specimen-a11y">{{ localized('Accessibility', 'Доступность') }}</h3>
+                  <p>
+                    {{
+                      localized(
+                        'The active section is announced as a location.',
+                        'Активный раздел объявляется как текущее местоположение.'
+                      )
+                    }}
+                  </p>
                 </div>
                 <krn-table-of-contents
                   [items]="tocItems"
@@ -1597,11 +2186,16 @@
             @case ('back-button') {
               <div class="navigation-surface compact-nav">
                 <krn-back-button
-                  [label]="stringArgument('label', 'Back to components')"
+                  [label]="
+                    localizedStringArgument('label', 'Back to components', 'Назад к компонентам')
+                  "
                   [href]="stringArgument('href', '/')"
                 />
                 <div class="surface-copy">
-                  <span>DETAIL / NORTHSTAR</span><strong>Workspace policy</strong>
+                  <span>{{ localized('DETAIL / NORTHSTAR', 'ДЕТАЛИ / NORTHSTAR') }}</span
+                  ><strong>{{
+                    localized('Workspace policy', 'Политика рабочего пространства')
+                  }}</strong>
                 </div>
               </div>
             }
@@ -1610,20 +2204,40 @@
                 <krn-skip-link
                   targetId="specimen-skip-target"
                   [label]="stringArgument('label', 'Skip specimen navigation')"
-                /><span>KEYBOARD-ONLY SHORTCUT</span
-                ><strong>Press Tab, then Enter to bypass repeated navigation.</strong>
-                <p>The link stays off-screen until it receives keyboard focus.</p>
+                /><span>{{ localized('KEYBOARD-ONLY SHORTCUT', 'КЛАВИАТУРНАЯ КОМАНДА') }}</span
+                ><strong>{{
+                  localized(
+                    'Press Tab, then Enter to bypass repeated navigation.',
+                    'Нажмите Tab, затем Enter, чтобы пропустить повторяющуюся навигацию.'
+                  )
+                }}</strong>
+                <p>
+                  {{
+                    localized(
+                      'The link stays off-screen until it receives keyboard focus.',
+                      'Ссылка остаётся за пределами экрана, пока не получит клавиатурный фокус.'
+                    )
+                  }}
+                </p>
                 <div id="specimen-skip-target" tabindex="-1" class="skip-target">
                   <span aria-hidden="true">✓</span>
                   <div>
-                    <small>FOCUS TARGET</small><strong>Main specimen content begins here</strong>
+                    <small>{{ localized('FOCUS TARGET', 'ЦЕЛЬ ФОКУСА') }}</small>
+                    <strong>{{
+                      localized(
+                        'Main specimen content begins here',
+                        'Здесь начинается основное содержимое примера'
+                      )
+                    }}</strong>
                   </div>
                 </div>
               </div>
             }
           }
         } @placeholder {
-          <div class="specimen-loading">Loading navigation specimen…</div>
+          <div class="specimen-loading">
+            {{ localized('Loading navigation specimen…', 'Загрузка примера навигации…') }}
+          </div>
         }
       }
 
@@ -1636,12 +2250,26 @@
                 <krn-alert
                   [tone]="stringArgument('tone', 'success')"
                   [appearance]="stringArgument('appearance', 'subtle')"
-                  [title]="stringArgument('title', 'Changes published')"
+                  [title]="
+                    localizedStringArgument('title', 'Changes published', 'Изменения опубликованы')
+                  "
                   [dismissible]="booleanArgument('dismissible', true)"
                   [icon]="stringArgument('icon', '')"
-                  >All twelve environments now use the current configuration.</krn-alert
-                ><krn-alert tone="warning" title="Review required"
-                  >Two workspaces exceed the configured seat threshold.</krn-alert
+                  >{{
+                    localized(
+                      'All twelve environments now use the current configuration.',
+                      'Все двенадцать сред теперь используют текущую конфигурацию.'
+                    )
+                  }}</krn-alert
+                ><krn-alert
+                  tone="warning"
+                  [title]="localized('Review required', 'Требуется проверка')"
+                  >{{
+                    localized(
+                      'Two workspaces exceed the configured seat threshold.',
+                      'Два рабочих пространства превышают заданный лимит мест.'
+                    )
+                  }}</krn-alert
                 >
               </div>
             }
@@ -1652,16 +2280,30 @@
                 [icon]="stringArgument('icon', '')"
                 [title]="stringArgument('title', 'Scheduled maintenance')"
                 [tone]="stringArgument('tone', 'info')"
-                >Exports will be unavailable on Sunday from 02:00–03:00 UTC.</krn-banner
+                >{{
+                  localized(
+                    'Exports will be unavailable on Sunday from 02:00–03:00 UTC.',
+                    'Экспорт будет недоступен в воскресенье с 02:00 до 03:00 UTC.'
+                  )
+                }}</krn-banner
               >
             }
             @case ('toast') {
               <div class="feedback-trigger">
-                <button krnButton (click)="showToast()">Show success toast</button>
-                <p>Add several notifications, then hover or focus the stack to review each one.</p>
+                <button krnButton (click)="showToast()">
+                  {{ localized('Show success toast', 'Показать успешное уведомление') }}
+                </button>
+                <p>
+                  {{
+                    localized(
+                      'Add several notifications, then hover or focus the stack to review each one.',
+                      'Добавьте несколько уведомлений, затем наведите указатель на стек или переведите на него фокус, чтобы просмотреть каждое.'
+                    )
+                  }}
+                </p>
               </div>
               <krn-toast-viewport
-                ariaLabel="Specimen notifications"
+                [ariaLabel]="localized('Specimen notifications', 'Уведомления примера')"
                 [(expanded)]="toastExpanded"
                 [maxExpanded]="numberArgument('maxExpanded', 8)"
                 [maxVisible]="numberArgument('maxVisible', 3)"
@@ -1673,51 +2315,97 @@
                 <button
                   krnIconButton
                   type="button"
-                  aria-label="Copy public link"
-                  [krnTooltip]="stringArgument('text', 'Copy public link')"
+                  [attr.aria-label]="localized('Copy public link', 'Скопировать публичную ссылку')"
+                  [krnTooltip]="
+                    localizedStringArgument(
+                      'text',
+                      'Copy public link',
+                      'Скопировать публичную ссылку'
+                    )
+                  "
                   [krnTooltipPosition]="stringArgument('position', 'above')"
                   [krnTooltipShowDelay]="numberArgument('showDelay', 400)"
                   [krnTooltipHideDelay]="numberArgument('hideDelay', 80)"
                 >
                   ↗
                 </button>
-                <p>Hover or focus the icon to reveal concise help.</p>
+                <p>
+                  {{
+                    localized(
+                      'Hover or focus the icon to reveal concise help.',
+                      'Наведите указатель на иконку или переведите на неё фокус, чтобы открыть краткую подсказку.'
+                    )
+                  }}
+                </p>
               </div>
             }
             @case ('popover') {
               <krn-popover
-                ariaLabel="Deployment details"
+                [ariaLabel]="localized('Deployment details', 'Сведения о развёртывании')"
                 [(open)]="surfaceOpen"
                 [autoFocus]="booleanArgument('autoFocus', true)"
               >
-                <span krnPopoverTrigger class="person-link">Deployment details</span>
+                <span krnPopoverTrigger class="person-link">{{
+                  localized('Deployment details', 'Сведения о развёртывании')
+                }}</span>
                 <div class="overlay-copy">
                   <strong>Production / EU-WEST</strong>
-                  <p>Last deployed 8 minutes ago by Avery Cole.</p>
+                  <p>
+                    {{
+                      localized(
+                        'Last deployed 8 minutes ago by Avery Cole.',
+                        'Последнее развёртывание выполнил Эйвери Коул 8 минут назад.'
+                      )
+                    }}
+                  </p>
                 </div></krn-popover
               >
             }
             @case ('hover-card') {
               <krn-hover-card
-                ariaLabel="Avery Cole profile"
+                [ariaLabel]="localized('Avery Cole profile', 'Профиль Эйвери Коула')"
                 [openDelay]="numberArgument('openDelay', 350)"
                 [closeDelay]="numberArgument('closeDelay', 120)"
                 ><span krnHoverCardTrigger class="person-link">Avery Cole</span>
                 <div class="profile-preview">
                   <krn-avatar name="Avery Cole" status="online" /><span
-                    ><strong>Avery Cole</strong><small>Operations lead · London</small></span
+                    ><strong>Avery Cole</strong
+                    ><small>{{
+                      localized('Operations lead · London', 'Руководитель операций · Лондон')
+                    }}</small></span
                   >
                 </div></krn-hover-card
               >
             }
             @case ('dialog') {
               <div class="feedback-trigger">
-                <button krnButton (click)="surfaceOpen.set(true)">Edit workspace</button>
-                <p>Modal task with focus trap, Escape, and focus restoration.</p>
+                <button krnButton (click)="surfaceOpen.set(true)">
+                  {{ localized('Edit workspace', 'Изменить рабочее пространство') }}
+                </button>
+                <p>
+                  {{
+                    localized(
+                      'Modal task with focus trap, Escape, and focus restoration.',
+                      'Модальная задача удерживает фокус, закрывается по Escape и восстанавливает фокус.'
+                    )
+                  }}
+                </p>
               </div>
               <krn-dialog
-                [title]="stringArgument('title', 'Edit workspace')"
-                [description]="stringArgument('description', 'Changes apply to every member.')"
+                [title]="
+                  localizedStringArgument(
+                    'title',
+                    'Edit workspace',
+                    'Изменить рабочее пространство'
+                  )
+                "
+                [description]="
+                  localizedStringArgument(
+                    'description',
+                    'Changes apply to every member.',
+                    'Изменения применятся ко всем участникам.'
+                  )
+                "
                 [showClose]="booleanArgument('showClose', true)"
                 [modal]="booleanArgument('modal', true)"
                 [size]="stringArgument('size', 'md')"
@@ -1726,7 +2414,10 @@
                 [closeOnOutside]="nullableBooleanArgument('closeOnOutside')"
                 [eyebrow]="stringArgument('eyebrow', '')"
                 ><div class="overlay-copy">
-                  <label>Workspace name <input value="Northstar" /></label>
+                  <label
+                    >{{ localized('Workspace name', 'Название рабочего пространства') }}
+                    <input value="Northstar"
+                  /></label>
                 </div>
                 <button
                   krnButton
@@ -1735,18 +2426,25 @@
                   tone="neutral"
                   (click)="surfaceOpen.set(false)"
                 >
-                  Cancel</button
+                  {{ localized('Cancel', 'Отмена') }}</button
                 ><button krnButton krnDialogAction (click)="surfaceOpen.set(false)">
-                  Save
+                  {{ localized('Save', 'Сохранить') }}
                 </button></krn-dialog
               >
             }
             @case ('alert-dialog') {
               <div class="feedback-trigger">
                 <button krnButton tone="danger" (click)="surfaceOpen.set(true)">
-                  Delete workspace
+                  {{ localized('Delete workspace', 'Удалить рабочее пространство') }}
                 </button>
-                <p>Destructive confirmation does not close on outside click.</p>
+                <p>
+                  {{
+                    localized(
+                      'Destructive confirmation does not close on outside click.',
+                      'Подтверждение разрушительного действия не закрывается по клику снаружи.'
+                    )
+                  }}
+                </p>
               </div>
               <krn-alert-dialog
                 [(open)]="surfaceOpen"
@@ -1758,7 +2456,14 @@
                 [modal]="booleanArgument('modal', true)"
                 [showClose]="booleanArgument('showClose', true)"
                 [title]="stringArgument('title', 'Delete Northstar?')"
-                ><p>18 automations and 42 reports will also be deleted.</p>
+                ><p>
+                  {{
+                    localized(
+                      '18 automations and 42 reports will also be deleted.',
+                      'Также будут удалены 18 автоматизаций и 42 отчёта.'
+                    )
+                  }}
+                </p>
                 <button
                   krnButton
                   krnDialogAction
@@ -1766,18 +2471,25 @@
                   tone="neutral"
                   (click)="surfaceOpen.set(false)"
                 >
-                  Cancel</button
+                  {{ localized('Cancel', 'Отмена') }}</button
                 ><button krnButton krnDialogAction tone="danger" (click)="surfaceOpen.set(false)">
-                  Delete
+                  {{ localized('Delete', 'Удалить') }}
                 </button></krn-alert-dialog
               >
             }
             @case ('drawer') {
               <div class="feedback-trigger">
                 <button krnButton variant="outline" tone="neutral" (click)="surfaceOpen.set(true)">
-                  Open activity drawer
+                  {{ localized('Open activity drawer', 'Открыть панель активности') }}
                 </button>
-                <p>Edge-aligned context without leaving the underlying page.</p>
+                <p>
+                  {{
+                    localized(
+                      'Edge-aligned context without leaving the underlying page.',
+                      'Контекстная панель у края экрана не уводит с исходной страницы.'
+                    )
+                  }}
+                </p>
               </div>
               <krn-drawer
                 [(open)]="surfaceOpen"
@@ -1791,10 +2503,14 @@
                 [showClose]="booleanArgument('showClose', true)"
                 [title]="stringArgument('title', 'Recent activity')"
                 ><krn-timeline
-                  ><krn-timeline-item heading="Policy updated" time="8 min ago"
+                  ><krn-timeline-item
+                    [heading]="localized('Policy updated', 'Политика обновлена')"
+                    [time]="localized('8 min ago', '8 минут назад')"
                     >Avery Cole</krn-timeline-item
-                  ><krn-timeline-item heading="Export completed" time="34 min ago"
-                    >System</krn-timeline-item
+                  ><krn-timeline-item
+                    [heading]="localized('Export completed', 'Экспорт завершён')"
+                    [time]="localized('34 min ago', '34 минуты назад')"
+                    >{{ localized('System', 'Система') }}</krn-timeline-item
                   ></krn-timeline
                 ></krn-drawer
               >
@@ -1802,9 +2518,16 @@
             @case ('bottom-sheet') {
               <div class="feedback-trigger">
                 <button krnButton variant="outline" tone="neutral" (click)="surfaceOpen.set(true)">
-                  Choose mobile action
+                  {{ localized('Choose mobile action', 'Выбрать мобильное действие') }}
                 </button>
-                <p>A thumb-reachable transient surface for narrow viewports.</p>
+                <p>
+                  {{
+                    localized(
+                      'A thumb-reachable transient surface for narrow viewports.',
+                      'Временная поверхность в зоне досягаемости большого пальца для узких экранов.'
+                    )
+                  }}
+                </p>
               </div>
               <krn-bottom-sheet
                 [(open)]="surfaceOpen"
@@ -1817,8 +2540,12 @@
                 [showClose]="booleanArgument('showClose', true)"
                 [title]="stringArgument('title', 'Workspace actions')"
                 ><krn-list
-                  ><krn-list-item heading="Duplicate">Create a copy</krn-list-item
-                  ><krn-list-item heading="Export">Download records</krn-list-item></krn-list
+                  ><krn-list-item [heading]="localized('Duplicate', 'Дублировать')">{{
+                    localized('Create a copy', 'Создать копию')
+                  }}</krn-list-item
+                  ><krn-list-item [heading]="localized('Export', 'Экспорт')">{{
+                    localized('Download records', 'Скачать записи')
+                  }}</krn-list-item></krn-list
                 ></krn-bottom-sheet
               >
             }
@@ -1829,8 +2556,17 @@
                   [label]="stringArgument('label', 'Importing customer records…')"
                   [blocking]="booleanArgument('blocking', true)"
                 >
-                  <krn-card eyebrow="IMPORT / 84%" heading="Customer records"
-                    ><p>Processing 8,410 of 10,000 rows.</p></krn-card
+                  <krn-card
+                    [eyebrow]="localized('IMPORT / 84%', 'ИМПОРТ / 84%')"
+                    [heading]="localized('Customer records', 'Записи клиентов')"
+                    ><p>
+                      {{
+                        localized(
+                          'Processing 8,410 of 10,000 rows.',
+                          'Обработано 8 410 из 10 000 строк.'
+                        )
+                      }}
+                    </p></krn-card
                   >
                 </krn-loading-overlay>
               </div>
@@ -1838,7 +2574,8 @@
             @case ('progress-bar') {
               <div class="progress-specimen">
                 <span
-                  >Importing records <strong>{{ progressPercent() }}%</strong></span
+                  >{{ localized('Importing records', 'Импорт записей') }}
+                  <strong>{{ progressPercent() }}%</strong></span
                 ><krn-progress-bar
                   [value]="progressValue()"
                   [max]="progressMaximum()"
@@ -1847,7 +2584,11 @@
                     stringArgumentOverride('valueText', progressValue() + ' percent complete')
                   "
                 />
-                <div class="progress-controls" role="group" aria-label="Adjust import progress">
+                <div
+                  class="progress-controls"
+                  role="group"
+                  [attr.aria-label]="localized('Adjust import progress', 'Изменить ход импорта')"
+                >
                   <button
                     krnButton
                     size="sm"
@@ -1876,13 +2617,21 @@
                   [max]="progressMaximum()"
                   [indeterminate]="booleanArgument('indeterminate')"
                   [showValue]="booleanArgument('showValue', true)"
-                  ariaLabel="Storage used"
+                  [ariaLabel]="localized('Storage used', 'Использовано хранилища')"
                 />
                 <div>
-                  <strong>{{ progressPercent() }}% used</strong
-                  ><small>{{ progressAvailable() }} GB available</small>
+                  <strong>{{ progressPercent() }}% {{ localized('used', 'использовано') }}</strong
+                  ><small
+                    >{{ progressAvailable() }} GB {{ localized('available', 'доступно') }}</small
+                  >
                 </div>
-                <div class="progress-controls" role="group" aria-label="Adjust storage progress">
+                <div
+                  class="progress-controls"
+                  role="group"
+                  [attr.aria-label]="
+                    localized('Adjust storage progress', 'Изменить использование хранилища')
+                  "
+                >
                   <button
                     krnButton
                     size="sm"
@@ -1907,7 +2656,14 @@
             @case ('spinner') {
               <div class="feedback-trigger">
                 <krn-spinner [label]="stringArgument('label', 'Refreshing workspace data')" />
-                <p>Refreshing workspace data…</p>
+                <p>
+                  {{
+                    localized(
+                      'Refreshing workspace data…',
+                      'Обновляем данные рабочего пространства…'
+                    )
+                  }}
+                </p>
               </div>
             }
             @case ('skeleton') {
@@ -1932,7 +2688,9 @@
                   )
                 "
                 [title]="stringArgument('title', 'No automations yet')"
-                ><button krnButton krnStateAction>Create automation</button></krn-empty-state
+                ><button krnButton krnStateAction>
+                  {{ localized('Create automation', 'Создать автоматизацию') }}
+                </button></krn-empty-state
               >
             }
             @case ('error-state') {
@@ -1946,7 +2704,7 @@
                 "
                 [title]="stringArgument('title', 'Could not load workspaces')"
                 ><button krnButton krnStateAction variant="outline" tone="neutral">
-                  Try again
+                  {{ localized('Try again', 'Повторить') }}
                 </button></krn-error-state
               >
             }
@@ -1957,21 +2715,25 @@
                   stringArgument('description', 'Northstar is ready for collaborators.')
                 "
                 [title]="stringArgument('title', 'Workspace created')"
-                ><button krnButton krnStateAction>Invite people</button></krn-success-state
+                ><button krnButton krnStateAction>
+                  {{ localized('Invite people', 'Пригласить людей') }}
+                </button></krn-success-state
               >
             }
             @case ('confirmation-pattern') {
               <krn-confirmation
-                requestLabel="Archive workspace"
-                confirmLabel="Archive"
-                cancelLabel="Keep active"
+                [requestLabel]="localized('Archive workspace', 'Архивировать рабочее пространство')"
+                [confirmLabel]="localized('Archive', 'Архивировать')"
+                [cancelLabel]="localized('Keep active', 'Оставить активным')"
                 [(confirming)]="confirmationOpen"
                 [prompt]="stringArgument('prompt', 'Archive Northstar and pause all automations?')"
               />
             }
           }
         } @placeholder {
-          <div class="specimen-loading">Loading feedback specimen…</div>
+          <div class="specimen-loading">
+            {{ localized('Loading feedback specimen…', 'Загрузка примера обратной связи…') }}
+          </div>
         }
       }
 
@@ -1986,9 +2748,9 @@
                   [variant]="stringArgument('variant', 'subtle')"
                   [size]="stringArgument('size', 'md')"
                   [status]="booleanArgument('status')"
-                  >Draft</krn-badge
+                  >{{ localized('Draft', 'Черновик') }}</krn-badge
                 ><krn-badge tone="brand">Pro</krn-badge><krn-badge tone="info">Beta</krn-badge
-                ><krn-badge tone="warning">Review</krn-badge>
+                ><krn-badge tone="warning">{{ localized('Review', 'Проверка') }}</krn-badge>
               </div>
             }
             @case ('status-badge') {
@@ -1998,9 +2760,13 @@
                   [variant]="stringArgument('variant', 'subtle')"
                   [size]="stringArgument('size', 'md')"
                   [status]="booleanArgument('status', true)"
-                  >Healthy</krn-status-badge
-                ><krn-status-badge status tone="warning">Attention</krn-status-badge
-                ><krn-status-badge status tone="danger">Offline</krn-status-badge>
+                  >{{ localized('Healthy', 'В норме') }}</krn-status-badge
+                ><krn-status-badge status tone="warning">{{
+                  localized('Attention', 'Требует внимания')
+                }}</krn-status-badge
+                ><krn-status-badge status tone="danger">{{
+                  localized('Offline', 'Не в сети')
+                }}</krn-status-badge>
               </div>
             }
             @case ('chip') {
@@ -2010,9 +2776,9 @@
                   [(selected)]="chipSelected"
                   [removable]="booleanArgument('removable')"
                   [disabled]="booleanArgument('disabled')"
-                  >Enterprise</krn-chip
-                ><krn-chip interactive>Research</krn-chip
-                ><krn-chip interactive>Operations</krn-chip>
+                  >{{ localized('Enterprise', 'Корпоративный') }}</krn-chip
+                ><krn-chip interactive>{{ localized('Research', 'Исследования') }}</krn-chip
+                ><krn-chip interactive>{{ localized('Operations', 'Операции') }}</krn-chip>
               </div>
             }
             @case ('tag') {
@@ -2024,7 +2790,10 @@
                   [removable]="booleanArgument('removable', true)"
                   [disabled]="booleanArgument('disabled')"
                   >production</krn-tag
-                ><krn-tag removable accessibleLabel="Region: eu-west">eu-west</krn-tag
+                ><krn-tag
+                  removable
+                  [accessibleLabel]="localized('Region: eu-west', 'Регион: eu-west')"
+                  >eu-west</krn-tag
                 ><krn-tag>audit-ready</krn-tag>
               </div>
             }
@@ -2038,12 +2807,17 @@
                   [src]="stringArgument('src', '')"
                   [status]="stringArgument('status', 'online')"
                 />
-                <div><strong>Avery Cole</strong><small>Operations lead</small></div>
+                <div>
+                  <strong>Avery Cole</strong
+                  ><small>{{ localized('Operations lead', 'Руководитель операций') }}</small>
+                </div>
               </div>
             }
             @case ('avatar-group') {
               <krn-avatar-group
-                ariaLabel="Workspace collaborators"
+                [ariaLabel]="
+                  localized('Workspace collaborators', 'Участники рабочего пространства')
+                "
                 [overlap]="stringArgument('overlap', '0.625rem')"
                 ><krn-avatar name="Avery Cole" /><krn-avatar name="Mina Chen" /><krn-avatar
                   name="Ravi Singh" /><krn-avatar name="Nora Costa"
@@ -2054,10 +2828,19 @@
                 [eyebrow]="stringArgument('eyebrow', 'WORKSPACE / 0248')"
                 [heading]="stringArgument('heading', 'Northstar')"
                 [interactive]="booleanArgument('interactive', true)"
-                ><p>Operations workspace · 18 active automations</p>
+                ><p>
+                  {{
+                    localized(
+                      'Operations workspace · 18 active automations',
+                      'Операционное рабочее пространство · 18 активных автоматизаций'
+                    )
+                  }}
+                </p>
                 <div krnCardFooter>
-                  <krn-badge status tone="success">Healthy</krn-badge
-                  ><button krnButton size="sm" variant="ghost">Open</button>
+                  <krn-badge status tone="success">{{ localized('Healthy', 'В норме') }}</krn-badge
+                  ><button krnButton size="sm" variant="ghost">
+                    {{ localized('Open', 'Открыть') }}
+                  </button>
                 </div></krn-card
               >
             }
@@ -2065,13 +2848,19 @@
               <div class="stat-gallery">
                 <krn-stat
                   [trend]="stringArgument('trend', 'up')"
-                  [detail]="stringArgument('detail', '+12.4% this quarter')"
+                  [detail]="
+                    localizedStringArgument(
+                      'detail',
+                      '+12.4% this quarter',
+                      '+12,4% за этот квартал'
+                    )
+                  "
                   [label]="stringArgument('label', 'Active workspaces')"
                   [value]="stringArgument('value', '2,481')"
                 /><krn-stat
-                  label="Attention needed"
+                  [label]="localized('Attention needed', 'Требует внимания')"
                   value="24"
-                  detail="6 more than yesterday"
+                  [detail]="localized('6 more than yesterday', 'На 6 больше, чем вчера')"
                   trend="down"
                 />
               </div>
@@ -2080,99 +2869,205 @@
               @switch (contentDataState()) {
                 @case ('empty') {
                   <krn-description-list />
-                  <p class="fixture-empty-message">No workspace metadata is available.</p>
+                  <p class="fixture-empty-message">
+                    {{
+                      localized(
+                        'No workspace metadata is available.',
+                        'Метаданные рабочего пространства недоступны.'
+                      )
+                    }}
+                  </p>
                 }
                 @case ('long-text') {
                   <krn-description-list
-                    ><krn-description-item term="Owner"
-                      >Avery Cole, Principal Operations Lead for Enterprise Reliability and Global
-                      Governance</krn-description-item
-                    ><krn-description-item term="Data region"
-                      >European Union — multi-region residency with extended disaster-recovery
-                      replication</krn-description-item
-                    ><krn-description-item term="Plan"
-                      >Scale with advanced policy controls, audit retention, and delegated
-                      administration</krn-description-item
-                    ></krn-description-list
+                    ><krn-description-item [term]="localized('Owner', 'Владелец')">{{
+                      localized(
+                        'Avery Cole, Principal Operations Lead for Enterprise Reliability and Global Governance',
+                        'Avery Cole, главный руководитель операций по корпоративной надёжности и глобальному управлению'
+                      )
+                    }}</krn-description-item
+                    ><krn-description-item [term]="localized('Data region', 'Регион данных')">{{
+                      localized(
+                        'European Union — multi-region residency with extended disaster-recovery replication',
+                        'Европейский союз — мультирегиональное хранение с расширенной репликацией для аварийного восстановления'
+                      )
+                    }}</krn-description-item
+                    ><krn-description-item [term]="localized('Plan', 'Тариф')">{{
+                      localized(
+                        'Scale with advanced policy controls, audit retention, and delegated administration',
+                        'Масштабный тариф с расширенным управлением политиками, хранением аудита и делегированным администрированием'
+                      )
+                    }}</krn-description-item></krn-description-list
                   >
                 }
                 @default {
                   <krn-description-list
-                    ><krn-description-item term="Owner">Avery Cole</krn-description-item
-                    ><krn-description-item term="Data region">European Union</krn-description-item
-                    ><krn-description-item term="Created">18 January 2026</krn-description-item
-                    ><krn-description-item term="Plan"
-                      >Scale</krn-description-item
-                    ></krn-description-list
+                    ><krn-description-item [term]="localized('Owner', 'Владелец')"
+                      >Avery Cole</krn-description-item
+                    ><krn-description-item [term]="localized('Data region', 'Регион данных')">{{
+                      localized('European Union', 'Европейский союз')
+                    }}</krn-description-item
+                    ><krn-description-item [term]="localized('Created', 'Создано')">{{
+                      localized('18 January 2026', '18 января 2026')
+                    }}</krn-description-item
+                    ><krn-description-item [term]="localized('Plan', 'Тариф')">{{
+                      localized('Scale', 'Масштабный')
+                    }}</krn-description-item></krn-description-list
                   >
                 }
               }
             }
             @case ('list') {
-              <krn-list ariaLabel="Recent workspaces" [role]="stringArgument('role', 'list')"
-                ><krn-list-item heading="Northstar" selected>Operations · Healthy</krn-list-item
-                ><krn-list-item heading="Fieldnote">Research · Attention</krn-list-item
-                ><krn-list-item heading="Orchard">Commerce · Healthy</krn-list-item></krn-list
+              <krn-list
+                [ariaLabel]="localized('Recent workspaces', 'Недавние рабочие пространства')"
+                [role]="stringArgument('role', 'list')"
+                ><krn-list-item heading="Northstar" selected>{{
+                  localized('Operations · Healthy', 'Операции · В норме')
+                }}</krn-list-item
+                ><krn-list-item heading="Fieldnote">{{
+                  localized('Research · Attention', 'Исследования · Требует внимания')
+                }}</krn-list-item
+                ><krn-list-item heading="Orchard">{{
+                  localized('Commerce · Healthy', 'Коммерция · В норме')
+                }}</krn-list-item></krn-list
               >
             }
             @case ('list-item') {
-              <krn-list ariaLabel="Audit packages"
+              <krn-list [ariaLabel]="localized('Audit packages', 'Пакеты аудита')"
                 ><krn-list-item
                   [selected]="booleanArgument('selected')"
                   [heading]="stringArgument('heading', 'Quarterly audit package')"
-                  ><span>PDF · 18.4 MB · created 8 minutes ago</span
+                  ><span>{{
+                    localized(
+                      'PDF · 18.4 MB · created 8 minutes ago',
+                      'PDF · 18,4 МБ · создано 8 минут назад'
+                    )
+                  }}</span
                   ><button krnButton size="sm" variant="outline" tone="neutral">
-                    Download
+                    {{ localized('Download', 'Скачать') }}
                   </button></krn-list-item
                 ></krn-list
               >
             }
             @case ('accordion') {
-              <krn-accordion ariaLabel="Workspace settings"
-                ><krn-disclosure heading="Identity" [(open)]="accordionExpanded"
-                  >Name, slug, and brand assets.</krn-disclosure
-                ><krn-disclosure heading="Access policy"
-                  >Single sign-on and guest permissions.</krn-disclosure
-                ><krn-disclosure heading="Retention"
-                  >Audit history and export policy.</krn-disclosure
-                ></krn-accordion
+              <krn-accordion
+                [ariaLabel]="localized('Workspace settings', 'Настройки рабочего пространства')"
+                ><krn-disclosure
+                  [heading]="localized('Identity', 'Идентичность')"
+                  [(open)]="accordionExpanded"
+                  >{{
+                    localized(
+                      'Name, slug, and brand assets.',
+                      'Название, адрес и материалы бренда.'
+                    )
+                  }}</krn-disclosure
+                ><krn-disclosure [heading]="localized('Access policy', 'Политика доступа')">{{
+                  localized('Single sign-on and guest permissions.', 'Единый вход и права гостей.')
+                }}</krn-disclosure
+                ><krn-disclosure [heading]="localized('Retention', 'Хранение')">{{
+                  localized(
+                    'Audit history and export policy.',
+                    'История аудита и политика экспорта.'
+                  )
+                }}</krn-disclosure></krn-accordion
               >
             }
             @case ('disclosure') {
               <krn-disclosure
                 [(open)]="disclosureOpen"
                 [heading]="stringArgument('heading', 'Advanced automation settings')"
-                ><p>Retries, timeouts, concurrency, and failure policy.</p></krn-disclosure
+                ><p>
+                  {{
+                    localized(
+                      'Retries, timeouts, concurrency, and failure policy.',
+                      'Повторы, тайм-ауты, параллельность и политика сбоев.'
+                    )
+                  }}
+                </p></krn-disclosure
               >
             }
             @case ('timeline') {
               @switch (contentDataState()) {
                 @case ('empty') {
-                  <krn-timeline ariaLabel="Workspace activity" />
-                  <p class="fixture-empty-message">No workspace activity has been recorded.</p>
+                  <krn-timeline
+                    [ariaLabel]="
+                      localized('Workspace activity', 'Активность рабочего пространства')
+                    "
+                  />
+                  <p class="fixture-empty-message">
+                    {{
+                      localized(
+                        'No workspace activity has been recorded.',
+                        'Активность в рабочем пространстве ещё не зафиксирована.'
+                      )
+                    }}
+                  </p>
                 }
                 @case ('long-text') {
-                  <krn-timeline ariaLabel="Workspace activity"
+                  <krn-timeline
+                    [ariaLabel]="
+                      localized('Workspace activity', 'Активность рабочего пространства')
+                    "
                     ><krn-timeline-item
-                      heading="Enterprise configuration policy published"
-                      time="8 min ago"
-                      >Avery Cole updated guest access, cross-region retention, delegated
-                      administration, and recovery requirements for every production
-                      workspace.</krn-timeline-item
-                    ><krn-timeline-item heading="Regulatory export completed" time="34 min ago"
-                      >The complete Q3 audit package with supporting evidence and signed
-                      attestations is ready for review.</krn-timeline-item
+                      [heading]="
+                        localized(
+                          'Enterprise configuration policy published',
+                          'Опубликована политика корпоративной конфигурации'
+                        )
+                      "
+                      [time]="localized('8 min ago', '8 минут назад')"
+                      >{{
+                        localized(
+                          'Avery Cole updated guest access, cross-region retention, delegated administration, and recovery requirements for every production workspace.',
+                          'Avery Cole обновил гостевой доступ, межрегиональное хранение, делегированное администрирование и требования к восстановлению для всех производственных рабочих пространств.'
+                        )
+                      }}</krn-timeline-item
+                    ><krn-timeline-item
+                      [heading]="
+                        localized('Regulatory export completed', 'Регуляторный экспорт завершён')
+                      "
+                      [time]="localized('34 min ago', '34 минуты назад')"
+                      >{{
+                        localized(
+                          'The complete Q3 audit package with supporting evidence and signed attestations is ready for review.',
+                          'Полный пакет аудита за 3-й квартал с подтверждающими материалами и подписанными аттестатами готов к проверке.'
+                        )
+                      }}</krn-timeline-item
                     ></krn-timeline
                   >
                 }
                 @default {
-                  <krn-timeline ariaLabel="Workspace activity"
-                    ><krn-timeline-item heading="Configuration published" time="8 min ago"
-                      >Avery Cole changed guest access.</krn-timeline-item
-                    ><krn-timeline-item heading="Export completed" time="34 min ago"
-                      >Q3 audit package is ready.</krn-timeline-item
-                    ><krn-timeline-item heading="Member invited" time="Yesterday"
-                      >Mina Chen joined Northstar.</krn-timeline-item
+                  <krn-timeline
+                    [ariaLabel]="
+                      localized('Workspace activity', 'Активность рабочего пространства')
+                    "
+                    ><krn-timeline-item
+                      [heading]="localized('Configuration published', 'Конфигурация опубликована')"
+                      [time]="localized('8 min ago', '8 минут назад')"
+                      >{{
+                        localized(
+                          'Avery Cole changed guest access.',
+                          'Avery Cole изменил гостевой доступ.'
+                        )
+                      }}</krn-timeline-item
+                    ><krn-timeline-item
+                      [heading]="localized('Export completed', 'Экспорт завершён')"
+                      [time]="localized('34 min ago', '34 минуты назад')"
+                      >{{
+                        localized(
+                          'Q3 audit package is ready.',
+                          'Пакет аудита за 3-й квартал готов.'
+                        )
+                      }}</krn-timeline-item
+                    ><krn-timeline-item
+                      [heading]="localized('Member invited', 'Участник приглашён')"
+                      [time]="localized('Yesterday', 'Вчера')"
+                      >{{
+                        localized(
+                          'Mina Chen joined Northstar.',
+                          'Mina Chen присоединилась к Northstar.'
+                        )
+                      }}</krn-timeline-item
                     ></krn-timeline
                   >
                 }
@@ -2181,7 +3076,7 @@
             @case ('tree') {
               <div class="tree-data-stage">
                 <krn-tree
-                  ariaLabel="Project files"
+                  [ariaLabel]="localized('Project files', 'Файлы проекта')"
                   [nodes]="activeTreeNodes()"
                   [(selected)]="treeSelected"
                 />
@@ -2189,7 +3084,7 @@
             }
             @case ('data-table') {
               <krn-data-table
-                ariaLabel="Workspace directory"
+                [ariaLabel]="localized('Workspace directory', 'Каталог рабочих пространств')"
                 [data]="activeSpecimenRows()"
                 [columns]="activeSpecimenColumns()"
                 [rowIdentity]="rowIdentity"
@@ -2218,7 +3113,7 @@
             }
             @case ('data-grid') {
               <krn-data-grid
-                ariaLabel="Workspace usage"
+                [ariaLabel]="localized('Workspace usage', 'Использование рабочих пространств')"
                 [data]="activeSpecimenRows()"
                 [columns]="activeSpecimenColumns()"
                 [rowIdentity]="rowIdentity"
@@ -2274,7 +3169,7 @@
             }
             @case ('json-view') {
               <krn-json-view
-                ariaLabel="Deployment JSON"
+                [ariaLabel]="localized('Deployment JSON', 'JSON развёртывания')"
                 [data]="jsonPayload"
                 [highlightPattern]="stringArgument('highlightPattern', '')"
                 [defaultExpandDepth]="numberArgument('defaultExpandDepth', 2)"
@@ -2284,16 +3179,20 @@
             }
             @case ('keyboard-shortcut') {
               <div class="shortcut-gallery">
-                <span>Open command palette</span
-                ><krn-keyboard-shortcut [keys]="shortcutKeys()" /><span>Save changes</span
-                ><krn-keyboard-shortcut [keys]="saveShortcutKeys()" /><span>Close layer</span
+                <span>{{ localized('Open command palette', 'Открыть палитру команд') }}</span
+                ><krn-keyboard-shortcut [keys]="shortcutKeys()" /><span>{{
+                  localized('Save changes', 'Сохранить изменения')
+                }}</span
+                ><krn-keyboard-shortcut [keys]="saveShortcutKeys()" /><span>{{
+                  localized('Close layer', 'Закрыть слой')
+                }}</span
                 ><krn-keyboard-shortcut [keys]="['Esc']" />
               </div>
             }
             @case ('meter') {
               <div class="meter-gallery">
                 <div>
-                  <span>Storage</span
+                  <span>{{ localized('Storage', 'Хранилище') }}</span
                   ><strong>{{ meterValue() }} GB / {{ meterMaximum() }} GB</strong>
                 </div>
                 <krn-meter
@@ -2305,7 +3204,13 @@
                   [optimum]="numberArgument('optimum', 20)"
                   [label]="stringArgument('label', 'Storage used')"
                 />
-                <div class="progress-controls" role="group" aria-label="Adjust storage meter">
+                <div
+                  class="progress-controls"
+                  role="group"
+                  [attr.aria-label]="
+                    localized('Adjust storage meter', 'Изменить индикатор хранилища')
+                  "
+                >
                   <button
                     krnButton
                     size="sm"
@@ -2331,13 +3236,13 @@
               <div class="rating-gallery">
                 <krn-rating
                   [(value)]="ratingValue"
-                  ariaLabel="Customer rating"
+                  [ariaLabel]="localized('Customer rating', 'Оценка клиентов')"
                   [disabled]="booleanArgument('disabled', false)"
                   [max]="numberArgument('max', 5)"
                   [readonly]="booleanArgument('readonly', false)"
                 /><span
                   ><strong>{{ ratingValue().toFixed(1) }}</strong
-                  ><small>128 responses</small></span
+                  ><small>{{ localized('128 responses', '128 ответов') }}</small></span
                 >
               </div>
             }
@@ -2351,7 +3256,7 @@
                     tone="neutral"
                     (click)="reverseChartOrder()"
                   >
-                    Reverse data order
+                    {{ localized('Reverse data order', 'Обратить порядок данных') }}
                   </button>
                 }
                 <krn-line-chart
@@ -2375,7 +3280,7 @@
                     tone="neutral"
                     (click)="reverseChartOrder()"
                   >
-                    Reverse data order
+                    {{ localized('Reverse data order', 'Обратить порядок данных') }}
                   </button>
                 }
                 <krn-bar-chart
@@ -2399,7 +3304,7 @@
                     tone="neutral"
                     (click)="reverseChartOrder()"
                   >
-                    Reverse data order
+                    {{ localized('Reverse data order', 'Обратить порядок данных') }}
                   </button>
                 }
                 <krn-donut-chart
@@ -2415,7 +3320,13 @@
             }
             @case ('responsive-media') {
               <krn-responsive-media [aspectRatio]="stringArgument('aspectRatio', '16 / 9')"
-                ><svg viewBox="0 0 800 450" role="img" aria-label="Abstract operational map">
+                ><svg
+                  viewBox="0 0 800 450"
+                  role="img"
+                  [attr.aria-label]="
+                    localized('Abstract operational map', 'Абстрактная карта операций')
+                  "
+                >
                   <defs>
                     <linearGradient id="media-gradient" x1="0" x2="1">
                       <stop stop-color="#20252d" />
@@ -2430,13 +3341,17 @@
                     stroke-width="12"
                   />
                   <circle cx="510" cy="130" r="22" fill="#faf7f2" />
-                  <text x="80" y="90" fill="#faf7f2" font-size="28">NORTH / OPERATIONS</text>
+                  <text x="80" y="90" fill="#faf7f2" font-size="28">
+                    {{ localized('NORTH / OPERATIONS', 'СЕВЕР / ОПЕРАЦИИ') }}
+                  </text>
                 </svg></krn-responsive-media
               >
             }
           }
         } @placeholder {
-          <div class="specimen-loading">Loading data specimen…</div>
+          <div class="specimen-loading">
+            {{ localized('Loading data specimen…', 'Загрузка примера данных…') }}
+          </div>
         }
       }
 
@@ -2450,9 +3365,12 @@
                 [detail]="stringArgument('detail', 'avery@north.ops')"
                 [name]="stringArgument('name', 'Avery Cole')"
                 ><span krnUserAvatar class="avatar-token">AC</span
-                ><button role="menuitem" type="button">Profile</button
-                ><button role="menuitem" type="button">Workspace settings</button
-                ><button role="menuitem" type="button">Sign out</button></krn-user-menu
+                ><button role="menuitem" type="button">{{ localized('Profile', 'Профиль') }}</button
+                ><button role="menuitem" type="button">
+                  {{ localized('Workspace settings', 'Настройки рабочего пространства') }}</button
+                ><button role="menuitem" type="button">
+                  {{ localized('Sign out', 'Выйти') }}
+                </button></krn-user-menu
               >
             }
             @case ('notification-center') {
@@ -2466,7 +3384,12 @@
             @case ('global-search') {
               <div class="pattern-stage search-stage">
                 <krn-global-search
-                  ariaLabel="Search workspaces and projects"
+                  [ariaLabel]="
+                    localized(
+                      'Search workspaces and projects',
+                      'Поиск рабочих пространств и проектов'
+                    )
+                  "
                   [results]="searchResults"
                   [(query)]="globalSearchQuery"
                   [placeholder]="
@@ -2476,13 +3399,20 @@
                   [(open)]="globalSearchOpen"
                   [maxResults]="numberArgument('maxResults', 8)"
                 />
-                <p>Type “north” to see grouped, keyboard-accessible results.</p>
+                <p>
+                  {{
+                    localized(
+                      'Type “north” to see grouped, keyboard-accessible results.',
+                      'Введите «north», чтобы увидеть сгруппированные результаты с клавиатурной навигацией.'
+                    )
+                  }}
+                </p>
               </div>
             }
             @case ('filter-bar') {
               <div class="pattern-stage">
                 <krn-filter-bar
-                  ariaLabel="Workspace filters"
+                  [ariaLabel]="localized('Workspace filters', 'Фильтры рабочих пространств')"
                   [filters]="filters"
                   [(values)]="filterValues"
                 />
@@ -2500,17 +3430,30 @@
                   "
                   [eyebrow]="stringArgument('eyebrow', 'Workspace / Northstar')"
                   [index]="stringArgument('index', '07')"
-                  ><krn-badge status tone="success">Systems nominal</krn-badge
-                  ><button krnButton>New automation</button></krn-page-header
+                  ><krn-badge status tone="success">{{
+                    localized('Systems nominal', 'Системы в норме')
+                  }}</krn-badge
+                  ><button krnButton>
+                    {{ localized('New automation', 'Новая автоматизация') }}
+                  </button></krn-page-header
                 >
               </div>
             }
             @case ('settings-panel') {
               <div class="feedback-trigger">
                 <button krnButton variant="outline" tone="neutral" (click)="settingsOpen.set(true)">
-                  Open workspace settings
+                  {{
+                    localized('Open workspace settings', 'Открыть настройки рабочего пространства')
+                  }}
                 </button>
-                <p>Persistent product settings in an edge-aligned panel.</p>
+                <p>
+                  {{
+                    localized(
+                      'Persistent product settings in an edge-aligned panel.',
+                      'Постоянные настройки продукта в панели у края экрана.'
+                    )
+                  }}
+                </p>
               </div>
               <krn-settings-panel
                 [(open)]="settingsOpen"
@@ -2518,11 +3461,13 @@
                 [closeOnOutside]="booleanArgument('closeOnOutside', true)"
                 [heading]="stringArgument('heading', 'Workspace settings')"
                 ><div class="overlay-copy">
-                  <label>Workspace name <input value="Northstar" /></label
+                  <label
+                    >{{ localized('Workspace name', 'Название рабочего пространства') }}
+                    <input value="Northstar" /></label
                   ><label
-                    >Data region
+                    >{{ localized('Data region', 'Регион данных') }}
                     <select>
-                      <option>European Union</option>
+                      <option>{{ localized('European Union', 'Европейский союз') }}</option>
                     </select></label
                   >
                 </div>
@@ -2533,31 +3478,43 @@
                     tone="neutral"
                     (click)="settingsOpen.set(false)"
                   >
-                    Cancel</button
-                  ><button krnButton (click)="settingsOpen.set(false)">Save</button>
+                    {{ localized('Cancel', 'Отмена') }}</button
+                  ><button krnButton (click)="settingsOpen.set(false)">
+                    {{ localized('Save', 'Сохранить') }}
+                  </button>
                 </div></krn-settings-panel
               >
             }
             @case ('crud-toolbar') {
               <div class="pattern-stage">
                 <krn-crud-toolbar
-                  ariaLabel="Workspace actions"
+                  [ariaLabel]="localized('Workspace actions', 'Действия с рабочим пространством')"
                   [selectedCount]="numberArgument('selectedCount', 0)"
-                  ><strong krnToolbarTitle>Workspaces</strong
-                  ><button krnButton variant="outline" tone="neutral">Export</button
-                  ><button krnButton>New workspace</button></krn-crud-toolbar
+                  ><strong krnToolbarTitle>{{
+                    localized('Workspaces', 'Рабочие пространства')
+                  }}</strong
+                  ><button krnButton variant="outline" tone="neutral">
+                    {{ localized('Export', 'Экспорт') }}</button
+                  ><button krnButton>
+                    {{ localized('New workspace', 'Новое рабочее пространство') }}
+                  </button></krn-crud-toolbar
                 >
               </div>
             }
             @case ('bulk-actions') {
               <div class="pattern-stage">
                 <krn-bulk-actions
-                  ariaLabel="Selected workspace actions"
+                  [ariaLabel]="
+                    localized(
+                      'Selected workspace actions',
+                      'Действия с выбранными рабочими пространствами'
+                    )
+                  "
                   [selectedCount]="selectedCount()"
                   ><button krnButton variant="ghost" tone="danger" (click)="selectedCount.set(0)">
-                    Archive</button
+                    {{ localized('Archive', 'Архивировать') }}</button
                   ><button krnButton variant="outline" tone="neutral">
-                    Export
+                    {{ localized('Export', 'Экспорт') }}
                   </button></krn-bulk-actions
                 >
               </div>
@@ -2573,12 +3530,24 @@
                     </button>
                   </div>
                   <div krnDetail class="detail-copy">
-                    <span>WORKSPACE / NORTHSTAR</span>
+                    <span>{{
+                      localized('WORKSPACE / NORTHSTAR', 'РАБОЧЕЕ ПРОСТРАНСТВО / NORTHSTAR')
+                    }}</span>
                     <h3>Northstar</h3>
-                    <p>Permissions, automation health, and usage context stay beside the list.</p>
-                    <krn-alert tone="success" title="Healthy"
-                      >All scheduled runs completed.</krn-alert
-                    >
+                    <p>
+                      {{
+                        localized(
+                          'Permissions, automation health, and usage context stay beside the list.',
+                          'Права доступа, состояние автоматизаций и контекст использования остаются рядом со списком.'
+                        )
+                      }}
+                    </p>
+                    <krn-alert tone="success" [title]="localized('Healthy', 'В норме')">{{
+                      localized(
+                        'All scheduled runs completed.',
+                        'Все запланированные запуски завершены.'
+                      )
+                    }}</krn-alert>
                   </div></krn-master-detail-layout
                 >
               </div>
@@ -2588,17 +3557,22 @@
                 <krn-dashboard-widget
                   [heading]="stringArgument('heading', 'Automation health')"
                   [eyebrow]="stringArgument('eyebrow', 'AUTOMATION')"
-                  ><krn-bar-chart title="Last 24 hours" [data]="chartData.slice(0, 4)" />
+                  ><krn-bar-chart
+                    [title]="localized('Last 24 hours', 'Последние 24 часа')"
+                    [data]="chartData.slice(0, 4)"
+                  />
                   <div krnWidgetFooter>
-                    <a krnLink href="/patterns">View automation report</a>
+                    <a krnLink href="/patterns">{{
+                      localized('View automation report', 'Открыть отчёт об автоматизации')
+                    }}</a>
                   </div></krn-dashboard-widget
                 >
               </div>
             }
             @case ('login-form') {
               <div class="auth-card">
-                <span>ACCOUNT / SIGN IN</span>
-                <h3>Continue to Kern</h3>
+                <span>{{ localized('ACCOUNT / SIGN IN', 'УЧЁТНАЯ ЗАПИСЬ / ВХОД') }}</span>
+                <h3>{{ localized('Continue to Kern', 'Продолжить в Kern') }}</h3>
                 <krn-login-form
                   [loading]="booleanArgument('loading')"
                   [errorMessage]="stringArgument('errorMessage', '')"
@@ -2609,8 +3583,8 @@
             }
             @case ('profile-form') {
               <div class="auth-card wide-auth">
-                <span>SETTINGS / PROFILE</span>
-                <h3>Public profile</h3>
+                <span>{{ localized('SETTINGS / PROFILE', 'НАСТРОЙКИ / ПРОФИЛЬ') }}</span>
+                <h3>{{ localized('Public profile', 'Публичный профиль') }}</h3>
                 <krn-profile-form
                   [value]="profile"
                   [saving]="booleanArgument('saving')"
@@ -2626,15 +3600,20 @@
                 <krn-multi-step-form
                   [steps]="steps"
                   [(current)]="formStep"
-                  completeLabel="Create workspace"
+                  [completeLabel]="localized('Create workspace', 'Создать рабочее пространство')"
                   [(furthestStep)]="multiStepFurthestStep"
                   [allowStepNavigation]="booleanArgument('allowStepNavigation', true)"
                   [orientation]="stringArgument('orientation', 'horizontal')"
                   ><div class="step-copy">
-                    <span>STEP {{ formStep() + 1 }}</span>
+                    <span>{{ localized('STEP', 'ШАГ') }} {{ formStep() + 1 }}</span>
                     <h3>{{ steps[formStep()]?.label }}</h3>
                     <p>
-                      Each step owns its validation while the pattern owns progress and navigation.
+                      {{
+                        localized(
+                          'Each step owns its validation while the pattern owns progress and navigation.',
+                          'Каждый шаг отвечает за свою валидацию, а паттерн — за прогресс и навигацию.'
+                        )
+                      }}
                     </p>
                   </div></krn-multi-step-form
                 >
@@ -2643,28 +3622,35 @@
             @case ('mobile-navigation') {
               <div class="phone-frame">
                 <div class="phone-content">
-                  <span>Q3 / OPERATIONS</span><strong>Workspace health</strong
-                  ><krn-stat label="Active automations" value="18.7k" />
+                  <span>{{ localized('Q3 / OPERATIONS', 'КВ. 3 / ОПЕРАЦИИ') }}</span
+                  ><strong>{{
+                    localized('Workspace health', 'Состояние рабочего пространства')
+                  }}</strong
+                  ><krn-stat
+                    [label]="localized('Active automations', 'Активные автоматизации')"
+                    value="18.7k"
+                  />
                 </div>
-                <krn-mobile-navigation ariaLabel="Mobile sections"
+                <krn-mobile-navigation
+                  [ariaLabel]="localized('Mobile sections', 'Разделы мобильной версии')"
                   ><a
                     [routerLink]="['/components', item().id]"
                     fragment="specimen"
                     [attr.aria-current]="mobileNavigationSelected() === 'overview' ? 'page' : null"
                     (click)="mobileNavigationSelected.set('overview')"
-                    >Overview</a
+                    >{{ localized('Overview', 'Обзор') }}</a
                   ><a
                     [routerLink]="['/components', item().id]"
                     fragment="specimen"
                     [attr.aria-current]="mobileNavigationSelected() === 'activity' ? 'page' : null"
                     (click)="mobileNavigationSelected.set('activity')"
-                    >Activity</a
+                    >{{ localized('Activity', 'Активность') }}</a
                   ><button
                     type="button"
                     [attr.aria-current]="mobileNavigationSelected() === 'settings' ? 'page' : null"
                     (click)="mobileNavigationSelected.set('settings')"
                   >
-                    Settings
+                    {{ localized('Settings', 'Настройки') }}
                   </button></krn-mobile-navigation
                 >
               </div>
@@ -2683,43 +3669,62 @@
                       tone="neutral"
                       (click)="responsiveNavigationOpen.update((open) => !open)"
                     >
-                      Navigation</button
-                    ><krn-badge status tone="success">Live</krn-badge>
+                      {{ localized('Navigation', 'Навигация') }}</button
+                    ><krn-badge status tone="success">{{ localized('Live', 'Активно') }}</krn-badge>
                   </div>
                   <nav krnAppNavigation class="responsive-shell-nav">
-                    <a [routerLink]="['/components', item().id]" fragment="specimen">Overview</a
-                    ><a [routerLink]="['/components', item().id]" fragment="specimen">Automations</a
-                    ><a [routerLink]="['/components', item().id]" fragment="specimen">Audit log</a>
+                    <a [routerLink]="['/components', item().id]" fragment="specimen">{{
+                      localized('Overview', 'Обзор')
+                    }}</a
+                    ><a [routerLink]="['/components', item().id]" fragment="specimen">{{
+                      localized('Automations', 'Автоматизации')
+                    }}</a
+                    ><a [routerLink]="['/components', item().id]" fragment="specimen">{{
+                      localized('Audit log', 'Журнал аудита')
+                    }}</a>
                   </nav>
                   <div class="responsive-shell-main">
-                    <span>WORKSPACE / 0248</span>
+                    <span>{{ localized('WORKSPACE / 0248', 'РАБОЧЕЕ ПРОСТРАНСТВО / 0248') }}</span>
                     <h3>Northstar</h3>
-                    <krn-stat label="Usage" value="84%" detail="Healthy" />
+                    <krn-stat
+                      [label]="localized('Usage', 'Использование')"
+                      value="84%"
+                      [detail]="localized('Healthy', 'В норме')"
+                    />
                   </div>
                   <krn-mobile-navigation krnAppMobileNavigation
                     ><a
                       [routerLink]="['/components', item().id]"
                       fragment="specimen"
                       aria-current="page"
-                      >Overview</a
-                    ><a [routerLink]="['/components', item().id]" fragment="specimen"
-                      >Reports</a
-                    ></krn-mobile-navigation
+                      >{{ localized('Overview', 'Обзор') }}</a
+                    ><a [routerLink]="['/components', item().id]" fragment="specimen">{{
+                      localized('Reports', 'Отчёты')
+                    }}</a></krn-mobile-navigation
                   ></krn-responsive-application-shell
                 >
               </div>
             }
           }
         } @placeholder {
-          <div class="specimen-loading">Loading pattern specimen…</div>
+          <div class="specimen-loading">
+            {{ localized('Loading pattern specimen…', 'Загрузка примера паттерна…') }}
+          </div>
         }
       }
 
       @default {
         <div class="missing-specimen">
-          <span>Example pending</span>
+          <span>{{ localized('Example pending', 'Пример готовится') }}</span>
           <strong>{{ item().name }}</strong>
-          <p>This route has no focused renderer yet.</p>
+          <p>
+            {{
+              localized(
+                'This route has no focused renderer yet.',
+                'Для этой страницы пока нет специализированного примера.'
+              )
+            }}
+          </p>
         </div>
       }
     }

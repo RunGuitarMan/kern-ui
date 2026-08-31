@@ -2,6 +2,7 @@ import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import type { KernApiRow, KernCatalogItem } from '@kern-ui/showcase';
 import type {
   KernCatalogIndexItem,
+  KernCatalogFamily,
   KernCategory,
   KernComponentStatus,
 } from '@kern-ui/showcase/catalog-index';
@@ -84,15 +85,47 @@ export class DocsI18n {
     if (!pack) return item;
     const name = item.name;
     const translatedSummary = pack.RU_COMPONENT_SUMMARIES[item.id];
+    const guidance = pack.russianGuidanceFor(item);
     return {
       ...item,
       name,
       summary: translatedSummary ? `${name}. ${translatedSummary}` : item.summary,
-      keyboard: pack.RU_COMPONENT_KEYBOARD[item.id] ?? item.keyboard,
-      accessibility: pack.RU_COMPONENT_ACCESSIBILITY[item.id] ?? item.accessibility,
+      keyboard: guidance.keyboard,
+      accessibility: guidance.accessibility,
       api: item.api.map((row) => ({ ...row, description: this.apiDescriptionFor(locale, row) })),
-      do: pack.RU_COMPONENT_DO[item.id] ?? item.do,
-      dont: pack.RU_COMPONENT_DONT[item.id] ?? item.dont,
+      do: guidance.do,
+      dont: guidance.dont,
+    };
+  }
+
+  catalogFamily(family: KernCatalogFamily): KernCatalogFamily {
+    return this.catalogFamilyFor(this.prefs.locale(), family);
+  }
+
+  catalogFamilyName(id: string, english: string): string {
+    if (!this.russian()) return english;
+    const pack = this.russianPack();
+    if (!pack) return english;
+    return (
+      pack.RU_COMPONENT_FAMILIES[id as keyof typeof pack.RU_COMPONENT_FAMILIES]?.name ?? english
+    );
+  }
+
+  catalogFamilyFor(locale: string, family: KernCatalogFamily): KernCatalogFamily {
+    if (locale !== 'ru-RU') return family;
+    const pack = this.packFor(locale);
+    if (!pack) return family;
+    const translated =
+      pack.RU_COMPONENT_FAMILIES[family.id as keyof typeof pack.RU_COMPONENT_FAMILIES];
+    if (!translated) return family;
+    return {
+      ...family,
+      name: translated.name,
+      description: translated.description,
+      members: family.members.map((member) => {
+        const translatedMember = translated.members[member.id];
+        return translatedMember ? { ...member, ...translatedMember } : member;
+      }),
     };
   }
 
@@ -106,10 +139,8 @@ export class DocsI18n {
   ): string {
     if (locale !== 'ru-RU') return row.description;
     const pack = this.packFor(locale);
-    const explicit = pack?.RU_API_DESCRIPTIONS[row.name];
-    if (explicit) return explicit;
     if (!pack) return row.description;
-    return row.description;
+    return pack.russianApiDescriptionFor(row);
   }
 
   prepare(locale: string): Promise<void> {

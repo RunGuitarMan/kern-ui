@@ -19,6 +19,8 @@ import { findKernComponent, type KernCatalogItem } from '@kern-ui/showcase';
 import {
   KERN_PLAYGROUND_DEFINITIONS,
   findKernPlaygroundDefinition,
+  localizeKernPlaygroundFixtureEffect,
+  localizeKernPlaygroundStringArgument,
   resolveKernPlaygroundState,
   type KernPlaygroundEnvironment,
   type KernPlaygroundValue,
@@ -393,6 +395,7 @@ export class KernComponentSpecimen {
   readonly state = input('default');
   readonly args = input<KernPlaygroundValues>({});
   readonly resetRevision = input(0);
+  private readonly locale = inject(LOCALE_ID);
 
   private readonly playgroundDefinition = computed(() => {
     const definition = findKernPlaygroundDefinition(this.item().id);
@@ -416,6 +419,10 @@ export class KernComponentSpecimen {
     () => this.effectiveState().visualPseudoState,
   );
   protected readonly effectiveFixtureEffect = computed(() => this.effectiveState().fixtureEffect);
+  protected readonly localizedFixtureEffect = computed(() => {
+    const effect = this.effectiveFixtureEffect();
+    return effect ? localizeKernPlaygroundFixtureEffect(this.locale, effect) : null;
+  });
   protected readonly appliedArguments = computed(() => {
     const state = this.effectiveState();
     return this.playgroundDefinition().controls.flatMap((control) => {
@@ -425,7 +432,10 @@ export class KernComponentSpecimen {
         : [
             Object.freeze({
               key: control.key,
-              value: typeof value === 'string' ? value : JSON.stringify(value),
+              value:
+                typeof value === 'string'
+                  ? localizeKernPlaygroundStringArgument(this.locale, control.key, value)
+                  : JSON.stringify(value),
             }),
           ];
     });
@@ -453,7 +463,6 @@ export class KernComponentSpecimen {
     return findKernComponent(id)?.name ?? id;
   }
 
-  private readonly locale = inject(LOCALE_ID);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly toasts = inject(KrnToastService);
   private readonly clipboardWriter = inject(KernSpecimenClipboardWriter);
@@ -548,12 +557,14 @@ export class KernComponentSpecimen {
       return '';
     }
     const length = this.workspaceName().trim().length;
-    return length >= 3 && length <= 48 ? '' : 'Use 3–48 characters.';
+    return length >= 3 && length <= 48
+      ? ''
+      : this.localized('Use 3–48 characters.', 'Используйте от 3 до 48 символов.');
   });
   protected readonly formFieldError = computed(() =>
     this.stringArgument<'default' | 'valid' | 'pending' | 'invalid'>('state', 'default') ===
     'invalid'
-      ? 'Use 3–48 characters.'
+      ? this.localized('Use 3–48 characters.', 'Используйте от 3 до 48 символов.')
       : this.workspaceNameError(),
   );
   private lastItemId = '';
@@ -774,39 +785,61 @@ export class KernComponentSpecimen {
       description: index % 5 === 0 ? 'Enterprise search fixture' : undefined,
     }),
   );
-  protected readonly activeSelectOptions = computed(() =>
-    this.effectiveScenario() === 'stress' ? this.scaleSelectOptions : this.selectOptions,
-  );
+  protected readonly activeSelectOptions = computed(() => {
+    const options =
+      this.effectiveScenario() === 'stress' ? this.scaleSelectOptions : this.selectOptions;
+    if (this.locale !== 'ru-RU') return options;
+
+    return options.map((option) => {
+      if (option.value.startsWith('option-')) {
+        return {
+          ...option,
+          label: option.label.replace('Workspace option', 'Вариант рабочего пространства'),
+          description: option.description ? 'Пример корпоративного поиска' : undefined,
+        };
+      }
+
+      const russian = {
+        starter: { label: 'Начальный' },
+        team: { label: 'Командный', description: 'Для командной работы над продуктом' },
+        scale: {
+          label: 'Масштабный',
+          description: 'Расширенное управление и контроль',
+        },
+      }[option.value];
+      return russian ? { ...option, ...russian } : option;
+    });
+  });
   protected readonly stressFormFields = Array.from({ length: 200 }, (_, index) => ({
     id: `enterprise-field-${index + 1}`,
-    label: `Enterprise field ${index + 1}`,
-    placeholder: `Value ${index + 1}`,
+    label: this.localized(`Enterprise field ${index + 1}`, `Корпоративное поле ${index + 1}`),
+    placeholder: this.localized(`Value ${index + 1}`, `Значение ${index + 1}`),
   }));
-  protected readonly segmentOptions = [
-    { value: 'list', label: 'List' },
-    { value: 'board', label: 'Board' },
-    { value: 'timeline', label: 'Timeline' },
-  ] as const;
+  protected readonly segmentOptions = computed(() => [
+    { value: 'list', label: this.localized('List', 'Список') },
+    { value: 'board', label: this.localized('Board', 'Доска') },
+    { value: 'timeline', label: this.localized('Timeline', 'Хронология') },
+  ]);
   protected readonly tabs: readonly KrnTabItem[] = [
-    { id: 'overview', label: 'Overview', badge: 8 },
-    { id: 'activity', label: 'Activity', badge: 24 },
-    { id: 'settings', label: 'Settings' },
+    { id: 'overview', label: this.localized('Overview', 'Обзор'), badge: 8 },
+    { id: 'activity', label: this.localized('Activity', 'Активность'), badge: 24 },
+    { id: 'settings', label: this.localized('Settings', 'Настройки') },
   ];
   protected readonly breadcrumbs = computed(() => {
     const href = `/components/${this.item().id}#specimen`;
     return [
-      { label: 'Organization', href },
-      { label: 'Operations', href },
-      { label: 'Workspaces', href },
+      { label: this.localized('Organization', 'Организация'), href },
+      { label: this.localized('Operations', 'Операции'), href },
+      { label: this.localized('Workspaces', 'Рабочие пространства'), href },
       { label: 'Northstar', href },
-      { label: 'Settings', current: true },
+      { label: this.localized('Settings', 'Настройки'), current: true },
     ] as const;
   });
   protected readonly navigationItems: readonly KrnNavigationItem[] = [
-    { id: 'overview', label: 'Overview', icon: '⌂' },
-    { id: 'activity', label: 'Activity', icon: '↗', badge: 4 },
-    { id: 'reports', label: 'Reports', icon: '▤' },
-    { id: 'archive', label: 'Archive', disabled: true },
+    { id: 'overview', label: this.localized('Overview', 'Обзор'), icon: '⌂' },
+    { id: 'activity', label: this.localized('Activity', 'Активность'), icon: '↗', badge: 4 },
+    { id: 'reports', label: this.localized('Reports', 'Отчёты'), icon: '▤' },
+    { id: 'archive', label: this.localized('Archive', 'Архив'), disabled: true },
   ];
   protected readonly activeMenubarItems = computed(() =>
     resolveKernSpecimenMenubarItems(
@@ -815,53 +848,73 @@ export class KernComponentSpecimen {
     ),
   );
   protected readonly contextMenuItems: readonly KrnContextMenuItem[] = [
-    { id: 'open', label: 'Open workspace', icon: '↗', shortcut: '↵' },
-    { id: 'duplicate', label: 'Duplicate', icon: '⧉', shortcut: '⌘D' },
+    {
+      id: 'open',
+      label: this.localized('Open workspace', 'Открыть рабочее пространство'),
+      icon: '↗',
+      shortcut: '↵',
+    },
+    {
+      id: 'duplicate',
+      label: this.localized('Duplicate', 'Дублировать'),
+      icon: '⧉',
+      shortcut: '⌘D',
+    },
     {
       id: 'move',
-      label: 'Move to',
+      label: this.localized('Move to', 'Переместить в'),
       icon: '↪',
       children: [
-        { id: 'move-operations', label: 'Operations', icon: 'O' },
-        { id: 'move-research', label: 'Research', icon: 'R' },
-        { id: 'move-archive', label: 'Archive', icon: 'A', disabled: true },
+        { id: 'move-operations', label: this.localized('Operations', 'Операции'), icon: 'O' },
+        { id: 'move-research', label: this.localized('Research', 'Исследования'), icon: 'R' },
+        {
+          id: 'move-archive',
+          label: this.localized('Archive', 'Архив'),
+          icon: 'A',
+          disabled: true,
+        },
       ],
     },
-    { id: 'archive', label: 'Archive workspace', icon: '□', disabled: true },
+    {
+      id: 'archive',
+      label: this.localized('Archive workspace', 'Архивировать рабочее пространство'),
+      icon: '□',
+      disabled: true,
+    },
   ];
   protected readonly treeNavigationItems: readonly KrnTreeNavigationItem[] = [
     {
       id: 'workspace',
       label: 'Northstar',
       children: [
-        { id: 'overview', label: 'Overview' },
+        { id: 'overview', label: this.localized('Overview', 'Обзор') },
         {
           id: 'operations',
-          label: 'Operations',
+          label: this.localized('Operations', 'Операции'),
           children: [
-            { id: 'automations', label: 'Automations' },
-            { id: 'audit', label: 'Audit log' },
+            { id: 'automations', label: this.localized('Automations', 'Автоматизации') },
+            { id: 'audit', label: this.localized('Audit log', 'Журнал аудита') },
           ],
         },
       ],
     },
-    { id: 'archive', label: 'Archive' },
+    { id: 'archive', label: this.localized('Archive', 'Архив') },
   ];
   private readonly asyncTreeNavigationItems: readonly KrnTreeNavigationItem[] = [
     {
       id: 'loading-workspace',
-      label: 'Loading workspace',
+      label: this.localized('Loading workspace', 'Загрузка рабочего пространства'),
       childrenState: 'loading',
     },
     {
       id: 'failed-workspace',
-      label: 'Failed workspace',
+      label: this.localized('Failed workspace', 'Рабочее пространство не загрузилось'),
       childrenState: 'error',
     },
     {
       id: 'ready-workspace',
-      label: 'Ready workspace',
-      children: [{ id: 'ready-overview', label: 'Overview' }],
+      label: this.localized('Ready workspace', 'Рабочее пространство готово'),
+      children: [{ id: 'ready-overview', label: this.localized('Overview', 'Обзор') }],
     },
   ];
   protected readonly activeTreeNavigationItems = computed(() =>
@@ -870,17 +923,17 @@ export class KernComponentSpecimen {
       : this.treeNavigationItems,
   );
   protected readonly tocItems: readonly KrnTocItem[] = [
-    { id: 'specimen-overview', label: 'Overview', level: 2 },
-    { id: 'specimen-api', label: 'API contract', level: 2 },
-    { id: 'specimen-a11y', label: 'Accessibility', level: 2 },
+    { id: 'specimen-overview', label: this.localized('Overview', 'Обзор'), level: 2 },
+    { id: 'specimen-api', label: this.localized('API contract', 'Контракт API'), level: 2 },
+    { id: 'specimen-a11y', label: this.localized('Accessibility', 'Доступность'), level: 2 },
   ];
   protected readonly chartData: readonly KrnChartDatum[] = [
-    { id: 'mon', label: 'Mon', value: 42 },
-    { id: 'tue', label: 'Tue', value: 56 },
-    { id: 'wed', label: 'Wed', value: 49 },
-    { id: 'thu', label: 'Thu', value: 68 },
-    { id: 'fri', label: 'Fri', value: 74 },
-    { id: 'sat', label: 'Sat', value: 63 },
+    { id: 'mon', label: this.localized('Mon', 'Пн'), value: 42 },
+    { id: 'tue', label: this.localized('Tue', 'Вт'), value: 56 },
+    { id: 'wed', label: this.localized('Wed', 'Ср'), value: 49 },
+    { id: 'thu', label: this.localized('Thu', 'Чт'), value: 68 },
+    { id: 'fri', label: this.localized('Fri', 'Пт'), value: 74 },
+    { id: 'sat', label: this.localized('Sat', 'Сб'), value: 63 },
   ];
   private readonly scaleChartData: readonly KrnChartDatum[] = Array.from(
     { length: 120 },
@@ -896,18 +949,48 @@ export class KernComponentSpecimen {
     return this.chartOrderReversed() ? [...data].reverse() : data;
   });
   protected readonly specimenRows: readonly SpecimenRow[] = [
-    { id: 1, workspace: 'Northstar', owner: 'A. Cole', status: 'Healthy', usage: 84 },
-    { id: 2, workspace: 'Fieldnote', owner: 'M. Chen', status: 'Attention', usage: 96 },
-    { id: 3, workspace: 'Orchard', owner: 'R. Singh', status: 'Healthy', usage: 67 },
-    { id: 4, workspace: 'Relay', owner: 'N. Costa', status: 'Healthy', usage: 72 },
+    {
+      id: 1,
+      workspace: 'Northstar',
+      owner: 'A. Cole',
+      status: this.localized('Healthy', 'В норме'),
+      usage: 84,
+    },
+    {
+      id: 2,
+      workspace: 'Fieldnote',
+      owner: 'M. Chen',
+      status: this.localized('Attention', 'Требует внимания'),
+      usage: 96,
+    },
+    {
+      id: 3,
+      workspace: 'Orchard',
+      owner: 'R. Singh',
+      status: this.localized('Healthy', 'В норме'),
+      usage: 67,
+    },
+    {
+      id: 4,
+      workspace: 'Relay',
+      owner: 'N. Costa',
+      status: this.localized('Healthy', 'В норме'),
+      usage: 72,
+    },
   ];
   private readonly scaleRows: readonly SpecimenRow[] = Array.from(
     { length: 10_000 },
     (_, index) => ({
       id: index + 1,
-      workspace: `Workspace ${String(index + 1).padStart(5, '0')}`,
-      owner: `Owner ${(index % 97) + 1}`,
-      status: index % 11 === 0 ? 'Attention' : 'Healthy',
+      workspace: this.localized(
+        `Workspace ${String(index + 1).padStart(5, '0')}`,
+        `Рабочее пространство ${String(index + 1).padStart(5, '0')}`,
+      ),
+      owner: this.localized(`Owner ${(index % 97) + 1}`, `Владелец ${(index % 97) + 1}`),
+      status:
+        index % 11 === 0
+          ? this.localized('Attention', 'Требует внимания')
+          : this.localized('Healthy', 'В норме'),
       usage: (index * 17) % 101,
     }),
   );
@@ -929,7 +1012,12 @@ export class KernComponentSpecimen {
   });
   protected readonly gridLoading = computed(() => this.gridDataState() === 'loading');
   protected readonly gridError = computed(() =>
-    this.gridDataState() === 'error' ? 'Workspace data could not be loaded.' : '',
+    this.gridDataState() === 'error'
+      ? this.localized(
+          'Workspace data could not be loaded.',
+          'Не удалось загрузить данные рабочего пространства.',
+        )
+      : '',
   );
   protected readonly dataTableGridMode = computed(() =>
     resolveKernSpecimenGridMode(this.booleanArgument('pagination', false)),
@@ -941,25 +1029,36 @@ export class KernComponentSpecimen {
     ),
   );
   protected readonly specimenColumns: readonly KrnDataColumn<SpecimenRow>[] = [
-    { key: 'workspace', label: 'Workspace', sortable: true, priority: 'primary' },
-    { key: 'owner', label: 'Owner', sortable: true },
-    { key: 'status', label: 'State', sortable: true },
-    { key: 'usage', label: 'Usage', sortable: true, align: 'end', priority: 'primary' },
+    {
+      key: 'workspace',
+      label: this.localized('Workspace', 'Рабочее пространство'),
+      sortable: true,
+      priority: 'primary',
+    },
+    { key: 'owner', label: this.localized('Owner', 'Владелец'), sortable: true },
+    { key: 'status', label: this.localized('State', 'Состояние'), sortable: true },
+    {
+      key: 'usage',
+      label: this.localized('Usage', 'Использование'),
+      sortable: true,
+      align: 'end',
+      priority: 'primary',
+    },
   ];
   private readonly pinnedSpecimenColumns: readonly KrnDataColumn<SpecimenRow>[] = [
     {
       key: 'workspace',
-      label: 'Workspace',
+      label: this.localized('Workspace', 'Рабочее пространство'),
       sortable: true,
       priority: 'primary',
       width: 220,
       pinned: 'start',
     },
-    { key: 'owner', label: 'Owner', sortable: true, width: 260 },
-    { key: 'status', label: 'State', sortable: true, width: 220 },
+    { key: 'owner', label: this.localized('Owner', 'Владелец'), sortable: true, width: 260 },
+    { key: 'status', label: this.localized('State', 'Состояние'), sortable: true, width: 220 },
     {
       key: 'usage',
-      label: 'Usage',
+      label: this.localized('Usage', 'Использование'),
       sortable: true,
       align: 'end',
       priority: 'primary',
@@ -997,17 +1096,17 @@ export class KernComponentSpecimen {
   private readonly asyncTreeNodes: readonly KrnTreeNode[] = [
     {
       id: 'loading-projects',
-      label: 'Loading projects',
+      label: this.localized('Loading projects', 'Загрузка проектов'),
       childrenState: 'loading',
     },
     {
       id: 'failed-projects',
-      label: 'Failed projects',
+      label: this.localized('Failed projects', 'Проекты не загрузились'),
       childrenState: 'error',
     },
     {
       id: 'ready-projects',
-      label: 'Ready projects',
+      label: this.localized('Ready projects', 'Проекты готовы'),
       children: [{ id: 'ready-kern', label: 'kern' }],
     },
   ];
@@ -1015,7 +1114,10 @@ export class KernComponentSpecimen {
     { length: 500 },
     (_, index) => ({
       id: `node-${index + 1}`,
-      label: `Enterprise node ${String(index + 1).padStart(3, '0')}`,
+      label: this.localized(
+        `Enterprise node ${String(index + 1).padStart(3, '0')}`,
+        `Корпоративный узел ${String(index + 1).padStart(3, '0')}`,
+      ),
     }),
   );
   protected readonly treeDataState = computed(() => {
@@ -1037,44 +1139,60 @@ export class KernComponentSpecimen {
     {
       id: 'northstar',
       label: 'Northstar',
-      description: 'Operations workspace',
-      group: 'Workspace',
+      description: this.localized('Operations workspace', 'Рабочее пространство операций'),
+      group: this.localized('Workspace', 'Рабочее пространство'),
     },
-    { id: 'fieldnote', label: 'Fieldnote', description: 'Research project', group: 'Project' },
-    { id: 'orchard', label: 'Orchard', description: 'Commerce workspace', group: 'Workspace' },
+    {
+      id: 'fieldnote',
+      label: 'Fieldnote',
+      description: this.localized('Research project', 'Исследовательский проект'),
+      group: this.localized('Project', 'Проект'),
+    },
+    {
+      id: 'orchard',
+      label: 'Orchard',
+      description: this.localized('Commerce workspace', 'Рабочее пространство коммерции'),
+      group: this.localized('Workspace', 'Рабочее пространство'),
+    },
   ];
   protected readonly filters: readonly KrnFilterDefinition[] = [
     {
       id: 'state',
-      label: 'State',
+      label: this.localized('State', 'Состояние'),
       options: [
-        { value: 'healthy', label: 'Healthy', count: 18 },
-        { value: 'attention', label: 'Attention', count: 6 },
+        { value: 'healthy', label: this.localized('Healthy', 'В норме'), count: 18 },
+        { value: 'attention', label: this.localized('Attention', 'Требует внимания'), count: 6 },
       ],
     },
     {
       id: 'plan',
-      label: 'Plan',
+      label: this.localized('Plan', 'Тариф'),
       options: [
-        { value: 'scale', label: 'Scale', count: 12 },
-        { value: 'team', label: 'Team', count: 9 },
+        { value: 'scale', label: this.localized('Scale', 'Масштабный'), count: 12 },
+        { value: 'team', label: this.localized('Team', 'Командный'), count: 9 },
       ],
     },
   ];
   protected readonly notifications: readonly KrnNotification[] = [
     {
       id: 'n1',
-      title: 'Seat threshold reached',
-      detail: 'Fieldnote is using 96% of its available seats.',
-      timestamp: '8 minutes ago',
+      title: this.localized('Seat threshold reached', 'Достигнут лимит мест'),
+      detail: this.localized(
+        'Fieldnote is using 96% of its available seats.',
+        'Fieldnote использует 96% доступных мест.',
+      ),
+      timestamp: this.localized('8 minutes ago', '8 минут назад'),
       read: false,
       tone: 'warning',
     },
     {
       id: 'n2',
-      title: 'Export completed',
-      detail: 'The Q3 audit package is ready.',
-      timestamp: '34 minutes ago',
+      title: this.localized('Export completed', 'Экспорт завершён'),
+      detail: this.localized(
+        'The Q3 audit package is ready.',
+        'Пакет аудита за 3-й квартал готов.',
+      ),
+      timestamp: this.localized('34 minutes ago', '34 минуты назад'),
       read: true,
       tone: 'success',
     },
@@ -1096,14 +1214,33 @@ export class KernComponentSpecimen {
   protected readonly avatarSource =
     'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2232%22 fill=%22%2346505e%22/%3E%3Ccircle cx=%2232%22 cy=%2224%22 r=%2211%22 fill=%22%23faf7f2%22/%3E%3Cpath d=%22M13 58c2-13 9-20 19-20s17 7 19 20%22 fill=%22%23e56c45%22/%3E%3C/svg%3E';
   protected readonly steps: readonly KrnFormStep[] = [
-    { id: 'workspace', label: 'Workspace', description: 'Identity', valid: true },
-    { id: 'people', label: 'People', description: 'Collaborators', optional: true, valid: true },
-    { id: 'review', label: 'Review', description: 'Policy', valid: true },
+    {
+      id: 'workspace',
+      label: this.localized('Workspace', 'Рабочее пространство'),
+      description: this.localized('Identity', 'Идентичность'),
+      valid: true,
+    },
+    {
+      id: 'people',
+      label: this.localized('People', 'Люди'),
+      description: this.localized('Collaborators', 'Участники'),
+      optional: true,
+      valid: true,
+    },
+    {
+      id: 'review',
+      label: this.localized('Review', 'Проверка'),
+      description: this.localized('Policy', 'Политика'),
+      valid: true,
+    },
   ];
   protected readonly profile: KrnProfileValue = {
     name: 'Avery Cole',
-    role: 'Operations lead',
-    bio: 'Designing calm systems for complicated work.',
+    role: this.localized('Operations lead', 'Руководитель операций'),
+    bio: this.localized(
+      'Designing calm systems for complicated work.',
+      'Создаёт понятные системы для сложной работы.',
+    ),
     timezone: 'Europe/Moscow',
   };
   protected readonly codeSnippet = `import { KrnButton } from '@kern-ui/angular/actions';
@@ -1116,7 +1253,10 @@ export class Toolbar {}`;
 
   protected readonly rowIdentity = (row: SpecimenRow): number => row.id;
   protected readonly expandedRow = (row: SpecimenRow): string =>
-    `${row.workspace} is owned by ${row.owner}.`;
+    this.localized(
+      `${row.workspace} is owned by ${row.owner}.`,
+      `Владелец ${row.workspace} — ${row.owner}.`,
+    );
 
   private contextMenuControlApplied = false;
   private lastCopyFixtureHost: HTMLElement | null = null;
@@ -1333,7 +1473,21 @@ export class Toolbar {}`;
 
   protected stringArgument<T extends string>(key: string, fallback: T): T {
     const value = this.argument(key);
-    return typeof value === 'string' ? (value as T) : fallback;
+    const resolved = typeof value === 'string' ? value : fallback;
+    return localizeKernPlaygroundStringArgument(this.locale, key, resolved) as T;
+  }
+
+  protected localizedStringArgument(
+    key: string,
+    englishDefault: string,
+    russianDefault: string,
+  ): string {
+    const rawValue = this.argument(key);
+    const value = typeof rawValue === 'string' ? rawValue : englishDefault;
+    const localizedValue = localizeKernPlaygroundStringArgument(this.locale, key, value);
+    return this.locale === 'ru-RU' && localizedValue === englishDefault
+      ? russianDefault
+      : localizedValue;
   }
 
   protected argumentOverride(key: string): KernPlaygroundValue | undefined {
@@ -1344,7 +1498,20 @@ export class Toolbar {}`;
 
   protected stringArgumentOverride<T extends string>(key: string, fallback: T): T {
     const value = this.argumentOverride(key);
-    return typeof value === 'string' ? (value as T) : fallback;
+    const resolved = typeof value === 'string' ? value : fallback;
+    return localizeKernPlaygroundStringArgument(this.locale, key, resolved) as T;
+  }
+
+  protected localizedStringArgumentOverride(
+    key: string,
+    englishDefault: string,
+    russianDefault: string,
+  ): string {
+    const value = this.argumentOverride(key);
+    if (typeof value === 'string') {
+      return localizeKernPlaygroundStringArgument(this.locale, key, value);
+    }
+    return this.localized(englishDefault, russianDefault);
   }
 
   protected optionsStateArgument(statesValue: 'error' | 'loading'): 'error' | 'loading' | 'ready' {
@@ -1370,9 +1537,30 @@ export class Toolbar {}`;
 
   protected showToast(): void {
     const examples = [
-      { title: 'Changes saved', message: 'Workspace settings were published.', tone: 'success' },
-      { title: 'Export ready', message: 'The audit package is ready to download.', tone: 'info' },
-      { title: 'Review requested', message: 'Two policy changes need attention.', tone: 'warning' },
+      {
+        title: this.localized('Changes saved', 'Изменения сохранены'),
+        message: this.localized(
+          'Workspace settings were published.',
+          'Настройки рабочего пространства опубликованы.',
+        ),
+        tone: 'success',
+      },
+      {
+        title: this.localized('Export ready', 'Экспорт готов'),
+        message: this.localized(
+          'The audit package is ready to download.',
+          'Пакет аудита готов к скачиванию.',
+        ),
+        tone: 'info',
+      },
+      {
+        title: this.localized('Review requested', 'Требуется проверка'),
+        message: this.localized(
+          'Two policy changes need attention.',
+          'Два изменения политики требуют внимания.',
+        ),
+        tone: 'warning',
+      },
     ] as const;
     const index = this.toastSequence();
     const example = examples[index % examples.length] ?? examples[0];
@@ -1381,7 +1569,7 @@ export class Toolbar {}`;
       title: example.title,
       tone: example.tone,
       duration: 0,
-      actionLabel: example.tone === 'warning' ? 'Review' : undefined,
+      actionLabel: example.tone === 'warning' ? this.localized('Review', 'Проверить') : undefined,
     });
   }
 

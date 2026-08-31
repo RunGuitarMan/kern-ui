@@ -79,12 +79,12 @@
             [attr.aria-pressed]="state() === preset.id"
             (click)="selectPreset(preset.id)"
           >
-            {{ controlOptionLabel(preset.label) }}
+            {{ presetLabel(preset) }}
           </button>
         }
       </div>
       <p class="story-description" aria-live="polite">
-        <strong>{{ selectedPreset().label }}</strong>
+        <strong>{{ presetLabel(selectedPreset()) }}</strong>
         <span>{{ storyDescription() }}</span>
       </p>
     </section>
@@ -225,7 +225,7 @@
             <input
               type="text"
               [attr.aria-label]="control.key"
-              [value]="stringArg(control)"
+              [value]="textArg(control)"
               (change)="setStringArg(control, $event)"
             />
           }

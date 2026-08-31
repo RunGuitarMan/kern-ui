@@ -49,23 +49,26 @@ describe('App', () => {
     }
   });
 
-  it('preserves precise source documentation when a Russian component translation is absent', async () => {
+  it('uses complete Russian documentation for every component surface', async () => {
     const i18n = TestBed.inject(DocsI18n);
     await i18n.prepare('ru-RU');
-    const source = KERN_CATALOG.find(({ id }) => id === 'floating-action-button');
+    const cyrillic = /\p{Script=Cyrillic}/u;
 
-    expect(source).toBeDefined();
-    if (!source) return;
-
-    const localized = i18n.catalogItemFor('ru-RU', source);
-    expect(localized.summary).toBe(source.summary);
-    expect(localized.keyboard).toEqual(source.keyboard);
-    expect(localized.accessibility).toEqual(source.accessibility);
-    expect(localized.do).toBe(source.do);
-    expect(localized.dont).toBe(source.dont);
+    for (const source of KERN_CATALOG) {
+      const localized = i18n.catalogItemFor('ru-RU', source);
+      expect(localized.summary, `${source.id}: summary`).toMatch(cyrillic);
+      expect(localized.summary, `${source.id}: summary fallback`).not.toBe(source.summary);
+      for (const line of localized.keyboard) expect(line).toMatch(cyrillic);
+      for (const line of localized.accessibility) expect(line).toMatch(cyrillic);
+      expect(localized.do, `${source.id}: do`).toMatch(cyrillic);
+      expect(localized.dont, `${source.id}: dont`).toMatch(cyrillic);
+      for (const row of localized.api) {
+        expect(row.description, `${source.id}.${row.name}: API description`).toMatch(cyrillic);
+      }
+    }
   });
 
-  it('uses component-specific Russian copy without replacing untranslated API descriptions', async () => {
+  it('keeps component-specific Russian copy for the header API', async () => {
     const i18n = TestBed.inject(DocsI18n);
     await i18n.prepare('ru-RU');
     const header = KERN_CATALOG.find(({ id }) => id === 'header');
@@ -78,13 +81,13 @@ describe('App', () => {
     const stickyOffset = header.api.find(({ name }) => name === 'stickyOffset');
     expect(stickyOffset).toBeDefined();
     if (!stickyOffset) return;
-    expect(
-      i18n.apiDescriptionFor('ru-RU', {
-        name: stickyOffset.name,
-        kind: stickyOffset.kind,
-        description: stickyOffset.description,
-      }),
-    ).toBe(stickyOffset.description);
+    const translatedDescription = i18n.apiDescriptionFor('ru-RU', {
+      name: stickyOffset.name,
+      kind: stickyOffset.kind,
+      description: stickyOffset.description,
+    });
+    expect(translatedDescription).toMatch(/\p{Script=Cyrillic}/u);
+    expect(translatedDescription).not.toBe(stickyOffset.description);
     expect(stickyOffset.description).not.toMatch(/^Configures the component /);
   });
 

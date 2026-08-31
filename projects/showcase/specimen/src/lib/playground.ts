@@ -31,7 +31,13 @@ import {
   type KernSpecimenScenario,
 } from './playground-foundation';
 
-export { normalizeKernPlaygroundApiType } from './playground-foundation';
+export {
+  localizeKernPlaygroundFixtureEffect,
+  localizeKernPlaygroundPresetLabel,
+  localizeKernPlaygroundStateLabel,
+  localizeKernPlaygroundStringArgument,
+  normalizeKernPlaygroundApiType,
+} from './playground-foundation';
 export type {
   KernSpecimenScenario,
   KernPlaygroundValue,

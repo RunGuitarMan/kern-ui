@@ -110,6 +110,290 @@ export interface KernPlaygroundStatePreset {
   readonly fixtureEffect?: KernPlaygroundFixtureEffect;
 }
 
+const RU_PLAYGROUND_STATE_LABELS: Readonly<Record<string, string>> = Object.freeze({
+  active: 'Активно',
+  'async-branches': 'Асинхронные ветви',
+  'async-loading': 'Асинхронная загрузка',
+  closed: 'Закрыто',
+  collapsed: 'Свёрнуто',
+  compact: 'Компактно',
+  'compact-rows': 'Компактные строки',
+  connected: 'Соединено',
+  copied: 'Скопировано',
+  current: 'Текущее',
+  dark: 'Тёмная тема',
+  default: 'По умолчанию',
+  disabled: 'Отключено',
+  dismissed: 'Закрыто пользователем',
+  dismissible: 'Можно закрыть',
+  empty: 'Пусто',
+  'empty-results': 'Нет результатов',
+  error: 'Ошибка',
+  'error-branch': 'Ошибка ветви',
+  expanded: 'Развёрнуто',
+  filled: 'Заполнено',
+  filtered: 'Отфильтровано',
+  fixed: 'Фиксировано',
+  'focus-visible': 'Видимый фокус',
+  'handle-focus-visible': 'Видимый фокус разделителя',
+  'handle-hover': 'Наведение на разделитель',
+  'high-contrast': 'Высокая контрастность',
+  highlighted: 'Подсвечено',
+  hover: 'Наведение',
+  idle: 'Ожидание',
+  'inactive-overlay': 'Неактивный оверлей',
+  indeterminate: 'Неопределённое',
+  interactive: 'Интерактивное',
+  'interactive-order': 'Интерактивный порядок',
+  invalid: 'Невалидно',
+  loading: 'Загрузка',
+  'loading-branch': 'Загрузка ветви',
+  'long-text': 'Длинный текст',
+  maximum: 'Максимум',
+  'maximum-size': 'Максимальный размер',
+  minimum: 'Минимум',
+  'minimum-size': 'Минимальный размер',
+  mobile: 'Мобильный вид',
+  nested: 'Вложенное',
+  open: 'Открыто',
+  optional: 'Необязательно',
+  overflow: 'Переполнение',
+  partial: 'Частично',
+  pending: 'В процессе',
+  persistent: 'Постоянное',
+  'pinned-columns': 'Закреплённые столбцы',
+  plain: 'Без оформления',
+  readonly: 'Только чтение',
+  recoverable: 'Можно восстановить',
+  removable: 'Можно удалить',
+  required: 'Обязательно',
+  rtl: 'Справа налево (RTL)',
+  selected: 'Выбрано',
+  'selected-rows': 'Выбранные строки',
+  separated: 'Разделено',
+  sorted: 'Отсортировано',
+  static: 'Статичное',
+  'status-marker': 'Маркер статуса',
+  stress: 'Нагрузочные данные',
+  success: 'Успешно',
+  terminal: 'Конечное',
+  unread: 'Непрочитано',
+  unselected: 'Не выбрано',
+  'value-hidden': 'Значение скрыто',
+  virtualized: 'Виртуализация',
+  'with-action': 'С действием',
+  'with-next-action': 'Со следующим действием',
+  'with-retry': 'С повтором',
+  'without-action': 'Без действия',
+  wrapped: 'С переносом',
+});
+
+const RU_PLAYGROUND_ARGUMENT_STRINGS: Readonly<Record<string, string>> = Object.freeze({
+  '+12.4% this quarter': '+12,4% за этот квартал',
+  'Access policy': 'Политика доступа',
+  'Active workspaces': 'Активные рабочие пространства',
+  'Add a tag': 'Добавьте тег',
+  'Advanced automation settings': 'Расширенные настройки автоматизации',
+  ALLOCATION: 'РАСПРЕДЕЛЕНИЕ',
+  'Archive Northstar and pause all automations?':
+    'Архивировать Northstar и приостановить все автоматизации?',
+  AUDIT: 'АУДИТ',
+  AUTOMATION: 'АВТОМАТИЗАЦИЯ',
+  'Automation health': 'Состояние автоматизации',
+  'Back to catalog': 'Вернуться в каталог',
+  'Browse files': 'Выбрать файлы',
+  'Changes apply to every member.': 'Изменения применятся ко всем участникам.',
+  'Changes published': 'Изменения опубликованы',
+  'Choose a CSV file': 'Выберите файл CSV',
+  'Choose a plan': 'Выберите тариф',
+  'Choose a region': 'Выберите регион',
+  'Copy public link': 'Скопировать публичную ссылку',
+  'Could not load options': 'Не удалось загрузить варианты',
+  'Could not load workspaces': 'Не удалось загрузить рабочие пространства',
+  'Create an automation to connect events with repeatable actions.':
+    'Создайте автоматизацию, чтобы связать события с повторяемыми действиями.',
+  'CSV, up to 10 MB.': 'CSV, до 10 МБ.',
+  'Current active workspaces': 'Текущие активные рабочие пространства',
+  'Default visibility': 'Видимость по умолчанию',
+  'Delete Northstar?': 'Удалить Northstar?',
+  'Edit workspace': 'Изменить рабочее пространство',
+  'Enter password': 'Введите пароль',
+  'Enter the 6-digit verification code': 'Введите шестизначный код подтверждения',
+  'Explain what changed and why…': 'Опишите, что изменилось и почему…',
+  'Filter plans…': 'Фильтровать тарифы…',
+  'Filter rows…': 'Фильтровать строки…',
+  'Flexible, billed each month': 'Гибкий тариф с ежемесячной оплатой',
+  Hide: 'Скрыть',
+  'Importing customer records…': 'Импорт записей клиентов…',
+  'Included events': 'События в сводке',
+  'Jump to…': 'Перейти к…',
+  'Loading options…': 'Загрузка вариантов…',
+  'Members will authenticate through your identity provider.':
+    'Участники будут входить через вашего поставщика удостоверений.',
+  'Monitor runs, failures, and throughput across environments.':
+    'Отслеживайте запуски, ошибки и пропускную способность во всех средах.',
+  'No automations yet': 'Автоматизаций пока нет',
+  'No options': 'Нет вариантов',
+  'Northstar is ready for collaborators.': 'Northstar готов к совместной работе.',
+  'On this page': 'На этой странице',
+  'Quarterly audit package': 'Пакет квартального аудита',
+  'Receive a summary every Monday at 09:00.': 'Получать сводку каждый понедельник в 09:00.',
+  'Recent activity': 'Недавняя активность',
+  'Recent events': 'Недавние события',
+  'Refreshing workspace data': 'Обновление данных рабочего пространства',
+  'Renewal approved pending legal review.': 'Продление одобрено и ожидает юридической проверки.',
+  'Required enterprise value.': 'Обязательное корпоративное значение.',
+  'Runs by environment': 'Запуски по средам',
+  'Scheduled maintenance': 'Плановое обслуживание',
+  'Search 248 workspaces…': 'Поиск по 248 рабочим пространствам…',
+  'Search commands…': 'Поиск команд…',
+  'Search workspaces, projects, people…': 'Поиск рабочих пространств, проектов и людей…',
+  'Seat allocation': 'Распределение мест',
+  'Select owners': 'Выберите владельцев',
+  Show: 'Показать',
+  'Skip specimen navigation': 'Пропустить навигацию примера',
+  'Storage used': 'Использовано хранилища',
+  'Successful runs': 'Успешные запуски',
+  'SVG, PNG, or JPG · 5 MB each': 'SVG, PNG или JPG · до 5 МБ каждый',
+  'The service did not respond. Your changes are safe.':
+    'Сервис не ответил. Ваши изменения сохранены.',
+  'This action cannot be undone.': 'Это действие нельзя отменить.',
+  THROUGHPUT: 'ПРОПУСКНАЯ СПОСОБНОСТЬ',
+  'Type a workspace alias…': 'Введите псевдоним рабочего пространства…',
+  'Unique members, last 6 days': 'Уникальные участники за последние 6 дней',
+  'Unsaved changes': 'Несохранённые изменения',
+  'Usage range': 'Диапазон использования',
+  'Use 3–48 characters.': 'Используйте от 3 до 48 символов.',
+  'Use at least 12 characters.': 'Используйте не менее 12 символов.',
+  'Weekly active users': 'Активные пользователи за неделю',
+  'WORKSPACE / 0248': 'РАБОЧЕЕ ПРОСТРАНСТВО / 0248',
+  'Workspace / Northstar': 'Рабочее пространство / Northstar',
+  'Workspace actions': 'Действия с рабочим пространством',
+  'Workspace created': 'Рабочее пространство создано',
+  'Workspace plan mix': 'Распределение тарифов рабочего пространства',
+  'Workspace settings': 'Настройки рабочего пространства',
+});
+
+const PLAYGROUND_PROSE_ARGUMENT_KEYS = new Set([
+  'alt',
+  'content',
+  'description',
+  'detail',
+  'dirtyMessage',
+  'emptyText',
+  'error',
+  'errorMessage',
+  'errorText',
+  'eyebrow',
+  'filter',
+  'filterPlaceholder',
+  'heading',
+  'hideText',
+  'hint',
+  'label',
+  'loadingText',
+  'name',
+  'optionalText',
+  'placeholder',
+  'prompt',
+  'query',
+  'showText',
+  'text',
+  'title',
+  'valueText',
+]);
+
+export function localizeKernPlaygroundStringArgument(
+  locale: string,
+  key: string,
+  value: string,
+): string {
+  if (locale !== 'ru-RU') return value;
+
+  const alternateSuffix = ' · alternate';
+  const hasAlternateSuffix = value.endsWith(alternateSuffix);
+  const source = hasAlternateSuffix ? value.slice(0, -alternateSuffix.length) : value;
+  const translated = RU_PLAYGROUND_ARGUMENT_STRINGS[source];
+
+  if (translated) {
+    return hasAlternateSuffix ? `${translated} · альтернативный вариант` : translated;
+  }
+
+  if (source === 'Alternate value' && PLAYGROUND_PROSE_ARGUMENT_KEYS.has(key)) {
+    return 'Альтернативное значение';
+  }
+
+  if (hasAlternateSuffix && PLAYGROUND_PROSE_ARGUMENT_KEYS.has(key)) {
+    return `${source} · альтернативный вариант`;
+  }
+
+  return value;
+}
+
+function playgroundStateId(value: string): string {
+  return value
+    .trim()
+    .toLocaleLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+export function localizeKernPlaygroundStateLabel(
+  locale: string,
+  id: string,
+  fallback: string,
+): string {
+  return locale === 'ru-RU' ? (RU_PLAYGROUND_STATE_LABELS[id] ?? fallback) : fallback;
+}
+
+export function localizeKernPlaygroundPresetLabel(
+  locale: string,
+  preset: Pick<KernPlaygroundStatePreset, 'id' | 'label'>,
+): string {
+  return localizeKernPlaygroundStateLabel(locale, preset.id, preset.label);
+}
+
+export function localizeKernPlaygroundFixtureEffect(
+  locale: string,
+  effect: KernPlaygroundFixtureEffect,
+): KernPlaygroundFixtureEffect {
+  if (locale !== 'ru-RU') return effect;
+
+  const id = playgroundStateId(effect.label);
+  const label = localizeKernPlaygroundStateLabel(locale, id, effect.label);
+  let description: string;
+  if (effect.kind === 'layout') {
+    description =
+      effect.mode === 'overflow'
+        ? 'Пример намеренно выходит за обычную ширину, чтобы показать поведение при переполнении.'
+        : 'Пример использует другую фиксированную границу, чтобы показать поведение макета.';
+  } else if (effect.kind === 'content') {
+    description =
+      effect.mode === 'long-text'
+        ? 'Длинное тестовое содержимое показывает перенос и обрезку текста.'
+        : effect.mode === 'empty'
+          ? 'Компонент показан с намеренно пустым содержимым.'
+          : effect.mode === 'filled'
+            ? 'Компонент показан с реалистичным заполненным значением.'
+            : 'Для этого состояния изменена композиция проектируемого содержимого.';
+  } else if (effect.kind === 'data') {
+    description =
+      effect.mode === 'loading'
+        ? 'Пример ожидает загрузки данных.'
+        : effect.mode === 'error'
+          ? 'Запрос данных завершился ошибкой, его можно повторить.'
+          : effect.mode === 'empty'
+            ? 'Источник данных не вернул записей.'
+            : effect.mode === 'success'
+              ? 'Операция в примере успешно завершена.'
+              : 'Для этого состояния изменено представление данных в примере.';
+  } else {
+    description = `Пример показывает состояние «${label.toLocaleLowerCase('ru-RU')}», не выдавая его за публичное входное свойство компонента.`;
+  }
+
+  return Object.freeze({ ...effect, label, description }) as KernPlaygroundFixtureEffect;
+}
+
 export interface KernPlaygroundDefinition {
   readonly id: string;
   /** Illustrative preset used by docs and Reset; `default` remains the exhaustive QA baseline. */
